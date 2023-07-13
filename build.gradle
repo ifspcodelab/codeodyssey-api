@@ -5,6 +5,7 @@ plugins {
 	id 'org.owasp.dependencycheck' version '8.3.1'
 	id 'com.diffplug.spotless' version '6.19.0'
 	id 'com.github.spotbugs' version '5.0.14'
+	id 'pmd'
 }
 
 group = 'app.codeodyssey'
@@ -83,4 +84,12 @@ spotbugsMain {
 		xml.enabled = false
 		html.enabled = true
 	}
+}
+
+pmd {
+	sourceSets = [ project.sourceSets.main ]
+	consoleOutput = true
+	toolVersion = "6.55.0"
+	ruleSets = []
+	ruleSetFiles = rootProject.files("config/pmd/ruleset.xml")
 }

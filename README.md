@@ -24,6 +24,17 @@ Apply format
 ./gradlew spotbugsTest
 ```
 
+### PMD
+```bash
+./gradlew check
+```
+
+or
+
+```bash
+./gradlew ch
+```
+
 ---
 
 ## Security plugins
