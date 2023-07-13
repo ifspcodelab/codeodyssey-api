@@ -4,6 +4,16 @@ API for the CodeOdyssey project. A platform to make and correct coding-related e
 ---
 
 ## Code quality plugins
+### Spotless
+Check
+```bash
+./gradlew spotlessCheck
+```
+
+Apply format
+```bash
+./gradlew spotlessApply
+```
 
 ---
 
