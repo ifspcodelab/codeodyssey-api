@@ -15,6 +15,15 @@ Apply format
 ./gradlew spotlessApply
 ```
 
+### Spotbugs
+```bash
+./gradlew spotbugsMain
+```
+
+```bash
+./gradlew spotbugsTest
+```
+
 ---
 
 ## Security plugins
