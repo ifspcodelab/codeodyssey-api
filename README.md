@@ -5,6 +5,8 @@ API for the CodeOdyssey project. A platform to make and correct coding-related e
 
 ## Code quality plugins
 ### Spotless
+How to run:
+
 Check
 ```bash
 ./gradlew spotlessCheck
@@ -16,10 +18,14 @@ Apply format
 ```
 
 ### Spotbugs
+How to run:
+
+Checks files in the `main` folder
 ```bash
 ./gradlew spotbugsMain
 ```
 
+Checks files in the `test` folder
 ```bash
 ./gradlew spotbugsTest
 ```
@@ -40,6 +46,8 @@ Reports: `build/reports/checkstyle`
 ```
 
 ### PMD
+Run it with any of the commands below. Do note that PMD also runs the other code quality plugins.
+
 ```bash
 ./gradlew check
 ```
@@ -54,6 +62,8 @@ or
 
 ## Security plugins
 ### OWASP Dependency Check
+
+How to run:
 ```bash
 ./gradlew dependencyCheckAnalyze
 ```
