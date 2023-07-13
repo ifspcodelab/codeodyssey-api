@@ -6,6 +6,7 @@ plugins {
 	id 'com.diffplug.spotless' version '6.19.0'
 	id 'com.github.spotbugs' version '5.0.14'
 	id 'pmd'
+	id 'checkstyle'
 }
 
 group = 'app.codeodyssey'
@@ -92,4 +93,12 @@ pmd {
 	toolVersion = "6.55.0"
 	ruleSets = []
 	ruleSetFiles = rootProject.files("config/pmd/ruleset.xml")
+}
+
+checkstyle {
+	toolVersion = '10.12.1'
+	ignoreFailures = false
+	configFile = rootProject.file('config/checkstyle/checkstyle.xml')
+	configDirectory = rootProject.file("config/checkstyle")
+	sourceSets = [sourceSets.main]
 }
