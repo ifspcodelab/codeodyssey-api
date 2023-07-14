@@ -7,6 +7,12 @@ jobs:
       - name: Checks-out the repository
         uses: actions/checkout@v3
 
+      - name: Setup java runtime
+        uses: actions/setup-java@v2
+        with:
+          java-version: '17'
+          distribution: 'adopt'
+
       - name: Run spotlessCheck
         run: ./gradlew clean spotlessCheck
 
