@@ -37,6 +37,9 @@ jobs:
         with:
           filters: |
             build_gradle:
-              - 'build.gradle'
+              - './build.gradle'
       - if: steps.changes.outputs.build_gradle == 'true'
         run: ./gradlew dependencyCheckAnalyze
+
+      - name: Run tests
+        run: ./gradlew test
