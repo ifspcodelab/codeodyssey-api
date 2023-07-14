@@ -67,3 +67,11 @@ How to run:
 ```bash
 ./gradlew dependencyCheckAnalyze
 ```
+
+## Tests
+### Unit tests
+
+How to run:
+```bash
+./gradlew test
+```
