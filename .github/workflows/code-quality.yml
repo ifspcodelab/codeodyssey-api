@@ -1,0 +1,35 @@
+name: code-quality
+on: [push]
+jobs:
+  check:
+    runs-on: ubuntu-latest
+    steps:
+      - name: Checks-out the repository
+        uses: actions/checkout@v3
+
+      - name: Run spotlessCheck
+        run: ./gradlew clean spotlessCheck
+
+      - name: Run spotbugsMain
+        run: ./gradlew clean spotbugsMain
+
+      - name: Run spotbugsTest
+        run: ./gradlew clean spotbugsTest
+
+      - name: Run checkstyleMain
+        run: ./gradlew clean checkstyleMain
+
+      - name: Run checkstyleTest
+        run: ./gradlew clean checkstyleTest
+
+      - name: Run pmdMain
+        run: ./gradlew clean pmdMain
+
+      - uses: dorny/paths-filter@v2
+        id: changes
+        with:
+          filters: |
+            build_gradle:
+              - 'src/build.gradle'
+      - if: steps.changes.outputs.build_gradle == 'true'
+        run: ./gradlew dependencyCheckAnalyze
