@@ -10,5 +10,5 @@ spring:
         open-in-view: false
 application:
     jwt:
-        secrectKey: ${JWT_SECRETKEY:7BEA1139386D2AE1D3A65BA9DFD47}
-        accessTokenExpirationAfterMinutes: 15
+        secret-key: ${JWT_SECRET:404E635266556A586E3272357538782F413F4428472B4B6250645367566B5970}
+        access-token-expiration-after-minutes: 15
