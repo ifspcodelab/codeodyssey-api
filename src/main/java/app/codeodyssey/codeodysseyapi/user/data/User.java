@@ -1,8 +1,7 @@
-package app.codeodyssey.codeodysseyapi.user;
+package app.codeodyssey.codeodysseyapi.user.data;
 
-import jakarta.persistence.Entity;
-import jakarta.persistence.Id;
-import jakarta.persistence.Table;
+import jakarta.persistence.*;
+
 import java.time.Instant;
 import java.util.UUID;
 import lombok.AllArgsConstructor;
@@ -21,6 +20,7 @@ public class User {
     private String email;
     private String name;
     private String password;
+    @Enumerated(EnumType.STRING)
     private UserRole role;
     private Instant createdAt;
 
