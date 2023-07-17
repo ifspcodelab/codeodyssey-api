@@ -1,6 +1,6 @@
 package app.codeodyssey.codeodysseyapi.course.data;
 
-import app.codeodyssey.codeodysseyapi.user.User;
+import app.codeodyssey.codeodysseyapi.user.data.User;
 import jakarta.persistence.Entity;
 import jakarta.persistence.Id;
 import jakarta.persistence.ManyToOne;
