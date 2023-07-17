@@ -1,9 +1,8 @@
 CREATE TABLE users (
-    id UUID NOT NULL,
-    email VARCHAR NOT NULL UNIQUE,
-    name VARCHAR NOT NULL,
-    password VARCHAR NOT NULL,
-    role UserRole NOT NULL,
-    createdAt Instant NOT NULL,
-    CONSTRAINT users_pk PRIMARY KEY (id)
-)
+                       id SERIAL PRIMARY KEY,
+                       name VARCHAR(100) NOT NULL,
+                       email VARCHAR(255) UNIQUE NOT NULL,
+                       password VARCHAR(100) NOT NULL,
+                       role VARCHAR(100) NOT NULL,
+                       created_at TIMESTAMP DEFAULT CURRENT_TIMESTAMP
+);
