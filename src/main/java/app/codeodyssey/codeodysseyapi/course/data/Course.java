@@ -5,13 +5,12 @@ import jakarta.persistence.Entity;
 import jakarta.persistence.Id;
 import jakarta.persistence.ManyToOne;
 import jakarta.persistence.Table;
-import lombok.AllArgsConstructor;
-import lombok.Getter;
-import lombok.NoArgsConstructor;
-
 import java.time.Instant;
 import java.time.LocalDate;
 import java.util.UUID;
+import lombok.AllArgsConstructor;
+import lombok.Getter;
+import lombok.NoArgsConstructor;
 
 @Entity
 @Table(name = "courses")
@@ -21,12 +20,15 @@ import java.util.UUID;
 public class Course {
     @Id
     private UUID id;
+
     private String name;
     private String slug;
     private LocalDate startDate;
     private LocalDate endDate;
+
     @ManyToOne
     private User professor;
+
     private Instant createdAt;
 
     public Course(String name, String slug, LocalDate startDate, LocalDate endDate, User professor) {

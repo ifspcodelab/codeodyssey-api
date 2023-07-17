@@ -3,12 +3,11 @@ package app.codeodyssey.codeodysseyapi.user;
 import jakarta.persistence.Entity;
 import jakarta.persistence.Id;
 import jakarta.persistence.Table;
+import java.time.Instant;
+import java.util.UUID;
 import lombok.AllArgsConstructor;
 import lombok.Getter;
 import lombok.NoArgsConstructor;
-
-import java.time.Instant;
-import java.util.UUID;
 
 @Entity
 @Table(name = "users")
@@ -18,6 +17,7 @@ import java.util.UUID;
 public class User {
     @Id
     private UUID id;
+
     private String email;
     private String name;
     private String password;
