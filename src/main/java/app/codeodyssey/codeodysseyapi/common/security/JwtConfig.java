@@ -1,4 +1,4 @@
-package app.codeodyssey.codeodysseyapi.config;
+package app.codeodyssey.codeodysseyapi.common.security;
 
 import lombok.Getter;
 import lombok.NoArgsConstructor;
