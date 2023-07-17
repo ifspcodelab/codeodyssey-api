@@ -9,6 +9,8 @@ import app.codeodyssey.codeodysseyapi.user.data.UserRepository;
 import lombok.AllArgsConstructor;
 import org.springframework.stereotype.Service;
 
+import java.util.UUID;
+
 @Service
 @AllArgsConstructor
 public class CreateUserService {
@@ -20,7 +22,10 @@ public class CreateUserService {
             throw new ViolationException(Resource.USER, ViolationType.ALREADY_EXISTS, "Email already exists");
         }
 
-        User user = userRepository.save(new User());
+        User user = new User(command.email(), command.name(),
+                command.password(), command.role());
+
+        user = userRepository.save(user);
 
         return userMapper.to(user);
     }

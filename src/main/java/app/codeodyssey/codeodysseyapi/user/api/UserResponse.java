@@ -4,4 +4,9 @@ import app.codeodyssey.codeodysseyapi.user.data.UserRole;
 import java.time.Instant;
 import java.util.UUID;
 
-public record UserResponse(String name, String email, UUID password, UserRole role, Instant createdAt) { }
+public record UserResponse(UUID id,
+                           String name,
+                           String email,
+                           String password,
+                           UserRole role,
+                           Instant createdAt) { }
