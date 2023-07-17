@@ -1,6 +1,12 @@
 package app.codeodyssey.codeodysseyapi.course.api;
 
 import app.codeodyssey.codeodysseyapi.course.service.GetCoursesService;
+import io.swagger.v3.oas.annotations.Operation;
+import io.swagger.v3.oas.annotations.media.ArraySchema;
+import io.swagger.v3.oas.annotations.media.Content;
+import io.swagger.v3.oas.annotations.media.Schema;
+import io.swagger.v3.oas.annotations.responses.ApiResponse;
+import io.swagger.v3.oas.annotations.responses.ApiResponses;
 import io.swagger.v3.oas.annotations.tags.Tag;
 import java.util.List;
 import lombok.AllArgsConstructor;
@@ -16,6 +22,19 @@ import org.springframework.web.bind.annotation.RestController;
 public class GetCoursesEndpoint {
     private final GetCoursesService getCoursesService;
 
+    @Operation(
+            summary = "Get all courses",
+            description = "Returns a list containing all courses registered on the database.",
+            tags = {"Courses"})
+    @ApiResponses({
+        @ApiResponse(
+                responseCode = "200",
+                content = {
+                    @Content(
+                            array = @ArraySchema(schema = @Schema(implementation = CourseResponse.class)),
+                            mediaType = "application/json")
+                })
+    })
     @GetMapping
     public ResponseEntity<List<CourseResponse>> get() {
         return ResponseEntity.ok(getCoursesService.execute());
