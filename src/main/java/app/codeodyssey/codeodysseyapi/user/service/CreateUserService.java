@@ -9,8 +9,6 @@ import app.codeodyssey.codeodysseyapi.user.data.UserRepository;
 import lombok.AllArgsConstructor;
 import org.springframework.stereotype.Service;
 
-import java.util.UUID;
-
 @Service
 @AllArgsConstructor
 public class CreateUserService {
