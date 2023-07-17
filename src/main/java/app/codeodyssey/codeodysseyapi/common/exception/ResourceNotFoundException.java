@@ -1,4 +1,4 @@
-package app.codeodyssey.codeodysseyapi.common.exception.exception;
+package app.codeodyssey.codeodysseyapi.common.exception;
 
 import lombok.Getter;
 
