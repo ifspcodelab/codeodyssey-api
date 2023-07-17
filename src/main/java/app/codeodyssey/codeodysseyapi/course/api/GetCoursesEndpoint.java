@@ -24,7 +24,8 @@ public class GetCoursesEndpoint {
 
     @Operation(
             summary = "Get all courses",
-            description = "Returns a list containing all courses registered on the database.",
+            description =
+                    "Returns a list containing all courses registered on the database. This course list is ordered by name and end date.",
             tags = {"Courses"})
     @ApiResponses({
         @ApiResponse(
