@@ -1,10 +1,12 @@
 package app.codeodyssey.codeodysseyapi.common.security;
 
 import io.jsonwebtoken.Claims;
+import io.jsonwebtoken.ExpiredJwtException;
 import io.jsonwebtoken.Jwts;
 import io.jsonwebtoken.SignatureAlgorithm;
 import io.jsonwebtoken.io.Decoders;
 import io.jsonwebtoken.security.Keys;
+import lombok.extern.slf4j.Slf4j;
 import org.apache.commons.lang3.time.DateUtils;
 import org.springframework.security.core.userdetails.UserDetails;
 import org.springframework.stereotype.Service;
@@ -15,6 +17,7 @@ import java.util.Map;
 import java.util.function.Function;
 
 @Service
+@Slf4j
 public class JwtService {
     private final JwtConfig jwtConfig;
 
@@ -65,7 +68,17 @@ public class JwtService {
     }
 
     private boolean isTokenExpired(String token) {
-        return extractExpiration(token).compareTo(new Date()) < 0;
+        try{
+            Jwts
+                    .parserBuilder()
+                    .setSigningKey(getSignKey())
+                    .build()
+                    .parse(token);
+            return false;
+        }catch (ExpiredJwtException e){
+            log.warn("jwt is expired: {}", e.getMessage());
+        }
+        return true;
     }
 
     private Date extractExpiration(String token) {
