@@ -8,3 +8,19 @@ spring:
         password: ${DATASOURCE_PASSWORD:postgres}
     jpa:
         open-in-view: false
+
+    mail:
+        host: ${MAIL_HOST:smtp.gmail.com}
+        port: ${MAIL_PORT:587}
+        test-connection: false
+        username: ${MAIL_USERNAME:nao.responda425@gmail.com}
+        password: ${MAIL_PASSWORD:fdswibvggzvdebsl}
+        properties:
+            mail:
+                smtp:
+                    auth: true
+                    starttls:
+                        enable: true
+                        required: true
+                    ssl:
+                        enabled: true
