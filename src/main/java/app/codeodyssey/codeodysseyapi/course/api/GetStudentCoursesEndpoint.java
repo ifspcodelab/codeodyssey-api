@@ -1,6 +1,13 @@
 package app.codeodyssey.codeodysseyapi.course.api;
 
 import app.codeodyssey.codeodysseyapi.course.service.GetStudentCoursesService;
+import io.swagger.v3.oas.annotations.Operation;
+import io.swagger.v3.oas.annotations.media.ArraySchema;
+import io.swagger.v3.oas.annotations.media.Content;
+import io.swagger.v3.oas.annotations.media.Schema;
+import io.swagger.v3.oas.annotations.responses.ApiResponse;
+import io.swagger.v3.oas.annotations.responses.ApiResponses;
+import io.swagger.v3.oas.annotations.tags.Tag;
 import jakarta.validation.Valid;
 import java.util.List;
 import java.util.UUID;
@@ -14,9 +21,24 @@ import org.springframework.web.bind.annotation.RestController;
 @RestController
 @RequestMapping("api/v1")
 @AllArgsConstructor
+@Tag(name = "Courses", description = "Course API endpoint")
 public class GetStudentCoursesEndpoint {
     private final GetStudentCoursesService getStudentCoursesService;
 
+    @Operation(
+            summary = "Get all student's courses.",
+            description =
+                    "Returns a list containing all courses of a student given their id. This course list is ordered by name and end date.",
+            tags = {"Courses"})
+    @ApiResponses({
+        @ApiResponse(
+                responseCode = "200",
+                content = {
+                    @Content(
+                            array = @ArraySchema(schema = @Schema(implementation = CourseResponse.class)),
+                            mediaType = "application/json")
+                })
+    })
     @GetMapping("users/{id}/enrollments")
     public ResponseEntity<List<CourseResponse>> get(@PathVariable @Valid UUID id) {
         return ResponseEntity.ok(getStudentCoursesService.execute(id));

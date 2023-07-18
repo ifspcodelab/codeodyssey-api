@@ -28,7 +28,7 @@ public class GetProfessorCoursesEndpoint {
     @Operation(
             summary = "Get all professor's courses.",
             description =
-                    "Returns a list containing all courses of a professor given their id. This course list ir ordered by name and end date.",
+                    "Returns a list containing all courses of a professor given their id. This course list is ordered by name and end date.",
             tags = {"Courses"})
     @ApiResponses({
         @ApiResponse(
