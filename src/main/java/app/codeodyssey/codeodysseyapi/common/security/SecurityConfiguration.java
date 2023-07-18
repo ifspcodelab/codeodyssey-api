@@ -19,13 +19,18 @@ public class SecurityConfiguration {
     private final JwtAuthenticationFilter jwtAuthFilter;
     private final AuthenticationProvider authenticationProvider;
 
+    private static final String[] NO_AUTH_REQUIRED = {
+            "/api/v1/**",
+            "/swagger-ui/**",
+            "/v3/api-docs/**"
+    };
+
     @Bean
     public SecurityFilterChain securityFilterChain(HttpSecurity http) throws Exception {
         http
                 .csrf(AbstractHttpConfigurer::disable)
                 .authorizeHttpRequests(auth -> auth
-                        .requestMatchers("/api/v1/**").permitAll()
-                        .requestMatchers("/**").permitAll()
+                        .requestMatchers(NO_AUTH_REQUIRED).permitAll()
                         .anyRequest()
                         .authenticated()
                 )
