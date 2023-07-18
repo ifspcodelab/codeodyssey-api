@@ -4,6 +4,7 @@ import lombok.extern.slf4j.Slf4j;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ProblemDetail;
 import org.springframework.http.ResponseEntity;
+import org.springframework.security.authentication.BadCredentialsException;
 import org.springframework.web.bind.annotation.ControllerAdvice;
 import org.springframework.web.bind.annotation.ExceptionHandler;
 
@@ -38,6 +39,20 @@ public class GlobalExceptionHandler {
         problem.setDetail(details);
 
         log.warn("{} ({})", title, details);
+        return new ResponseEntity<>(problem, status);
+    }
+
+    @ExceptionHandler(BadCredentialsException.class)
+    public ResponseEntity<ProblemDetail> badCredentials(BadCredentialsException ex){
+        HttpStatus status = HttpStatus.FORBIDDEN;
+        String cause = ex.getClass().getName();
+        String message = ex.getMessage();
+
+        ProblemDetail problem = ProblemDetail.forStatus(status);
+        problem.setTitle(cause);
+        problem.setDetail(message);
+
+        log.warn("{} ({})", cause, message);
         return new ResponseEntity<>(problem, status);
     }
 }
