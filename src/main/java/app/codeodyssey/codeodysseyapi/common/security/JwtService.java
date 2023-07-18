@@ -1,9 +1,6 @@
 package app.codeodyssey.codeodysseyapi.common.security;
 
-import io.jsonwebtoken.Claims;
-import io.jsonwebtoken.ExpiredJwtException;
-import io.jsonwebtoken.Jwts;
-import io.jsonwebtoken.SignatureAlgorithm;
+import io.jsonwebtoken.*;
 import io.jsonwebtoken.io.Decoders;
 import io.jsonwebtoken.security.Keys;
 import lombok.extern.slf4j.Slf4j;
@@ -25,7 +22,7 @@ public class JwtService {
         this.jwtConfig = jwtConfig;
     }
 
-    public String extractUsername(String token) {
+    public String extractUsername(String token){
         return extractClaim(token, Claims::getSubject);
     }
 
@@ -62,23 +59,20 @@ public class JwtService {
                 .compact();
     }
 
-    public boolean isTokenValid(String token, UserDetails userDetails){
-        final String username = extractUsername(token);
-        return (username.equals(userDetails.getUsername())) && !isTokenExpired(token);
-    }
-
-    private boolean isTokenExpired(String token) {
-        try{
-            Jwts
-                    .parserBuilder()
-                    .setSigningKey(getSignKey())
-                    .build()
-                    .parse(token);
-            return false;
-        }catch (ExpiredJwtException e){
+    public boolean isTokenValid(String token){
+        try {
+            Jwts.parserBuilder().setSigningKey(getSignKey()).build().parse(token);
+            return true;
+        } catch (MalformedJwtException e) {
+            log.warn("invalid jwt: {}", e.getMessage());
+        } catch (ExpiredJwtException e) {
             log.warn("jwt is expired: {}", e.getMessage());
+        } catch (UnsupportedJwtException e) {
+            log.warn("jwt is unsupported: {}", e.getMessage());
+        } catch (IllegalArgumentException e) {
+            log.warn("jwt claims string is empty: {}", e.getMessage());
         }
-        return true;
+        return false;
     }
 
     private Date extractExpiration(String token) {

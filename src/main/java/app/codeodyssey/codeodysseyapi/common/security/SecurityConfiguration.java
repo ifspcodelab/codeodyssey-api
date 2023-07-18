@@ -43,7 +43,6 @@ public class SecurityConfiguration {
                         .requestMatchers(NO_AUTH_REQUIRED).permitAll()
                         .requestMatchers(STUDENTS_ALLOWED).hasAnyAuthority("STUDENT")
                         .requestMatchers(PROFESSORS_ALLOWED).hasAnyAuthority("PROFESSOR")
-                        .requestMatchers("/**").hasAnyAuthority("ADMIN")
                         .anyRequest()
                         .authenticated()
                 )

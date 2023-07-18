@@ -45,14 +45,15 @@ public class GlobalExceptionHandler {
     @ExceptionHandler(BadCredentialsException.class)
     public ResponseEntity<ProblemDetail> badCredentials(BadCredentialsException ex){
         HttpStatus status = HttpStatus.FORBIDDEN;
-        String cause = ex.getClass().getName();
+        String className = ex.getClass().getName();
         String message = ex.getMessage();
 
         ProblemDetail problem = ProblemDetail.forStatus(status);
-        problem.setTitle(cause);
+        problem.setTitle(className);
         problem.setDetail(message);
 
-        log.warn("{} ({})", cause, message);
+        log.warn("{} ({})", className, message);
         return new ResponseEntity<>(problem, status);
     }
+
 }
