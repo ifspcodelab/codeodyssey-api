@@ -23,7 +23,7 @@ public class GetCoursesEndpoint {
     private final GetCoursesService getCoursesService;
 
     @Operation(
-            summary = "Get all courses",
+            summary = "Get all courses.",
             description =
                     "Returns a list containing all courses registered on the database. This course list is ordered by name and end date.",
             tags = {"Courses"})
