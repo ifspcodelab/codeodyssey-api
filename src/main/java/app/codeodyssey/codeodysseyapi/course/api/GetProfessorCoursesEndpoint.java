@@ -39,6 +39,7 @@ public class GetProfessorCoursesEndpoint {
                             mediaType = "application/json")
                 })
     })
+    // TODO: typo 'user' to 'users'
     @GetMapping("user/{id}/courses")
     public ResponseEntity<List<CourseResponse>> get(@PathVariable @Valid UUID id) {
         return ResponseEntity.ok(getProfessorCoursesService.execute(id));
