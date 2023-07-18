@@ -27,7 +27,7 @@ public class User {
         this.id = UUID.randomUUID();
         this.name = name;
         this.password = password;
-        this.role = UserRole.STUDENT;
+        this.role = role;
         this.createdAt = Instant.now();
     }
 }
