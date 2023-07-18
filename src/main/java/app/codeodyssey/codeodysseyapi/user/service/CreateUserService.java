@@ -34,8 +34,8 @@ public class CreateUserService {
 
         user = userRepository.save(user);
 
-        String token = CreateTokenService.generateToken();
-        String confirmationLink = "https://www.instagram.com/confirmation?token=" + token;
+        String token = CreateTokenService.generateToken(user.getId());
+        String confirmationLink = token;
 
         sendEmailService.sendConfirmationEmail(user.getEmail(), confirmationLink);
 
