@@ -7,5 +7,7 @@ import org.springframework.stereotype.Repository;
 
 @Repository
 public interface CourseRepository extends JpaRepository<Course, UUID> {
+    List<Course> findAllByOrderByNameAscEndDateAsc();
+
     List<Course> findAllByProfessorIdOrderByNameAscEndDateAsc(UUID id);
 }
