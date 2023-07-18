@@ -7,6 +7,7 @@ import app.codeodyssey.codeodysseyapi.user.api.UserResponse;
 import app.codeodyssey.codeodysseyapi.user.data.User;
 import app.codeodyssey.codeodysseyapi.user.data.UserRepository;
 import lombok.AllArgsConstructor;
+import org.springframework.security.crypto.bcrypt.BCryptPasswordEncoder;
 import org.springframework.stereotype.Service;
 
 @Service
@@ -20,11 +21,15 @@ public class CreateUserService {
             throw new ViolationException(Resource.USER, ViolationType.ALREADY_EXISTS, "Email already exists");
         }
 
+
+        BCryptPasswordEncoder encoder = new BCryptPasswordEncoder();
+        String hashedPassword = encoder.encode(command.password());
+
+
         User user = new User(command.email(), command.name(),
-                command.password(), command.role());
+                hashedPassword, command.role());
 
         user = userRepository.save(user);
-
         return userMapper.to(user);
     }
 }
