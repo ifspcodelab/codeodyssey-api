@@ -1,4 +1,4 @@
-package app.codeodyssey.codeodysseyapi.enrollment;
+package app.codeodyssey.codeodysseyapi.enrollment.data;
 
 import java.util.UUID;
 import org.springframework.data.jpa.repository.JpaRepository;

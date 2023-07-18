@@ -1,4 +1,4 @@
-package app.codeodyssey.codeodysseyapi.enrollment;
+package app.codeodyssey.codeodysseyapi.enrollment.data;
 
 import app.codeodyssey.codeodysseyapi.course.data.Course;
 import app.codeodyssey.codeodysseyapi.invitation.data.Invitation;
