@@ -13,7 +13,6 @@ public class GetCoursesService {
     private final CourseMapper courseMapper;
 
     public List<CourseResponse> execute() {
-        // return courseMapper.to(courseRepository.findAll(Sort.by(Sort.Order.asc("name"), Sort.Order.asc("endDate"))));
         return courseMapper.to(courseRepository.findAllByOrderByNameAscEndDateAsc());
     }
 }
