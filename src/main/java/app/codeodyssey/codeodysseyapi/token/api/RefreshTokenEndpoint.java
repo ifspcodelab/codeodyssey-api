@@ -1,7 +1,8 @@
 package app.codeodyssey.codeodysseyapi.token.api;
 
+import app.codeodyssey.codeodysseyapi.common.exception.ForbiddenException;
+import app.codeodyssey.codeodysseyapi.common.exception.ForbiddenType;
 import app.codeodyssey.codeodysseyapi.common.exception.Resource;
-import app.codeodyssey.codeodysseyapi.common.exception.ResourceNotFoundException;
 import app.codeodyssey.codeodysseyapi.common.security.JwtService;
 import app.codeodyssey.codeodysseyapi.token.data.RefreshToken;
 import lombok.RequiredArgsConstructor;
@@ -36,7 +37,9 @@ public class RefreshTokenEndpoint {
                     return new ResponseEntity<>(new RefreshTokenResponse(refreshToken, accessToken),
                             HttpStatus.CREATED);
                 })
-                .orElseThrow(() -> new ResourceNotFoundException(null, Resource.REFRESH_TOKEN));
+                .orElseThrow(() -> new ForbiddenException(Resource.REFRESH_TOKEN,
+                        ForbiddenType.REFRESH_TOKEN_NOT_FOUND,
+                        "refresh token was not found"));
     }
 
 }
