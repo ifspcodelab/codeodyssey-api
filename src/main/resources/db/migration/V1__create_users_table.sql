@@ -1,9 +1,9 @@
 CREATE TABLE users(
     id UUID,
-    name CHAR(100),
-    email CHAR(350) NOT NULL UNIQUE,
-    password CHAR(64),
+    name VARCHAR,
+    email VARCHAR NOT NULL UNIQUE,
+    password VARCHAR,
     role VARCHAR,
-    created_at TIMESTAMP,
+    created_at TIMESTAMPTZ,
     CONSTRAINT users_pk PRIMARY KEY (id)
 )

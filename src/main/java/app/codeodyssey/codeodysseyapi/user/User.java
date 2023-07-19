@@ -1,8 +1,6 @@
 package app.codeodyssey.codeodysseyapi.user;
 
-import jakarta.persistence.Entity;
-import jakarta.persistence.Id;
-import jakarta.persistence.Table;
+import jakarta.persistence.*;
 import lombok.AllArgsConstructor;
 import lombok.Getter;
 import lombok.NoArgsConstructor;
@@ -17,6 +15,7 @@ import java.util.UUID;
 @Getter
 public class User {
     @Id
+    @GeneratedValue(strategy = GenerationType.UUID)
     private UUID id;
     private String name;
     private String email;
@@ -24,12 +23,12 @@ public class User {
     private UserRole role;
     private Instant createdAt;
 
-    public User (String name, String email, String password, UserRole role){
+    public User (String name, String email, String password){
         this.id = UUID.randomUUID();
         this.name = name;
         this.email = email;
         this.password = password;
-        this.role = role;
+        this.role = UserRole.STUDENT;
         this.createdAt = Instant.now();
     }
 }
