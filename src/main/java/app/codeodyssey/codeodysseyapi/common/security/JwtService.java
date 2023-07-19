@@ -1,26 +1,33 @@
 package app.codeodyssey.codeodysseyapi.common.security;
 
+import app.codeodyssey.codeodysseyapi.common.exception.*;
+import app.codeodyssey.codeodysseyapi.token.data.RefreshToken;
+import app.codeodyssey.codeodysseyapi.token.data.RefreshTokenRepository;
+import app.codeodyssey.codeodysseyapi.user.data.UserRepository;
 import io.jsonwebtoken.*;
 import io.jsonwebtoken.io.Decoders;
 import io.jsonwebtoken.security.Keys;
+import jakarta.transaction.Transactional;
+import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
 import org.apache.commons.lang3.time.DateUtils;
 import org.springframework.security.core.userdetails.UserDetails;
 import org.springframework.stereotype.Service;
 
 import java.security.Key;
-import java.util.Date;
-import java.util.Map;
+import java.time.Instant;
+import java.time.temporal.ChronoUnit;
+import java.util.*;
 import java.util.function.Function;
 
 @Service
 @Slf4j
+@RequiredArgsConstructor
 public class JwtService {
-    private final JwtConfig jwtConfig;
 
-    public JwtService(JwtConfig jwtConfig) {
-        this.jwtConfig = jwtConfig;
-    }
+    private final JwtConfig jwtConfig;
+    private final RefreshTokenRepository refreshTokenRepository;
+    private final UserRepository userRepository;
 
     public String extractUsername(String token){
         return extractClaim(token, Claims::getSubject);
@@ -45,7 +52,7 @@ public class JwtService {
         return Keys.hmacShaKeyFor(keyBytes);
     }
 
-    public String generateToken(
+    public String generateAccessToken(
             Map<String, Object> extraClaims,
             UserDetails userDetails
     ){
@@ -59,7 +66,7 @@ public class JwtService {
                 .compact();
     }
 
-    public boolean isTokenValid(String token){
+    public boolean isAccessTokenValid(String token){
         try {
             Jwts.parserBuilder().setSigningKey(getSignKey()).build().parse(token);
             return true;
@@ -75,7 +82,40 @@ public class JwtService {
         return false;
     }
 
-    private Date extractExpiration(String token) {
-        return extractClaim(token, Claims::getExpiration);
+    public Optional<RefreshToken> findByToken(String token){
+        return this.refreshTokenRepository.findByToken(token);
+    }
+
+    @Transactional
+    public RefreshToken generateRefreshToken(UUID id) {
+        RefreshToken refreshToken = new RefreshToken();
+
+        this.refreshTokenRepository.deleteAllByUser(
+                this.userRepository.findById(id).get()
+        );
+
+        refreshToken.setUser(this.userRepository.findById(id).get());
+        refreshToken.setExpiryAt(Instant.now().plus(jwtConfig.getRefreshTokenExpirationAfterMinutes(),
+                ChronoUnit.MINUTES));
+        refreshToken.setToken(UUID.randomUUID().toString());
+
+        refreshToken = refreshTokenRepository.save(refreshToken);
+        return refreshToken;
+    }
+
+    public RefreshToken verifyRefreshTokenExpiration(RefreshToken token) {
+        if (token.getExpiryAt().compareTo(Instant.now()) < 0) {
+            this.refreshTokenRepository.delete(token);
+            throw new ForbiddenException(Resource.REFRESH_TOKEN,
+                    ForbiddenType.EXPIRED_REFRESH_TOKEN,
+                    "refresh token was expired");
+        }
+
+        return token;
+    }
+
+    @Transactional
+    public int deleteByUserId(UUID id) {
+        return refreshTokenRepository.deleteByUser(userRepository.findById(id).get());
     }
 }

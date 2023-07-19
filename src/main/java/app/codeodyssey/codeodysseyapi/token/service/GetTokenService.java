@@ -1,32 +1,28 @@
 package app.codeodyssey.codeodysseyapi.token.service;
 
 import app.codeodyssey.codeodysseyapi.common.security.JwtService;
-import app.codeodyssey.codeodysseyapi.token.api.TokenResponse;
-import app.codeodyssey.codeodysseyapi.user.api.UserRequest;
+import app.codeodyssey.codeodysseyapi.user.api.LoginRequest;
+import app.codeodyssey.codeodysseyapi.user.api.LoginResponse;
 import app.codeodyssey.codeodysseyapi.user.data.User;
-import app.codeodyssey.codeodysseyapi.user.data.UserRepository;
 import lombok.AllArgsConstructor;
 import org.springframework.security.authentication.AuthenticationManager;
 import org.springframework.security.authentication.UsernamePasswordAuthenticationToken;
 import org.springframework.security.core.Authentication;
 import org.springframework.security.core.GrantedAuthority;
-import org.springframework.security.core.userdetails.UserDetails;
 import org.springframework.stereotype.Service;
 
 import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
-import java.util.stream.Collectors;
 
 @Service
 @AllArgsConstructor
 public class GetTokenService {
 
-    private final UserRepository userRepository;
     private final JwtService jwtService;
     private final AuthenticationManager authenticationManager;
 
-    public TokenResponse execute(UserRequest request){
+    public LoginResponse execute(LoginRequest request){
 
         Authentication authentication = authenticationManager.authenticate(
                 new UsernamePasswordAuthenticationToken(
@@ -37,16 +33,14 @@ public class GetTokenService {
 
         List<String> roles = authentication.getAuthorities().stream().map(GrantedAuthority::getAuthority).toList();
 
-
-        User user = userRepository.findByEmail(request.email())
-                .orElseThrow();
+        User user = (User) authentication.getPrincipal();
 
         Map<String, Object> claims = new HashMap<>();
         claims.put("role", roles.get(0));
 
-        return new TokenResponse(
-                jwtService.generateToken(claims, user),
-                ""
+        return new LoginResponse(
+                jwtService.generateAccessToken(claims, user),
+                jwtService.generateRefreshToken(user.getId()).getToken()
         );
     }
 }

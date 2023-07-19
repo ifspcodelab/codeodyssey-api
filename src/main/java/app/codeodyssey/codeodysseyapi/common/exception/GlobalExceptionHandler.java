@@ -56,4 +56,19 @@ public class GlobalExceptionHandler {
         return new ResponseEntity<>(problem, status);
     }
 
+    @ExceptionHandler(ForbiddenException.class)
+    public ResponseEntity<ProblemDetail> forbidden(ForbiddenException ex){
+        HttpStatus status = HttpStatus.FORBIDDEN;
+        String resource = ex.getResource().getName();
+        String forbiddenType = ex.getType().getName();
+        String title = "%s %s".formatted(resource, forbiddenType);
+        String details = ex.getDetails();
+
+        ProblemDetail problem = ProblemDetail.forStatus(status);
+        problem.setTitle(title);
+        problem.setDetail(details);
+
+        log.warn("{} ({})", title, details);
+        return new ResponseEntity<>(problem, status);
+    }
 }

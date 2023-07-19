@@ -5,9 +5,8 @@ import lombok.Getter;
 
 @AllArgsConstructor
 @Getter
-public enum Resource {
-    USER("User"),
-    REFRESH_TOKEN("RefreshToken");
+public enum ForbiddenType {
+    EXPIRED_REFRESH_TOKEN("expired refresh token");
 
     private final String name;
 }

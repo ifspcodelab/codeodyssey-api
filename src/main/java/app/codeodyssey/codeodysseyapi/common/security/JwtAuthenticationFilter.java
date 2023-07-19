@@ -1,6 +1,5 @@
 package app.codeodyssey.codeodysseyapi.common.security;
 
-import io.jsonwebtoken.ExpiredJwtException;
 import jakarta.servlet.FilterChain;
 import jakarta.servlet.ServletException;
 import jakarta.servlet.http.HttpServletRequest;
@@ -41,7 +40,7 @@ public class JwtAuthenticationFilter extends OncePerRequestFilter {
 
         jwt = authHeader.substring(7);
 
-        if(jwtService.isTokenValid(jwt)) {
+        if(jwtService.isAccessTokenValid(jwt)) {
 
             userEmail = jwtService.extractUsername(jwt);
 

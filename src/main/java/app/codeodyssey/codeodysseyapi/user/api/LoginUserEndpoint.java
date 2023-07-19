@@ -1,6 +1,6 @@
 package app.codeodyssey.codeodysseyapi.user.api;
 
-import app.codeodyssey.codeodysseyapi.token.api.TokenResponse;
+import app.codeodyssey.codeodysseyapi.token.api.RefreshTokenResponse;
 import app.codeodyssey.codeodysseyapi.token.service.GetTokenService;
 import io.swagger.v3.oas.annotations.Operation;
 import io.swagger.v3.oas.annotations.media.Content;
@@ -34,7 +34,7 @@ public class LoginUserEndpoint {
                     responseCode = "200",
                     content = {
                             @Content(
-                                    schema = @Schema(implementation = TokenResponse.class),
+                                    schema = @Schema(implementation = LoginResponse.class),
                                     mediaType = "application/json")
                     }),
             @ApiResponse(
@@ -46,7 +46,7 @@ public class LoginUserEndpoint {
                     })
     })
     @PostMapping("/login")
-    public ResponseEntity<TokenResponse> login(@RequestBody UserRequest userRequest){
-        return new ResponseEntity<>(getTokenService.execute(userRequest), HttpStatus.OK);
+    public ResponseEntity<LoginResponse> login(@RequestBody LoginRequest loginRequest){
+        return new ResponseEntity<>(getTokenService.execute(loginRequest), HttpStatus.OK);
     }
 }

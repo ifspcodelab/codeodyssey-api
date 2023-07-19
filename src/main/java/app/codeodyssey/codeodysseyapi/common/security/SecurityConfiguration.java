@@ -25,6 +25,7 @@ public class SecurityConfiguration {
             "/api/v1/login",
             "/swagger-ui/**",
             "/v3/api-docs/**",
+            "/api/v1/refreshtoken",
     };
 
     private static final String[] STUDENTS_ALLOWED = {
