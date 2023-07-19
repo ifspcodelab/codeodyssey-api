@@ -27,7 +27,7 @@ public class LoginUserEndpoint {
 
     @Operation(
             summary = "Log in into the platform",
-            description = "Returns a JWT",
+            description = "Returns a JWT containing an access token and a refresh token",
             tags = {"Users"})
     @ApiResponses({
             @ApiResponse(
