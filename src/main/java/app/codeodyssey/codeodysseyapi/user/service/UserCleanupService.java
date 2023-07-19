@@ -21,7 +21,7 @@ public class UserCleanupService {
 
         List<User> usersToDelete = new ArrayList<>();
         for (User user : nonValidatedUsers) {
-            if (ValidateRegisterTokenService.isTokenValid(user.getToken())) {
+            if (!ValidateRegisterTokenService.isTokenValid(user.getToken())) {
                 usersToDelete.add(user);
             }
         }
