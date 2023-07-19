@@ -20,13 +20,9 @@ public class CourseCreateDTO {
     @Size(min = 1, max = 255)
     String slug;
     @NotNull
-    @NotBlank
     LocalDate startDate;
     LocalDate endDate;
     @NotNull
-    @NotBlank
     UUID professorId;
-    @NotNull
-    @NotBlank
     Instant createdAt;
 }
