@@ -4,6 +4,8 @@ import jakarta.persistence.*;
 import lombok.AllArgsConstructor;
 import lombok.Getter;
 import lombok.NoArgsConstructor;
+import lombok.Setter;
+
 import java.time.Instant;
 import java.util.UUID;
 
@@ -12,6 +14,7 @@ import java.util.UUID;
 @NoArgsConstructor
 @AllArgsConstructor
 @Getter
+@Setter
 public class User {
     @Id
     private UUID id;
@@ -21,6 +24,7 @@ public class User {
     @Enumerated(EnumType.STRING)
     private UserRole role;
     private Instant createdAt;
+    private boolean isValidated;
 
     public User(String email, String name, String password, UserRole role) {
         this.id = UUID.randomUUID();
@@ -29,5 +33,6 @@ public class User {
         this.password = password;
         this.role = role;
         this.createdAt = Instant.now();
+        this.isValidated = false;
     }
 }

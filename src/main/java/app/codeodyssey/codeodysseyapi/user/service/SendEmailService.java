@@ -16,7 +16,13 @@ public class SendEmailService {
 
         message.setTo(recipientEmail);
         message.setSubject("Email Confirmation");
-        message.setText("Please click the link below to confirm your email:\n" + confirmationLink);
+
+        String emailContent = "<html><body>" +
+                "<p>Please click the link below to confirm your email:</p>" +
+                "<a href=\"" + confirmationLink + "\">Click here to confirm your email</a>" +
+                "</body></html>";
+
+        message.setText(emailContent);
 
         mailSender.send(message);
     }

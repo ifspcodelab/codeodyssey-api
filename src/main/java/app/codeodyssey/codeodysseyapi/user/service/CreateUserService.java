@@ -35,7 +35,7 @@ public class CreateUserService {
         user = userRepository.save(user);
 
         String token = CreateTokenService.generateToken(user.getId());
-        String confirmationLink = token;
+        String confirmationLink = "http:localhost:8080/api/v1/users/confirmation/" + token;
 
         sendEmailService.sendConfirmationEmail(user.getEmail(), confirmationLink);
 
