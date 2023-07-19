@@ -5,7 +5,7 @@ import org.springframework.stereotype.Service;
 import java.util.UUID;
 
 @Service
-public class GetUserIdFromTokenService {
+public class GetUserIdFromRegisterTokenService {
     public static UUID getUserId(String token) {
         String[] parts = token.split("\\|");
 
@@ -20,5 +20,4 @@ public class GetUserIdFromTokenService {
             return null;
         }
     }
-
 }

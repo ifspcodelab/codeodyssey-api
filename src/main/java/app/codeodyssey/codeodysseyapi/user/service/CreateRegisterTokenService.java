@@ -9,9 +9,9 @@ import java.time.temporal.ChronoUnit;
 import java.util.UUID;
 
 @Service
-public class CreateTokenService {
+public class CreateRegisterTokenService {
     public static String generateToken(UUID userId) {
-        Instant expirationTime = Instant.now().plus(1, ChronoUnit.MINUTES);
+        Instant expirationTime = Instant.now().plus(3, ChronoUnit.MINUTES);
         String token = String.format("%s|%s", userId.toString(), expirationTime.toEpochMilli());
 
         try {
@@ -22,5 +22,4 @@ public class CreateTokenService {
             return null;
         }
     }
-
 }

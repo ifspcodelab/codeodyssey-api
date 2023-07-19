@@ -25,6 +25,7 @@ public class User {
     private UserRole role;
     private Instant createdAt;
     private boolean isValidated;
+    private String token;
 
     public User(String email, String name, String password, UserRole role) {
         this.id = UUID.randomUUID();

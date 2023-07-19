@@ -32,11 +32,13 @@ public class CreateUserService {
         User user = new User(command.email(), command.name(),
                 hashedPassword, command.role());
 
+        String token = CreateRegisterTokenService.generateToken(user.getId());
+        user.setToken(token);
+
         user = userRepository.save(user);
 
-        String token = CreateTokenService.generateToken(user.getId());
-        String confirmationLink = "http://localhost:8080/api/v1/users/confirmation/" + token;
 
+        String confirmationLink = "http://localhost:8080/api/v1/users/confirmation/" + token;
         sendEmailService.sendConfirmationEmail(user.getEmail(), confirmationLink);
 
         return userMapper.to(user);

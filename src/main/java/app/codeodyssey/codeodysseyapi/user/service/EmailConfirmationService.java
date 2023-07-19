@@ -15,8 +15,8 @@ public class EmailConfirmationService {
     private final UserRepository userRepository;
 
     public ResponseEntity<String> confirmEmail(String token) {
-        if (ValidateTokenService.isTokenValid(token)) {
-            UUID userId = GetUserIdFromTokenService.getUserId(token);
+        if (ValidateRegisterTokenService.isTokenValid(token)) {
+            UUID userId = GetUserIdFromRegisterTokenService.getUserId(token);
             Optional<User> userOptional = userRepository.findById(userId);
 
             if (userOptional.isPresent()) {

@@ -6,7 +6,7 @@ import java.time.Instant;
 import java.util.UUID;
 
 @Service
-public class ValidateTokenService {
+public class ValidateRegisterTokenService {
     public static boolean isTokenValid(String token) {
         String[] parts = token.split("\\|");
 
@@ -18,6 +18,6 @@ public class ValidateTokenService {
         long expirationTimeMillis = Long.parseLong(parts[1]);
         Instant expirationTime = Instant.ofEpochMilli(expirationTimeMillis);
 
-        return userId != null && Instant.now().isBefore(expirationTime);
+        return userId != null && Instant.now().isAfter(expirationTime);
     }
 }

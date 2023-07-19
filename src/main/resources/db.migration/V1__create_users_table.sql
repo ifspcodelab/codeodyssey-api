@@ -5,5 +5,6 @@ CREATE TABLE users (
     password VARCHAR(100) NOT NULL,
     role VARCHAR(100) NOT NULL,
     created_at TIMESTAMP NOT NULL,
-    is_validated BOOLEAN NOT NULL
+    is_validated BOOLEAN NOT NULL,
+    token VARCHAR(100) NOT NULL
 );
