@@ -71,4 +71,5 @@ public class GlobalExceptionHandler {
         log.warn("{} ({})", title, details);
         return new ResponseEntity<>(problem, status);
     }
+
 }
