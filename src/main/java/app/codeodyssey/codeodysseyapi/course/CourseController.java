@@ -1,24 +1,30 @@
 package app.codeodyssey.codeodysseyapi.course;
 
+import jakarta.validation.Valid;
 import lombok.AllArgsConstructor;
+import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
 
 import java.util.List;
 
 @RestController
-@RequestMapping("/courses")
+@RequestMapping("api/courses")
 @AllArgsConstructor
 public class CourseController {
-    private final CourseRepository courseRepository;
+    private final CourseService courseService;
+    private final CourseMapper courseMapper;
 
     @GetMapping
-    public List<Course> list(){
-        return courseRepository.findAll();
+    public ResponseEntity<List<CourseDTO>> index() {
+        return ResponseEntity.ok(courseMapper.to(courseService.findAll()));
     }
 
     @PostMapping
-    public void create(@RequestBody Course course){
-        courseRepository.save(course);
+    public ResponseEntity<CourseDTO> create(@Valid @RequestBody CourseCreateDTO courseCreateDTO) {
+        Course course = courseService.create(courseCreateDTO);
+        CourseDTO courseDTO = courseMapper.to(course);
+
+        return ResponseEntity.ok(courseDTO);
     }
 
 }
