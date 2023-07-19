@@ -27,12 +27,12 @@ public class User {
     private boolean isValidated;
     private String token;
 
-    public User(String email, String name, String password, UserRole role) {
+    public User(String email, String name, String password) {
         this.id = UUID.randomUUID();
         this.email = email;
         this.name = name;
         this.password = password;
-        this.role = role;
+        this.role = UserRole.STUDENT;
         this.createdAt = Instant.now();
         this.isValidated = false;
     }

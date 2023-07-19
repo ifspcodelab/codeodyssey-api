@@ -30,7 +30,7 @@ public class CreateUserService {
 
 
         User user = new User(command.email(), command.name(),
-                hashedPassword, command.role());
+                hashedPassword);
 
         String token = CreateRegisterTokenService.generateToken(user.getId());
         user.setToken(token);

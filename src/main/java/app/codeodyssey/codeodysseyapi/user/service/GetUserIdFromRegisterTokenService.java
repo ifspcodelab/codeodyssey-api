@@ -1,5 +1,7 @@
 package app.codeodyssey.codeodysseyapi.user.service;
 
+import app.codeodyssey.codeodysseyapi.common.exception.TokenMalformedException;
+import app.codeodyssey.codeodysseyapi.common.exception.UserIdInvalidException;
 import org.springframework.stereotype.Service;
 
 import java.util.UUID;
@@ -10,14 +12,14 @@ public class GetUserIdFromRegisterTokenService {
         String[] parts = token.split("\\|");
 
         if (parts.length != 2) {
-            return null;
+            throw new TokenMalformedException("Token is malformed or invalid.");
         }
 
         try {
             return UUID.fromString(parts[0]);
 
         } catch (IllegalArgumentException ex) {
-            return null;
+            throw new UserIdInvalidException("User ID in the token is not a valid UUID.");
         }
     }
 }
