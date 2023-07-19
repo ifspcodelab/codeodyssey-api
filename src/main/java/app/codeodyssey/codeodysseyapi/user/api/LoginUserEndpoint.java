@@ -1,6 +1,5 @@
 package app.codeodyssey.codeodysseyapi.user.api;
 
-import app.codeodyssey.codeodysseyapi.token.api.RefreshTokenResponse;
 import app.codeodyssey.codeodysseyapi.token.service.GetTokenService;
 import io.swagger.v3.oas.annotations.Operation;
 import io.swagger.v3.oas.annotations.media.Content;
@@ -12,10 +11,7 @@ import lombok.RequiredArgsConstructor;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ProblemDetail;
 import org.springframework.http.ResponseEntity;
-import org.springframework.web.bind.annotation.PostMapping;
-import org.springframework.web.bind.annotation.RequestBody;
-import org.springframework.web.bind.annotation.RequestMapping;
-import org.springframework.web.bind.annotation.RestController;
+import org.springframework.web.bind.annotation.*;
 
 @RestController
 @RequestMapping("/api/v1")
@@ -45,6 +41,7 @@ public class LoginUserEndpoint {
                                     mediaType = "application/json")
                     })
     })
+    @CrossOrigin(origins = "*")
     @PostMapping("/login")
     public ResponseEntity<LoginResponse> login(@RequestBody LoginRequest loginRequest){
         return new ResponseEntity<>(getTokenService.execute(loginRequest), HttpStatus.OK);
