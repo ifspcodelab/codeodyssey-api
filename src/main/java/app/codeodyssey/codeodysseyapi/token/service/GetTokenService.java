@@ -40,7 +40,7 @@ public class GetTokenService {
 
         return new LoginResponse(
                 jwtService.generateAccessToken(claims, user),
-                jwtService.generateRefreshToken(user.getId()).getToken()
+                jwtService.generateRefreshToken(user.getId(), null).getToken()
         );
     }
 }

@@ -1,8 +1,11 @@
 package app.codeodyssey.codeodysseyapi.common.security;
 
-import app.codeodyssey.codeodysseyapi.common.exception.*;
+import app.codeodyssey.codeodysseyapi.common.exception.ForbiddenException;
+import app.codeodyssey.codeodysseyapi.common.exception.ForbiddenType;
+import app.codeodyssey.codeodysseyapi.common.exception.Resource;
 import app.codeodyssey.codeodysseyapi.token.data.RefreshToken;
 import app.codeodyssey.codeodysseyapi.token.data.RefreshTokenRepository;
+import app.codeodyssey.codeodysseyapi.token.data.RefreshTokenStatus;
 import app.codeodyssey.codeodysseyapi.user.data.UserRepository;
 import io.jsonwebtoken.*;
 import io.jsonwebtoken.io.Decoders;
@@ -17,7 +20,10 @@ import org.springframework.stereotype.Service;
 import java.security.Key;
 import java.time.Instant;
 import java.time.temporal.ChronoUnit;
-import java.util.*;
+import java.util.Date;
+import java.util.Map;
+import java.util.Optional;
+import java.util.UUID;
 import java.util.function.Function;
 
 @Service
@@ -86,20 +92,20 @@ public class JwtService {
         return this.refreshTokenRepository.findByToken(token);
     }
 
-    @Transactional
-    public RefreshToken generateRefreshToken(UUID id) {
+    public RefreshToken generateRefreshToken(UUID id, String usedToken) {
         RefreshToken refreshToken = new RefreshToken();
 
-        this.refreshTokenRepository.deleteAllByUser(
-                this.userRepository.findById(id).get()
-        );
+        if(usedToken != null) {
+            Optional<RefreshToken> usedRefreshToken = this.refreshTokenRepository.findByToken(usedToken);
+            this.refreshTokenRepository.deleteById(usedRefreshToken.get().getId());
+        }
 
         refreshToken.setUser(this.userRepository.findById(id).get());
         refreshToken.setExpiryAt(Instant.now().plus(jwtConfig.getRefreshTokenExpirationAfterMinutes(),
                 ChronoUnit.MINUTES));
         refreshToken.setToken(UUID.randomUUID().toString());
 
-        refreshToken = refreshTokenRepository.save(refreshToken);
+        refreshToken = this.refreshTokenRepository.save(refreshToken);
         return refreshToken;
     }
 
@@ -114,8 +120,14 @@ public class JwtService {
         return token;
     }
 
-    @Transactional
-    public int deleteByUserId(UUID id) {
-        return refreshTokenRepository.deleteByUser(userRepository.findById(id).get());
+    public RefreshToken verifyRefreshTokenUsed(RefreshToken token){
+        if(token.getStatus().equals(RefreshTokenStatus.USED)){
+            throw new ForbiddenException(Resource.REFRESH_TOKEN,
+                    ForbiddenType.REFRESH_TOKEN_USED,
+                    "refresh token already used");
+        }
+
+        return token;
     }
+
 }

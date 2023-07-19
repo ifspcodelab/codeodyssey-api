@@ -57,12 +57,15 @@ public class RefreshTokenEndpoint {
         Map<String, Object> claims = new HashMap<>();
 
         return jwtService.findByToken(refreshToken)
+                .map(jwtService::verifyRefreshTokenUsed)
                 .map(jwtService::verifyRefreshTokenExpiration)
                 .map(RefreshToken::getUser)
                 .map(user -> {
                     claims.put("role", user.getRole());
                     String accessToken = jwtService.generateAccessToken(claims, user);
-                    return new ResponseEntity<>(new RefreshTokenResponse(refreshToken, accessToken),
+                    return new ResponseEntity<>(new RefreshTokenResponse(
+                            this.jwtService.generateRefreshToken(user.getId(), refreshToken).getToken(),
+                            accessToken),
                             HttpStatus.CREATED);
                 })
                 .orElseThrow(() -> new ForbiddenException(Resource.REFRESH_TOKEN,
