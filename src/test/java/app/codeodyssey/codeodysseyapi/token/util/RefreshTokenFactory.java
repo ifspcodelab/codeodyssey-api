@@ -7,7 +7,7 @@ import app.codeodyssey.codeodysseyapi.user.data.User;
 import java.time.Instant;
 import java.util.UUID;
 
-public class RefreshTokenUtils {
+public class RefreshTokenFactory {
     public static RefreshToken createValidRefreshToken(User user){
         return new RefreshToken(
                 UUID.randomUUID(),
