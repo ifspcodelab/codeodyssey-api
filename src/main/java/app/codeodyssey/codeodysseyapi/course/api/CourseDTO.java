@@ -1,4 +1,4 @@
-package app.codeodyssey.codeodysseyapi.course;
+package app.codeodyssey.codeodysseyapi.course.api;
 
 import app.codeodyssey.codeodysseyapi.user.User;
 import lombok.AllArgsConstructor;

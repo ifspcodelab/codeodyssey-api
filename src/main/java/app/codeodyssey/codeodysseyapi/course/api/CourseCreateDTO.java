@@ -1,4 +1,4 @@
-package app.codeodyssey.codeodysseyapi.course;
+package app.codeodyssey.codeodysseyapi.course.api;
 
 import jakarta.validation.constraints.NotBlank;
 import jakarta.validation.constraints.NotNull;

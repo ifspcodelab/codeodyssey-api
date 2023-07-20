@@ -1,5 +1,8 @@
-package app.codeodyssey.codeodysseyapi.course;
+package app.codeodyssey.codeodysseyapi.course.api;
 
+import app.codeodyssey.codeodysseyapi.course.Course;
+import app.codeodyssey.codeodysseyapi.course.CourseMapper;
+import app.codeodyssey.codeodysseyapi.course.CourseService;
 import jakarta.validation.Valid;
 import lombok.AllArgsConstructor;
 import org.springframework.http.ResponseEntity;
