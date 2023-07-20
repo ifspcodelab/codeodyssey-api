@@ -1,6 +1,6 @@
 package app.codeodyssey.codeodysseyapi.course.api;
 
-import app.codeodyssey.codeodysseyapi.course.Course;
+import app.codeodyssey.codeodysseyapi.course.data.Course;
 import app.codeodyssey.codeodysseyapi.course.CourseMapper;
 import app.codeodyssey.codeodysseyapi.course.CourseService;
 import jakarta.validation.Valid;

@@ -1,4 +1,4 @@
-package app.codeodyssey.codeodysseyapi.course;
+package app.codeodyssey.codeodysseyapi.course.data;
 
 import app.codeodyssey.codeodysseyapi.user.User;
 import jakarta.persistence.Entity;

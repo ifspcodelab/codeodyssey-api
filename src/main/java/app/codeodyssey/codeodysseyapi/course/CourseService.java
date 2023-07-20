@@ -1,6 +1,8 @@
 package app.codeodyssey.codeodysseyapi.course;
 
 import app.codeodyssey.codeodysseyapi.course.api.CourseCreateDTO;
+import app.codeodyssey.codeodysseyapi.course.data.Course;
+import app.codeodyssey.codeodysseyapi.course.data.CourseRepository;
 import app.codeodyssey.codeodysseyapi.user.User;
 import app.codeodyssey.codeodysseyapi.user.UserService;
 import lombok.AllArgsConstructor;
