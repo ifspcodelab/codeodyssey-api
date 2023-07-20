@@ -196,4 +196,32 @@ public class CourseRepositoryTest {
         assertThat(courseList).contains(courseA, courseB);
         assertThat(courseList).doesNotContain(courseC);
     }
+
+    @Test
+    @DisplayName("findAllByProfessorIdOrderByNameAscEndDateAsc() returns a list ordered by course name ascending when a professor has many courses")
+    void findAllByProfessorIdOrderByNameAscEndDateAsc_givenManyCoursesOfAProfessor_returnsListOrderedByName() {
+        var professorA = UserFactory.sampleUserProfessor();
+        var professorB = UserFactory.sampleUserProfessorB();
+        var courseA = CourseFactory.sampleCourseWithProfessor(professorA);
+        var courseB = CourseFactory.sampleCourseBWithProfessor(professorA);
+        var courseC = CourseFactory.sampleCourseCWithProfessor(professorB);
+        courseA.setName("Spring Cloud");
+        courseA.setSlug("spring-cloud");
+        courseB.setName("Spring Security");
+        courseB.setSlug("spring-security");
+        courseC.setName("Spring MVC");
+        courseC.setSlug("spring-mvc");
+        testEntityManager.persistAndFlush(professorA);
+        testEntityManager.persistAndFlush(professorB);
+        testEntityManager.persistAndFlush(courseB);
+        testEntityManager.persistAndFlush(courseC);
+        testEntityManager.persistAndFlush(courseA);
+
+        List<Course> courseList = courseRepository.findAllByProfessorIdOrderByNameAscEndDateAsc(professorA.getId());
+
+        assertThat(courseList).isNotEmpty();
+        assertThat(courseList).hasSize(2);
+        assertThat(courseList).doesNotContain(courseC);
+        assertThat(courseList).containsExactly(courseA, courseB);
+    }
 }
