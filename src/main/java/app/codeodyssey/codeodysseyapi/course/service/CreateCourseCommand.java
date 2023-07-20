@@ -8,7 +8,7 @@ import java.time.Instant;
 import java.time.LocalDate;
 import java.util.UUID;
 
-public record CreateUserCommand (
+public record CreateCourseCommand(
         @NotNull @NotBlank @Size(min = 1, max = 255) String name,
         @NotNull @NotBlank @Size(min = 1, max = 255) String slug,
         @NotNull LocalDate startDate,
