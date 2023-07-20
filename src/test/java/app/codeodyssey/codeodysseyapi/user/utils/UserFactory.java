@@ -21,4 +21,19 @@ public final class UserFactory {
 
         return user;
     }
+
+    public static User sampleUserStudent() {
+        User user = new User("holmes@gmail.com", "Sherlock Holmes", "$2a$12$H43oAFLSYG0SdqhJ9oE2BuG0Sk43lmNFBzD1oUCHMHIE4o2dPVWnC");
+        user.setRole(UserRole.STUDENT);
+
+        return user;
+    }
+
+    public static User sampleUserStudentB() {
+        var user = sampleUserStudent();
+        user.setEmail("john.watson@gmail.com");
+        user.setName("John Watson");
+
+        return user;
+    }
 }
