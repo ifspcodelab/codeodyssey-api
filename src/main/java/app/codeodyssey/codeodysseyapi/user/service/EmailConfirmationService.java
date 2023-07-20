@@ -1,9 +1,12 @@
 package app.codeodyssey.codeodysseyapi.user.service;
 
+import app.codeodyssey.codeodysseyapi.common.exception.ExpiredTokenException;
+import app.codeodyssey.codeodysseyapi.common.exception.Resource;
+import app.codeodyssey.codeodysseyapi.common.exception.ResourceNotFoundException;
 import app.codeodyssey.codeodysseyapi.user.data.User;
 import app.codeodyssey.codeodysseyapi.user.data.UserRepository;
 import lombok.AllArgsConstructor;
-import org.springframework.http.ResponseEntity;
+import org.springframework.http.HttpStatus;
 import org.springframework.stereotype.Service;
 
 import java.util.Optional;
@@ -14,7 +17,7 @@ import java.util.UUID;
 public class EmailConfirmationService {
     private final UserRepository userRepository;
 
-    public ResponseEntity<String> confirmEmail(String token) {
+    public User confirmEmail(String token) {
         if (ValidateRegisterTokenService.isTokenValid(token)) {
             UUID userId = GetUserIdFromRegisterTokenService.getUserId(token);
             Optional<User> userOptional = userRepository.findById(userId);
@@ -24,13 +27,12 @@ public class EmailConfirmationService {
                 user.setValidated(true);
 
                 userRepository.save(user);
-
-                return ResponseEntity.ok("Validado");
+                return user;
 
             } else {
-                return ResponseEntity.badRequest().body("User not found");
+                throw new ResourceNotFoundException(userId, Resource.USER);
             }
         }
-        return ResponseEntity.badRequest().body("Expired token");
+        throw new ExpiredTokenException("Expired token", HttpStatus.BAD_REQUEST.value());
     }
 }

@@ -10,9 +10,7 @@ import java.util.UUID;
 public class CreateRegisterTokenService {
     public static String generateToken(UUID userId) {
         Instant expirationTime = Instant.now().plus(3, ChronoUnit.MINUTES);
-        String token = String.format("%s|%s", userId.toString(), expirationTime.toEpochMilli());
-        System.out.println(token);
 
-        return token;
+        return String.format("%s|%s", userId.toString(), expirationTime.toEpochMilli());
     }
 }
