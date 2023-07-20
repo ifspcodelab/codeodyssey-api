@@ -28,11 +28,6 @@ public class CreateUserService {
             throw new ViolationException(Resource.USER, ViolationType.ALREADY_EXISTS, "Email already exists");
         }
 
-
-
-
-
-
         BCryptPasswordEncoder encoder = new BCryptPasswordEncoder();
         String hashedPassword = encoder.encode(command.password());
 

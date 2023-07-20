@@ -8,7 +8,7 @@ public class ValidPasswordValidator implements ConstraintValidator<ValidPassword
 
     private static final int MIN_PASSWORD_LENGTH = 8;
     private static final int MAX_PASSWORD_LENGTH = 64;
-    private static final String PASSWORD_PATTERN = "^(?=.*[A-Z])(?=.*[a-z])(?=.*\\d)(?=.*[@$!%*?&])[\\p{L}\\p{N}@$!%*?&\\s]{8,64}$";
+    private static final String PASSWORD_PATTERN = "^(?=.*[A-Z])(?=.*[a-z])(?=.*\\d)(?=.*[@$!%*?&#])[\\p{L}\\p{N}@\\$!%*?&#\\s]{8,64}$";
 
     @Override
     public boolean isValid(String password, ConstraintValidatorContext context) {
