@@ -11,7 +11,7 @@ import java.util.UUID;
 @AllArgsConstructor
 public class UserController {
     private final UserRepository userRepository;
-    private final UserService userService;
+    private final GetUserService getUserService;
 
     @GetMapping
     public List<User> list(){
@@ -20,7 +20,7 @@ public class UserController {
 
     @GetMapping("/{id}")
     public User findById(@PathVariable UUID id) {
-        return userService.findById(id);
+        return getUserService.execute(id);
     }
 
     @PostMapping

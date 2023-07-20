@@ -7,10 +7,10 @@ import java.util.UUID;
 
 @Service
 @AllArgsConstructor
-public class UserService {
+public class GetUserService {
     private final UserRepository userRepository;
 
-    public User findById(UUID id){
+    public User execute(UUID id){
         return userRepository.findById(id).orElseThrow(() -> new RuntimeException());
     }
 }
