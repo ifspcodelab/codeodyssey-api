@@ -14,6 +14,6 @@ public class GetStudentCoursesService {
     private final CourseMapper courseMapper;
 
     public List<CourseResponse> execute(UUID id) {
-        return courseMapper.to(courseRepository.findAllByStudentId(id));
+        return courseMapper.to(courseRepository.findAllByStudentIdOrderByNameAscEndDateAsc(id));
     }
 }

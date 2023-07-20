@@ -22,5 +22,5 @@ public interface CourseRepository extends JpaRepository<Course, UUID> {
             WHERE student.id = :id
             ORDER BY course.name, course.endDate
     """)
-    List<Course> findAllByStudentId(UUID id);
+    List<Course> findAllByStudentIdOrderByNameAscEndDateAsc(UUID id);
 }
