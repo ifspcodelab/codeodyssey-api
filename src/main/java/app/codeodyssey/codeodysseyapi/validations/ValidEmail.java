@@ -8,10 +8,10 @@ import java.lang.annotation.Retention;
 import java.lang.annotation.RetentionPolicy;
 import java.lang.annotation.Target;
 
-@Constraint(validatedBy = CustomEmailValidator.class)
+@Constraint(validatedBy = ValidEmailValidator.class)
 @Target({ElementType.FIELD, ElementType.METHOD})
 @Retention(RetentionPolicy.RUNTIME)
-public @interface CustomEmail {
+public @interface ValidEmail {
     String message() default "Invalid email address";
 
     Class<?>[] groups() default {};
