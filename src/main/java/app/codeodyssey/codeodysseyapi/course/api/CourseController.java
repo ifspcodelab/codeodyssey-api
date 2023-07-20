@@ -1,6 +1,7 @@
 package app.codeodyssey.codeodysseyapi.course.api;
 
 import app.codeodyssey.codeodysseyapi.course.data.Course;
+import app.codeodyssey.codeodysseyapi.course.service.CreateUserCommand;
 import app.codeodyssey.codeodysseyapi.course.service.CourseMapper;
 import app.codeodyssey.codeodysseyapi.course.service.CourseService;
 import jakarta.validation.Valid;
@@ -23,8 +24,8 @@ public class CourseController {
     }
 
     @PostMapping
-    public ResponseEntity<CourseDTO> create(@Valid @RequestBody CourseCreateDTO courseCreateDTO) {
-        Course course = courseService.create(courseCreateDTO);
+    public ResponseEntity<CourseDTO> create(@Valid @RequestBody CreateUserCommand command) {
+        Course course = courseService.create(command);
         CourseDTO courseDTO = courseMapper.to(course);
 
         return ResponseEntity.ok(courseDTO);

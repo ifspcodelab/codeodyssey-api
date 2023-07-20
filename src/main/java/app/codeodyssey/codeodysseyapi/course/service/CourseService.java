@@ -1,6 +1,5 @@
 package app.codeodyssey.codeodysseyapi.course.service;
 
-import app.codeodyssey.codeodysseyapi.course.api.CourseCreateDTO;
 import app.codeodyssey.codeodysseyapi.course.data.Course;
 import app.codeodyssey.codeodysseyapi.course.data.CourseRepository;
 import app.codeodyssey.codeodysseyapi.user.User;
@@ -20,14 +19,14 @@ public class CourseService {
         return courseRepository.findAll();
     }
 
-    public Course create(CourseCreateDTO courseCreateDto) {
-        User professor = userService.findById(courseCreateDto.getProfessorId());
+    public Course create(CreateUserCommand command) {
+        User professor = userService.findById(command.getProfessorId());
 
         Course course = new Course(
-                courseCreateDto.getName(),
-                courseCreateDto.getSlug(),
-                courseCreateDto.getStartDate(),
-                courseCreateDto.getEndDate(),
+                command.getName(),
+                command.getSlug(),
+                command.getStartDate(),
+                command.getEndDate(),
                 professor
         );
         return courseRepository.save(course);
