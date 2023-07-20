@@ -84,7 +84,7 @@ public class CourseRepositoryTest {
 
     @Test
     @DisplayName("findAllByOrderByNameAscEndDateAsc() returns a list ordered by course name ascending when the course table has many stored rows")
-    void findAllByOrderByNameAscEndDateAsc_givenManyStoredRows_returnsListOrderedByName() {
+    void findAllByOrderByNameAscEndDateAsc_givenManyStoredRows_returnsListOrderedByNameAsc() {
         var user = UserFactory.sampleUserProfessor();
         var courseA = CourseFactory.sampleCourseWithProfessor(user);
         var courseB = CourseFactory.sampleCourseWithProfessor(user);
@@ -199,7 +199,7 @@ public class CourseRepositoryTest {
 
     @Test
     @DisplayName("findAllByProfessorIdOrderByNameAscEndDateAsc() returns a list ordered by course name ascending when a professor has many courses")
-    void findAllByProfessorIdOrderByNameAscEndDateAsc_givenManyCoursesOfAProfessor_returnsListOrderedByName() {
+    void findAllByProfessorIdOrderByNameAscEndDateAsc_givenManyCoursesOfAProfessor_returnsListOrderedByNameAsc() {
         var professorA = UserFactory.sampleUserProfessor();
         var professorB = UserFactory.sampleUserProfessorB();
         var courseA = CourseFactory.sampleCourseWithProfessor(professorA);
@@ -223,5 +223,40 @@ public class CourseRepositoryTest {
         assertThat(courseList).hasSize(2);
         assertThat(courseList).doesNotContain(courseC);
         assertThat(courseList).containsExactly(courseA, courseB);
+    }
+
+    @Test
+    @DisplayName("findAllByProfessorIdOrderByNameAscEndDateAsc() returns a list ordered by course name ascending and end date ascending when a professor has many courses")
+    void findAllByProfessorIdOrderByNameAscEndDateAsc_givenManyCoursesOfAProfessor_returnsListOrderedByNameAscEndDateAsc() {
+        var professorA = UserFactory.sampleUserProfessor();
+        var professorB = UserFactory.sampleUserProfessorB();
+        var courseA = CourseFactory.sampleCourseWithProfessor(professorA);
+        var courseB = CourseFactory.sampleCourseWithProfessor(professorA);
+        var courseC = CourseFactory.sampleCourseBWithProfessor(professorA);
+        var courseD = CourseFactory.sampleCourseCWithProfessor(professorB);
+        courseA.setName("Spring Cloud");
+        courseA.setSlug("spring-cloud");
+        courseA.setEndDate(LocalDate.of(2023, 7, 6));
+        courseB.setName("Spring Cloud");
+        courseB.setSlug("spring-cloud-second-class");
+        courseB.setEndDate(LocalDate.of(2023, 7, 7));
+        courseC.setName("Spring MVC");
+        courseC.setSlug("spring-mvc");
+        courseC.setEndDate(LocalDate.of(2023, 7, 7));
+        courseD.setName("Spring Security");
+        courseD.setSlug("spring-security");
+        testEntityManager.persistAndFlush(professorA);
+        testEntityManager.persistAndFlush(professorB);
+        testEntityManager.persistAndFlush(courseB);
+        testEntityManager.persistAndFlush(courseC);
+        testEntityManager.persistAndFlush(courseD);
+        testEntityManager.persistAndFlush(courseA);
+
+        List<Course> courseList = courseRepository.findAllByProfessorIdOrderByNameAscEndDateAsc(professorA.getId());
+
+        assertThat(courseList).isNotEmpty();
+        assertThat(courseList).hasSize(3);
+        assertThat(courseList).doesNotContain(courseD);
+        assertThat(courseList).containsExactly(courseA, courseB, courseC);
     }
 }
