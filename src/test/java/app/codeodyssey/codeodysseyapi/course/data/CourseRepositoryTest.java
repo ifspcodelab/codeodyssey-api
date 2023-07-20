@@ -291,4 +291,29 @@ public class CourseRepositoryTest {
 
         assertThat(courseList).isEmpty();
     }
+
+    @Test
+    @DisplayName("findAllByStudentIdOrderByNameAscEndDateAsc returns an list when a student is enrolled on a course")
+    void findAllByStudentIdOrderByNameAscEndDateAsc_givenStudentEnrolledOnACourse_returnsList() {
+        var professor = UserFactory.sampleUserProfessor();
+        var course = CourseFactory.sampleCourseWithProfessor(professor);
+        var studentA = UserFactory.sampleUserStudent();
+        var studentB = UserFactory.sampleUserStudentB();
+        var invitation = InvitationFactory.sampleInvitationWithCourse(course);
+        var enrollmentStudentA = EnrollmentFactory.sampleEnrollment(invitation, studentA);
+        var enrollmentStudentB = EnrollmentFactory.sampleEnrollment(invitation, studentB);
+        testEntityManager.persistAndFlush(professor);
+        testEntityManager.persistAndFlush(course);
+        testEntityManager.persistAndFlush(studentA);
+        testEntityManager.persistAndFlush(studentB);
+        testEntityManager.persistAndFlush(invitation);
+        testEntityManager.persistAndFlush(enrollmentStudentA);
+        testEntityManager.persistAndFlush(enrollmentStudentB);
+
+        List<Course> courseList = courseRepository.findAllByStudentIdOrderByNameAscEndDateAsc(studentA.getId());
+
+        assertThat(courseList).isNotEmpty();
+        assertThat(courseList).hasSize(1);
+        assertThat(courseList).extracting(Course::getId).contains(invitation.getCourse().getId());
+    }
 }
