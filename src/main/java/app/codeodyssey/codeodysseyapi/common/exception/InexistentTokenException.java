@@ -1,16 +1,14 @@
 package app.codeodyssey.codeodysseyapi.common.exception;
 
-
 import lombok.Getter;
 
 @Getter
-public class InvalidTokenFormatException extends RuntimeException {
+public class InexistentTokenException extends RuntimeException {
     private final String message;
     private final int httpStatus;
-
-    public InvalidTokenFormatException(String message, int httpStatus) {
-        super(message);
-        this.message = message;
+    public InexistentTokenException(String messae, int httpStatus) {
+        super(messae);
+        this.message = messae;
         this.httpStatus = httpStatus;
     }
 }
