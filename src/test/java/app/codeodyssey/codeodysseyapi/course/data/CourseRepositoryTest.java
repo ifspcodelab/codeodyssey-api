@@ -1,15 +1,20 @@
 package app.codeodyssey.codeodysseyapi.course.data;
 
+import app.codeodyssey.codeodysseyapi.DatabaseContainerInitializer;
 import org.junit.jupiter.api.Test;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.boot.test.autoconfigure.jdbc.AutoConfigureTestDatabase;
 import org.springframework.boot.test.autoconfigure.orm.jpa.DataJpaTest;
 import org.springframework.boot.test.autoconfigure.orm.jpa.TestEntityManager;
+import org.springframework.test.context.ContextConfiguration;
 
 import java.util.List;
 
 import static org.assertj.core.api.Assertions.assertThat;
 
 @DataJpaTest
+@AutoConfigureTestDatabase(replace = AutoConfigureTestDatabase.Replace.NONE)
+@ContextConfiguration(initializers = { DatabaseContainerInitializer.class })
 public class CourseRepositoryTest {
     @Autowired
     private TestEntityManager testEntityManager;
