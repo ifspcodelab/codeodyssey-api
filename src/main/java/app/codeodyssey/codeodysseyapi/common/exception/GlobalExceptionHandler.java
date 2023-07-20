@@ -10,6 +10,7 @@ import org.springframework.web.bind.annotation.ExceptionHandler;
 @ControllerAdvice
 @Slf4j
 public class GlobalExceptionHandler {
+
     @ExceptionHandler(ResourceNotFoundException.class)
     public ResponseEntity<ProblemDetail> notFound(ResourceNotFoundException ex) {
         HttpStatus status = HttpStatus.NOT_FOUND;
@@ -46,5 +47,6 @@ public class GlobalExceptionHandler {
         log.warn("Token expirado ou inválido: {}", ex.getMessage());
         ApiError apiError = new ApiError(ex.getMessage());
         return new ResponseEntity<>(apiError, HttpStatus.valueOf(ex.getHttpStatus()));
+
     }
 }
