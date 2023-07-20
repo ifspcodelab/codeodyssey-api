@@ -11,12 +11,14 @@ import java.util.UUID;
 import lombok.AllArgsConstructor;
 import lombok.Getter;
 import lombok.NoArgsConstructor;
+import lombok.Setter;
 
 @Entity
 @Table(name = "invitations")
 @NoArgsConstructor
 @AllArgsConstructor
 @Getter
+@Setter
 public class Invitation {
     @Id
     private UUID id;
