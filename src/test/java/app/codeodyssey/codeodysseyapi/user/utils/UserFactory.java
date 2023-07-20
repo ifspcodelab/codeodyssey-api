@@ -13,4 +13,12 @@ public final class UserFactory {
 
         return user;
     }
+
+    public static User sampleUserProfessorB() {
+        var user = sampleUserProfessor();
+        user.setEmail("g.lestrade@email.com");
+        user.setName("Gregson Lestrade");
+
+        return user;
+    }
 }
