@@ -32,8 +32,7 @@ public class CreateUserService {
         String hashedPassword = encoder.encode(command.password());
 
 
-        User user = new User(command.email(), command.name(),
-                hashedPassword);
+        User user = new User(command.email(), command.name(), hashedPassword);
 
         String token = CreateRegisterTokenService.generateToken(user.getId());
         user.setToken(token);

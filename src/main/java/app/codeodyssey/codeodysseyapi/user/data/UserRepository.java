@@ -10,6 +10,7 @@ import java.util.UUID;
 public interface UserRepository extends JpaRepository<User, UUID> {
     boolean existsByEmail(String email);
     List<User> findByIsValidated(boolean isValidated);
-
     boolean existsByToken(String token);
+    User getUserById(UUID id);
+
 }

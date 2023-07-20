@@ -57,8 +57,8 @@ public class GlobalExceptionHandler {
         return new ResponseEntity<>(problem, status);
     }
 
-    @ExceptionHandler(InvalidTokenFormatException.class)
-    public ResponseEntity<ProblemDetail> tokenFormat(InvalidTokenFormatException ex) {
+    @ExceptionHandler(InexistentTokenException.class)
+    public ResponseEntity<ProblemDetail> inexistentToken(InexistentTokenException ex) {
         log.warn("Token problem: {}", ex.getMessage());
 
         HttpStatus status = HttpStatus.valueOf(ex.getHttpStatus());
@@ -72,12 +72,12 @@ public class GlobalExceptionHandler {
         return new ResponseEntity<>(problem, status);
     }
 
-    @ExceptionHandler(InexistentTokenException.class)
-    public ResponseEntity<ProblemDetail> inexistentToken(InexistentTokenException ex) {
-        log.warn("Token problem: {}", ex.getMessage());
+    @ExceptionHandler(UserAlreadyValidatedException.class)
+    public ResponseEntity<ProblemDetail> alreadyValidated(UserAlreadyValidatedException ex) {
+        log.warn("Validation: {}", ex.getMessage());
 
         HttpStatus status = HttpStatus.valueOf(ex.getHttpStatus());
-        String title = "Token problem";
+        String title = "Validation";
         String detail = ex.getMessage();
 
         ProblemDetail problem = ProblemDetail.forStatus(status);

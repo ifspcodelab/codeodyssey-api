@@ -1,13 +1,14 @@
 package app.codeodyssey.codeodysseyapi.user.service;
 
-import app.codeodyssey.codeodysseyapi.common.exception.*;
+import app.codeodyssey.codeodysseyapi.common.exception.ExpiredTokenException;
+import app.codeodyssey.codeodysseyapi.common.exception.InexistentTokenException;
+import app.codeodyssey.codeodysseyapi.common.exception.UserAlreadyValidatedException;
 import app.codeodyssey.codeodysseyapi.user.data.User;
 import app.codeodyssey.codeodysseyapi.user.data.UserRepository;
 import lombok.AllArgsConstructor;
 import org.springframework.http.HttpStatus;
 import org.springframework.stereotype.Service;
 
-import java.util.Optional;
 import java.util.UUID;
 
 @Service
@@ -19,19 +20,16 @@ public class EmailConfirmationService {
         if (userRepository.existsByToken(token)) {
             if (ValidateRegisterTokenService.isTokenValid(token)) {
                 UUID userId = GetUserIdFromRegisterTokenService.getUserId(token);
-                Optional<User> userOptional = userRepository.findById(userId);
+                User user = userRepository.getUserById(userId);
 
-                if (userOptional.isPresent()) {
-                    User user = userOptional.get();
-                    user.setValidated(true);
-
-                    userRepository.save(user);
-                    return user;
-
-                } else {
-                    throw new ResourceNotFoundException(userId, Resource.USER);
-                }
+                user.setValidated(true);
+                return user;
             }
+
+            if (userRepository.getUserById(GetUserIdFromRegisterTokenService.getUserId(token)).isValidated()) {
+                throw new UserAlreadyValidatedException("User is already validated", HttpStatus.BAD_REQUEST.value());
+            }
+
             throw new ExpiredTokenException("Expired token", HttpStatus.BAD_REQUEST.value());
         }
 
