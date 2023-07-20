@@ -1,16 +1,16 @@
 package app.codeodyssey.codeodysseyapi.enrollment.utils;
 
 import app.codeodyssey.codeodysseyapi.enrollment.data.Enrollment;
-import app.codeodyssey.codeodysseyapi.invitation.utils.InvitationFactory;
-import app.codeodyssey.codeodysseyapi.user.utils.UserFactory;
+import app.codeodyssey.codeodysseyapi.invitation.data.Invitation;
+import app.codeodyssey.codeodysseyapi.user.data.User;
 
 public class EnrollmentFactory {
     private EnrollmentFactory() {}
 
-    public static Enrollment sampleEnrollment() {
+    public static Enrollment sampleEnrollment(Invitation invitation, User student) {
         return new Enrollment(
-                InvitationFactory.sampleInvitation(),
-                UserFactory.sampleUserStudent()
+                invitation,
+                student
         );
     }
 }
