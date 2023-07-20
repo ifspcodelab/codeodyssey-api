@@ -11,6 +11,9 @@ import lombok.AllArgsConstructor;
 import org.springframework.security.crypto.bcrypt.BCryptPasswordEncoder;
 import org.springframework.stereotype.Service;
 
+import java.net.URLEncoder;
+import java.nio.charset.StandardCharsets;
+
 @Service
 @AllArgsConstructor
 public class CreateUserService {
@@ -37,8 +40,9 @@ public class CreateUserService {
 
         user = userRepository.save(user);
 
+        String encodedToken = URLEncoder.encode(token, StandardCharsets.UTF_8);
 
-        String confirmationLink = "http://localhost:8080/api/v1/users/confirmation/" + token;
+        String confirmationLink = "http://localhost:8080/api/v1/users/confirmation/" + encodedToken;
         sendEmailService.sendConfirmationEmail(user.getEmail(), confirmationLink);
 
         return userMapper.to(user);

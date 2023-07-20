@@ -43,10 +43,18 @@ public class GlobalExceptionHandler {
     }
 
     @ExceptionHandler(ExpiredTokenException.class)
-    public ResponseEntity<ApiError> handleExpiredTokenException(ExpiredTokenException ex) {
-        log.warn("Token expirado ou inválido: {}", ex.getMessage());
-        ApiError apiError = new ApiError(ex.getMessage());
-        return new ResponseEntity<>(apiError, HttpStatus.valueOf(ex.getHttpStatus()));
+    public ResponseEntity<ProblemDetail> ExpiredTokenException(ExpiredTokenException ex) {
+        log.warn("Token problem: {}", ex.getMessage());
 
+        HttpStatus status = HttpStatus.valueOf(ex.getHttpStatus());
+        String title = "Token problem";
+        String detail = ex.getMessage();
+
+        ProblemDetail problem = ProblemDetail.forStatus(status);
+        problem.setTitle(title);
+        problem.setDetail(detail);
+
+        return new ResponseEntity<>(problem, status);
     }
+
 }
