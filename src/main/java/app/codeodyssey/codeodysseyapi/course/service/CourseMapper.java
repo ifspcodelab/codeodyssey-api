@@ -1,4 +1,4 @@
-package app.codeodyssey.codeodysseyapi.course;
+package app.codeodyssey.codeodysseyapi.course.service;
 
 import app.codeodyssey.codeodysseyapi.course.api.CourseDTO;
 import app.codeodyssey.codeodysseyapi.course.data.Course;
