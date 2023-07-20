@@ -14,6 +14,7 @@ import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
 import org.apache.commons.lang3.time.DateUtils;
 import org.springframework.security.core.userdetails.UserDetails;
+import org.springframework.stereotype.Component;
 import org.springframework.stereotype.Service;
 
 import java.security.Key;
@@ -26,6 +27,7 @@ import java.util.UUID;
 import java.util.function.Function;
 
 @Service
+@Component
 @Slf4j
 @RequiredArgsConstructor
 public class JwtService {
