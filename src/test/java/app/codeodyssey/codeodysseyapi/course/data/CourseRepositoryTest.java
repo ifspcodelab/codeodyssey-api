@@ -84,7 +84,7 @@ public class CourseRepositoryTest {
     }
 
     @Test
-    @DisplayName("findAllByOrderByNameAscEndDateAsc() returns a list ordered by course name when the course table has many stored rows")
+    @DisplayName("findAllByOrderByNameAscEndDateAsc() returns a list ordered by course name ascending when the course table has many stored rows")
     void findAllByOrderByNameAscEndDateAsc_givenManyStoredRows_returnsListOrderedByName() {
         var user = UserFactory.sampleUserProfessor();
         var courseA = CourseFactory.sampleCourseWithProfessor(user);
