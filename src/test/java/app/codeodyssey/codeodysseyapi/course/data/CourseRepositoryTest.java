@@ -132,4 +132,27 @@ public class CourseRepositoryTest {
         assertThat(courseList).hasSize(3);
         assertThat(courseList).containsExactly(courseA1, courseA2, courseB);
     }
+
+    /**
+     * TODO: findAllByProfessorIdOrderByNameAscEndDateAsc();
+     * case 1: returns an empty list of a given professor
+     * case 2: returns a list with 1 element of a given professor
+     * case 3: returns a list with N elements of a given professor
+     * case 4: returns a course list of a given professor with element named A before element B
+     * case 5: returns a course list of a given professor list with element named AA and end date january 1st before element AA january 2nd
+     */
+    @Test
+    @DisplayName("findAllByProfessorIdOrderByNameAscEndDateAsc returns an empty list when a professor doesn't have any courses")
+    void findAllByProfessorIdOrderByNameAscEndDateAsc_givenNoCourseOfAProfessor_returnsEmptyList() {
+        var professorA = UserFactory.sampleUserProfessor();
+        var professorB = UserFactory.sampleUserProfessorB();
+        var course = CourseFactory.sampleCourseWithProfessor(professorB);
+        testEntityManager.persistAndFlush(professorA);
+        testEntityManager.persistAndFlush(professorB);
+        testEntityManager.persistAndFlush(course);
+
+        List<Course> courseList = courseRepository.findAllByProfessorIdOrderByNameAscEndDateAsc(professorA.getId());
+
+        assertThat(courseList).isEmpty();
+    }
 }
