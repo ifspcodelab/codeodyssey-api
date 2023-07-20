@@ -1,7 +1,8 @@
 package app.codeodyssey.codeodysseyapi.course.data;
 
 import app.codeodyssey.codeodysseyapi.DatabaseContainerInitializer;
-import app.codeodyssey.codeodysseyapi.user.data.UserFactory;
+import app.codeodyssey.codeodysseyapi.course.utils.CourseFactory;
+import app.codeodyssey.codeodysseyapi.user.utils.UserFactory;
 import org.junit.jupiter.api.Test;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.boot.test.autoconfigure.jdbc.AutoConfigureTestDatabase;

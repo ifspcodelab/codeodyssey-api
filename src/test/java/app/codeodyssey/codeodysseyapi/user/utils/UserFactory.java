@@ -1,4 +1,7 @@
-package app.codeodyssey.codeodysseyapi.user.data;
+package app.codeodyssey.codeodysseyapi.user.utils;
+
+import app.codeodyssey.codeodysseyapi.user.data.User;
+import app.codeodyssey.codeodysseyapi.user.data.UserRole;
 
 public final class UserFactory {
     private UserFactory() {}
