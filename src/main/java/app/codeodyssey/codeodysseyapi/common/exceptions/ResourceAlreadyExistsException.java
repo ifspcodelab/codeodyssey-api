@@ -1,5 +1,8 @@
 package app.codeodyssey.codeodysseyapi.common.exceptions;
 
+import lombok.Getter;
+
+@Getter
 public class ResourceAlreadyExistsException extends RuntimeException{
     private final ResourceName resourceName;
     private final String resourceAttribute;
