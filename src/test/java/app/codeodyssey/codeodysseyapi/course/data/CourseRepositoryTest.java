@@ -1,12 +1,10 @@
 package app.codeodyssey.codeodysseyapi.course.data;
 
-import static org.assertj.core.api.Assertions.assertThat;
-
 import app.codeodyssey.codeodysseyapi.DatabaseContainerInitializer;
 import app.codeodyssey.codeodysseyapi.course.utils.CourseFactory;
+import app.codeodyssey.codeodysseyapi.enrollment.utils.EnrollmentFactory;
+import app.codeodyssey.codeodysseyapi.invitation.utils.InvitationFactory;
 import app.codeodyssey.codeodysseyapi.user.utils.UserFactory;
-import java.time.LocalDate;
-import java.util.List;
 import org.junit.jupiter.api.DisplayName;
 import org.junit.jupiter.api.Test;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -14,6 +12,11 @@ import org.springframework.boot.test.autoconfigure.jdbc.AutoConfigureTestDatabas
 import org.springframework.boot.test.autoconfigure.orm.jpa.DataJpaTest;
 import org.springframework.boot.test.autoconfigure.orm.jpa.TestEntityManager;
 import org.springframework.test.context.ContextConfiguration;
+
+import java.time.LocalDate;
+import java.util.List;
+
+import static org.assertj.core.api.Assertions.assertThat;
 
 @DataJpaTest
 @DisplayName("Course Repository tests")
@@ -258,5 +261,34 @@ public class CourseRepositoryTest {
         assertThat(courseList).hasSize(3);
         assertThat(courseList).doesNotContain(courseD);
         assertThat(courseList).containsExactly(courseA, courseB, courseC);
+    }
+
+    /**
+     * TODO: findAllByStudentIdOrderByNameAscEndDateAsc();
+     * case 1: returns an empty list of a given student
+     * case 2: returns a list with 1 element of a given student
+     * case 3: returns a list with N elements of a given student
+     * case 4: returns a course list of a given student with element named A before element B
+     * case 5: returns a course list of a given student with element named AA and end date january 1st before element AA january 2nd
+     */
+    @Test
+    @DisplayName("findAllByStudentIdOrderByNameAscEndDateAsc returns an empty list when a student isn't enrolled on any courses")
+    void findAllByStudentIdOrderByNameAscEndDateAsc_givenNoEnrolledCourseOfAStudent_returnsEmptyList() {
+        var professor = UserFactory.sampleUserProfessor();
+        var course = CourseFactory.sampleCourseWithProfessor(professor);
+        var studentA = UserFactory.sampleUserStudent();
+        var studentB = UserFactory.sampleUserStudentB();
+        var invitation = InvitationFactory.sampleInvitationWithCourse(course);
+        var enrollment = EnrollmentFactory.sampleEnrollment(invitation, studentB);
+        testEntityManager.persistAndFlush(professor);
+        testEntityManager.persistAndFlush(course);
+        testEntityManager.persistAndFlush(studentA);
+        testEntityManager.persistAndFlush(studentB);
+        testEntityManager.persistAndFlush(invitation);
+        testEntityManager.persistAndFlush(enrollment);
+
+        List<Course> courseList = courseRepository.findAllByStudentIdOrderByNameAscEndDateAsc(studentA.getId());
+
+        assertThat(courseList).isEmpty();
     }
 }
