@@ -81,4 +81,25 @@ public class CourseRepositoryTest {
         assertThat(courseList).hasSize(3);
         assertThat(courseList).containsExactlyInAnyOrder(course1, course2, course3);
     }
+
+    @Test
+    @DisplayName("findAllByOrderByNameAscEndDateAsc() returns a list ordered by course name when the course table has many stored rows")
+    void findAllByOrderByNameAscEndDateAsc_givenManyStoredRows_returnsListOrderedByName() {
+        var user = UserFactory.sampleUserProfessor();
+        var courseA = CourseFactory.sampleCourseWithProfessor(user);
+        var courseB = CourseFactory.sampleCourseWithProfessor(user);
+        courseA.setName("Spring Cloud");
+        courseA.setSlug("spring-cloud");
+        courseB.setName("Spring Security");
+        courseB.setSlug("spring-security");
+        testEntityManager.persistAndFlush(user);
+        testEntityManager.persistAndFlush(courseB);
+        testEntityManager.persistAndFlush(courseA);
+
+        List<Course> courseList = courseRepository.findAllByOrderByNameAscEndDateAsc();
+
+        assertThat(courseList).isNotEmpty();
+        assertThat(courseList).hasSize(2);
+        assertThat(courseList).containsExactly(courseA, courseB);
+    }
 }
