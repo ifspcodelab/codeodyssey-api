@@ -1,8 +1,12 @@
 package app.codeodyssey.codeodysseyapi.course.data;
 
+import static org.assertj.core.api.Assertions.assertThat;
+
 import app.codeodyssey.codeodysseyapi.DatabaseContainerInitializer;
 import app.codeodyssey.codeodysseyapi.course.utils.CourseFactory;
 import app.codeodyssey.codeodysseyapi.user.utils.UserFactory;
+import java.time.LocalDate;
+import java.util.List;
 import org.junit.jupiter.api.DisplayName;
 import org.junit.jupiter.api.Test;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -11,15 +15,10 @@ import org.springframework.boot.test.autoconfigure.orm.jpa.DataJpaTest;
 import org.springframework.boot.test.autoconfigure.orm.jpa.TestEntityManager;
 import org.springframework.test.context.ContextConfiguration;
 
-import java.time.LocalDate;
-import java.util.List;
-
-import static org.assertj.core.api.Assertions.assertThat;
-
 @DataJpaTest
 @DisplayName("Course Repository tests")
 @AutoConfigureTestDatabase(replace = AutoConfigureTestDatabase.Replace.NONE)
-@ContextConfiguration(initializers = { DatabaseContainerInitializer.class })
+@ContextConfiguration(initializers = {DatabaseContainerInitializer.class})
 public class CourseRepositoryTest {
     @Autowired
     private TestEntityManager testEntityManager;
@@ -154,5 +153,25 @@ public class CourseRepositoryTest {
         List<Course> courseList = courseRepository.findAllByProfessorIdOrderByNameAscEndDateAsc(professorA.getId());
 
         assertThat(courseList).isEmpty();
+    }
+
+    @Test
+    @DisplayName("findAllByProfessorIdOrderByNameAscEndDateAsc returns a list when a professor has a course")
+    void findAllByProfessorIdOrderByNameAscEndDateAsc_givenOneCourseOfAProfessor_returnsList() {
+        var professorA = UserFactory.sampleUserProfessor();
+        var professorB = UserFactory.sampleUserProfessorB();
+        var courseA = CourseFactory.sampleCourseWithProfessor(professorA);
+        var courseB = CourseFactory.sampleCourseBWithProfessor(professorB);
+        testEntityManager.persistAndFlush(professorA);
+        testEntityManager.persistAndFlush(professorB);
+        testEntityManager.persistAndFlush(courseA);
+        testEntityManager.persistAndFlush(courseB);
+
+        List<Course> courseList = courseRepository.findAllByProfessorIdOrderByNameAscEndDateAsc(professorA.getId());
+
+        assertThat(courseList).isNotEmpty();
+        assertThat(courseList).hasSize(1);
+        assertThat(courseList).contains(courseA);
+        assertThat(courseList).doesNotContain(courseB);
     }
 }
