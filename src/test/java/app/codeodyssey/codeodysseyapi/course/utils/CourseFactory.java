@@ -39,4 +39,20 @@ public final class CourseFactory {
 
         return course;
     }
+
+    public static Course sampleCourseC() {
+        return new Course(
+                "Spring Cloud",
+                "spring-cloud",
+                LocalDate.of(2023, 7, 17),
+                LocalDate.of(2023, 7, 21),
+                UserFactory.sampleUserProfessor());
+    }
+
+    public static Course sampleCourseCWithProfessor(User user) {
+        var course = sampleCourseC();
+        course.setProfessor(user);
+
+        return course;
+    }
 }
