@@ -1,6 +1,7 @@
 package app.codeodyssey.codeodysseyapi.course.data;
 
 import app.codeodyssey.codeodysseyapi.DatabaseContainerInitializer;
+import app.codeodyssey.codeodysseyapi.user.data.UserFactory;
 import org.junit.jupiter.api.Test;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.boot.test.autoconfigure.jdbc.AutoConfigureTestDatabase;
@@ -38,5 +39,18 @@ public class CourseRepositoryTest {
         System.out.println(courseList.toString());
 
         assertThat(courseList).isEmpty();
+    }
+
+    @Test
+    void findAllByOrderByNameAscEndDateAsc_givenOneStoredRow_returnsList() {
+        var user = UserFactory.sampleUserProfessor();
+        var course = CourseFactory.sampleCourseWithProfessor(user);
+        testEntityManager.persistAndFlush(user);
+        testEntityManager.persistAndFlush(course);
+
+        List<Course> courseList = courseRepository.findAllByOrderByNameAscEndDateAsc();
+
+        assertThat(courseList).isNotEmpty();
+        assertThat(courseList).hasSize(1);
     }
 }
