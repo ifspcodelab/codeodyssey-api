@@ -21,16 +21,16 @@ public class CourseController {
     private final CourseMapper courseMapper;
 
     @GetMapping
-    public ResponseEntity<List<CourseDTO>> index() {
+    public ResponseEntity<List<CourseResponse>> index() {
         return ResponseEntity.ok(courseMapper.to(getCoursesService.execute()));
     }
 
     @PostMapping
-    public ResponseEntity<CourseDTO> create(@Valid @RequestBody CreateCourseCommand command) {
+    public ResponseEntity<CourseResponse> create(@Valid @RequestBody CreateCourseCommand command) {
         Course course = createCourseService.execute(command);
-        CourseDTO courseDTO = courseMapper.to(course);
+        CourseResponse courseResponse = courseMapper.to(course);
 
-        return ResponseEntity.ok(courseDTO);
+        return ResponseEntity.ok(courseResponse);
     }
 
 }

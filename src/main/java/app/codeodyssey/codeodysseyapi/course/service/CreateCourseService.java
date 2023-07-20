@@ -1,6 +1,6 @@
 package app.codeodyssey.codeodysseyapi.course.service;
 
-import app.codeodyssey.codeodysseyapi.course.api.CourseDTO;
+import app.codeodyssey.codeodysseyapi.course.api.CourseResponse;
 import app.codeodyssey.codeodysseyapi.course.data.Course;
 import app.codeodyssey.codeodysseyapi.course.data.CourseRepository;
 import app.codeodyssey.codeodysseyapi.user.User;
@@ -15,7 +15,7 @@ public class CreateCourseService {
     private final CourseMapper courseMapper;
     private final UserService userService;
 
-    public CourseDTO execute(CreateCourseCommand command) {
+    public CourseResponse execute(CreateCourseCommand command) {
         User professor = userService.findById(command.professorId());
 
         Course course = courseRepository.save(new Course(
