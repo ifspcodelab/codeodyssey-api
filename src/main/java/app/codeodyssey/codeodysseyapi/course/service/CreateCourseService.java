@@ -1,5 +1,7 @@
 package app.codeodyssey.codeodysseyapi.course.service;
 
+import app.codeodyssey.codeodysseyapi.common.exceptions.ResourceAlreadyExistsException;
+import app.codeodyssey.codeodysseyapi.common.exceptions.ResourceName;
 import app.codeodyssey.codeodysseyapi.course.api.CourseResponse;
 import app.codeodyssey.codeodysseyapi.course.data.Course;
 import app.codeodyssey.codeodysseyapi.course.data.CourseRepository;
@@ -17,6 +19,10 @@ public class CreateCourseService {
 
     public CourseResponse execute(CreateCourseCommand command) {
         User professor = getUserService.execute(command.professorId());
+
+        if(courseRepository.existsBySlug(command.slug())) {
+            throw new ResourceAlreadyExistsException(ResourceName.COURSE, "slug", command.slug());
+        }
 
         Course course = courseRepository.save(new Course(
                 command.name(),
