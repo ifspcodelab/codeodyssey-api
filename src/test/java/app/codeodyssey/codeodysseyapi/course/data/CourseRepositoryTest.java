@@ -356,4 +356,47 @@ public class CourseRepositoryTest {
                 invitationB.getCourse().getId()
         );
     }
+
+    @Test
+    @DisplayName("findAllByStudentIdOrderByNameAscEndDateAsc returns a list when a student is enrolled on courses of many professors")
+    void findAllByStudentIdOrderByNameAscEndDateAsc_givenStudentEnrolledOnCoursesOfManyProfessors_returnsList() {
+        var professorA = UserFactory.sampleUserProfessor();
+        var professorB = UserFactory.sampleUserProfessorB();
+        var professorC = UserFactory.sampleUserProfessorC();
+        var courseA = CourseFactory.sampleCourseWithProfessor(professorA);
+        var courseB = CourseFactory.sampleCourseBWithProfessor(professorB);
+        var courseC = CourseFactory.sampleCourseCWithProfessor(professorC);
+        var studentA = UserFactory.sampleUserStudent();
+        var studentB = UserFactory.sampleUserStudentB();
+        var invitationA = InvitationFactory.sampleInvitationWithCourse(courseA);
+        var invitationB = InvitationFactory.sampleInvitationWithCourse(courseB);
+        var invitationC = InvitationFactory.sampleInvitationWithCourse(courseC);
+        var enrollmentStudentACourseA = EnrollmentFactory.sampleEnrollment(invitationA, studentA);
+        var enrollmentStudentACourseB = EnrollmentFactory.sampleEnrollment(invitationB, studentA);
+        var enrollmentStudentBCourseC = EnrollmentFactory.sampleEnrollment(invitationC, studentB);
+        testEntityManager.persistAndFlush(professorA);
+        testEntityManager.persistAndFlush(professorB);
+        testEntityManager.persistAndFlush(professorC);
+        testEntityManager.persistAndFlush(courseA);
+        testEntityManager.persistAndFlush(courseB);
+        testEntityManager.persistAndFlush(courseC);
+        testEntityManager.persistAndFlush(studentA);
+        testEntityManager.persistAndFlush(studentB);
+        testEntityManager.persistAndFlush(invitationA);
+        testEntityManager.persistAndFlush(invitationB);
+        testEntityManager.persistAndFlush(invitationC);
+        testEntityManager.persistAndFlush(enrollmentStudentACourseA);
+        testEntityManager.persistAndFlush(enrollmentStudentACourseB);
+        testEntityManager.persistAndFlush(enrollmentStudentBCourseC);
+
+        List<Course> courseList = courseRepository.findAllByStudentIdOrderByNameAscEndDateAsc(studentA.getId());
+
+        assertThat(courseList).isNotEmpty();
+        assertThat(courseList).hasSize(2);
+        assertThat(courseList).extracting(Course::getId).doesNotContain(invitationC.getCourse().getId());
+        assertThat(courseList).extracting(Course::getId).contains(
+                invitationA.getCourse().getId(),
+                invitationB.getCourse().getId()
+        );
+    }
 }
