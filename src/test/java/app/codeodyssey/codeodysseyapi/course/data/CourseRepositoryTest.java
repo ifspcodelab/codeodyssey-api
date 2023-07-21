@@ -14,6 +14,7 @@ import org.springframework.boot.test.autoconfigure.orm.jpa.TestEntityManager;
 import org.springframework.test.context.ContextConfiguration;
 
 import java.time.LocalDate;
+import java.util.Comparator;
 import java.util.List;
 
 import static org.assertj.core.api.Assertions.assertThat;
@@ -132,6 +133,9 @@ public class CourseRepositoryTest {
         assertThat(courseList).isNotEmpty();
         assertThat(courseList).hasSize(3);
         assertThat(courseList).containsExactly(courseA1, courseA2, courseB);
+        assertThat(courseList).isSortedAccordingTo(
+                Comparator.comparing(Course::getName).thenComparing(Course::getEndDate)
+        );
     }
 
     /**
@@ -261,6 +265,9 @@ public class CourseRepositoryTest {
         assertThat(courseList).hasSize(3);
         assertThat(courseList).doesNotContain(courseD);
         assertThat(courseList).containsExactly(courseA, courseB, courseC);
+        assertThat(courseList).isSortedAccordingTo(
+                Comparator.comparing(Course::getName).thenComparing(Course::getEndDate)
+        );
     }
 
     /**
@@ -498,5 +505,8 @@ public class CourseRepositoryTest {
         assertThat(courseList).hasSize(3);
         assertThat(courseList).extracting(Course::getId).doesNotContain(invitationD.getCourse().getId());
         assertThat(courseList).containsExactly(courseA, courseB, courseC);
+        assertThat(courseList).isSortedAccordingTo(
+                Comparator.comparing(Course::getName).thenComparing(Course::getEndDate)
+        );
     }
 }
