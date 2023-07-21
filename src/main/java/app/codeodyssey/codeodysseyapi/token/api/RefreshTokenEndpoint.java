@@ -34,7 +34,7 @@ public class RefreshTokenEndpoint {
             tags = {"Users"})
     @ApiResponses({
             @ApiResponse(
-                    responseCode = "200",
+                    responseCode = "201",
                     content = {
                             @Content(
                                     schema = @Schema(implementation = RefreshTokenResponse.class),
