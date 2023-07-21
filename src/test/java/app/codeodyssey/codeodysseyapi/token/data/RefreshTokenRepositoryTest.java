@@ -38,4 +38,17 @@ public class RefreshTokenRepositoryTest {
         Assertions.assertThat(saved.getStatus()).isEqualTo(RefreshTokenStatus.UNUSED);
     }
 
+    @Test
+    @DisplayName("save a valid and updated token when successful")
+    void save_givenAValidAndUpdatedToken_returnsToken(){
+        User user = this.userRepository.save(UserFactory.createValidUser());
+        RefreshToken refreshToken = RefreshTokenFactory.createValidRefreshToken(user);
+        RefreshToken saved = this.refreshTokenRepository.save(refreshToken);
+        saved.setStatus(RefreshTokenStatus.USED);
+        RefreshToken updated = this.refreshTokenRepository.save(saved);
+        Assertions.assertThat(updated).isNotNull();
+        Assertions.assertThat(updated.getId()).isNotNull();
+        Assertions.assertThat(saved.getStatus()).isEqualTo(RefreshTokenStatus.USED);
+    }
+
 }
