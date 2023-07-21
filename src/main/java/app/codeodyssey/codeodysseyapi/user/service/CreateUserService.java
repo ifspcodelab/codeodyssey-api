@@ -9,7 +9,7 @@ import app.codeodyssey.codeodysseyapi.user.data.UserRepository;
 import jakarta.transaction.Transactional;
 import jakarta.validation.Valid;
 import lombok.AllArgsConstructor;
-import org.springframework.security.crypto.bcrypt.BCryptPasswordEncoder;
+import org.springframework.security.crypto.password.PasswordEncoder;
 import org.springframework.stereotype.Service;
 
 import java.net.URLEncoder;
@@ -21,6 +21,7 @@ public class CreateUserService {
     private UserRepository userRepository;
     private final UserMapper userMapper;
     private final SendEmailService sendEmailService;
+    private final PasswordEncoder passwordEncoder;
 
     @Transactional
     public UserResponse execute(@Valid CreateUserCommand command) {
@@ -28,11 +29,7 @@ public class CreateUserService {
             throw new ViolationException(Resource.USER, ViolationType.ALREADY_EXISTS, "Email already exists");
         }
 
-        BCryptPasswordEncoder encoder = new BCryptPasswordEncoder();
-        String hashedPassword = encoder.encode(command.password());
-
-
-        User user = new User(command.email(), command.name(), hashedPassword);
+        User user = new User(command.email(), command.name(), this.passwordEncoder.encode(command.password()));
 
         String token = CreateRegisterTokenService.generateToken(user.getId());
         user.setToken(token);
