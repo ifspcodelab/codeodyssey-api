@@ -443,4 +443,59 @@ public class CourseRepositoryTest {
         assertThat(courseList).extracting(Course::getId).doesNotContain(invitationC.getCourse().getId());
         assertThat(courseList).containsExactly(courseA, courseB);
     }
+
+    @Test
+    @DisplayName("findAllByStudentIdOrderByNameAscEndDateAsc returns a list ordered by course name ascending and end date ascending when a student is enrolled on many courses")
+    void findAllByStudentIdOrderByNameAscEndDateAsc_givenStudentEnrolledOnManyCourses_returnsListOrderedByNameAscEndDateAsc() {
+        var professorA = UserFactory.sampleUserProfessor();
+        var professorB = UserFactory.sampleUserProfessorB();
+        var courseA = CourseFactory.sampleCourseWithProfessor(professorA);
+        var courseB = CourseFactory.sampleCourseWithProfessor(professorA);
+        var courseC = CourseFactory.sampleCourseBWithProfessor(professorA);
+        var courseD = CourseFactory.sampleCourseCWithProfessor(professorB);
+        courseA.setName("Spring Cloud");
+        courseA.setSlug("spring-cloud");
+        courseA.setEndDate(LocalDate.of(2023, 7, 6));
+        courseB.setName("Spring Cloud");
+        courseB.setSlug("spring-cloud-second-class");
+        courseB.setEndDate(LocalDate.of(2023, 7, 7));
+        courseC.setName("Spring MVC");
+        courseC.setSlug("spring-mvc");
+        courseC.setEndDate(LocalDate.of(2023, 7, 7));
+        courseD.setName("Spring Security");
+        courseD.setSlug("spring-security");
+        var studentA = UserFactory.sampleUserStudent();
+        var studentB = UserFactory.sampleUserStudentB();
+        var invitationA = InvitationFactory.sampleInvitationWithCourse(courseA);
+        var invitationB = InvitationFactory.sampleInvitationWithCourse(courseB);
+        var invitationC = InvitationFactory.sampleInvitationWithCourse(courseC);
+        var invitationD = InvitationFactory.sampleInvitationWithCourse(courseD);
+        var enrollmentStudentACourseA = EnrollmentFactory.sampleEnrollment(invitationA, studentA);
+        var enrollmentStudentACourseB = EnrollmentFactory.sampleEnrollment(invitationB, studentA);
+        var enrollmentStudentACourseC = EnrollmentFactory.sampleEnrollment(invitationC, studentA);
+        var enrollmentStudentBCourseC = EnrollmentFactory.sampleEnrollment(invitationD, studentB);
+        testEntityManager.persistAndFlush(professorA);
+        testEntityManager.persistAndFlush(professorB);
+        testEntityManager.persistAndFlush(courseB);
+        testEntityManager.persistAndFlush(courseC);
+        testEntityManager.persistAndFlush(courseD);
+        testEntityManager.persistAndFlush(courseA);
+        testEntityManager.persistAndFlush(studentA);
+        testEntityManager.persistAndFlush(studentB);
+        testEntityManager.persistAndFlush(invitationA);
+        testEntityManager.persistAndFlush(invitationB);
+        testEntityManager.persistAndFlush(invitationC);
+        testEntityManager.persistAndFlush(invitationD);
+        testEntityManager.persistAndFlush(enrollmentStudentACourseA);
+        testEntityManager.persistAndFlush(enrollmentStudentACourseB);
+        testEntityManager.persistAndFlush(enrollmentStudentACourseC);
+        testEntityManager.persistAndFlush(enrollmentStudentBCourseC);
+
+        List<Course> courseList = courseRepository.findAllByStudentIdOrderByNameAscEndDateAsc(studentA.getId());
+
+        assertThat(courseList).isNotEmpty();
+        assertThat(courseList).hasSize(3);
+        assertThat(courseList).extracting(Course::getId).doesNotContain(invitationD.getCourse().getId());
+        assertThat(courseList).containsExactly(courseA, courseB, courseC);
+    }
 }
