@@ -268,8 +268,9 @@ public class CourseRepositoryTest {
      * case 1: returns an empty list of a given student
      * case 2: returns a list with 1 element of a given student
      * case 3: returns a list with N elements of a given student
-     * case 4: returns a course list of a given student with element named A before element B
-     * case 5: returns a course list of a given student with element named AA and end date january 1st before element AA january 2nd
+     * case 4: returns a list with N elements of a given student enrolled on courses of different professors
+     * case 5: returns a course list of a given student with element named A before element B
+     * case 6: returns a course list of a given student with element named AA and end date january 1st before element AA january 2nd
      */
     @Test
     @DisplayName("findAllByStudentIdOrderByNameAscEndDateAsc returns an empty list when a student isn't enrolled on any courses")
@@ -293,7 +294,7 @@ public class CourseRepositoryTest {
     }
 
     @Test
-    @DisplayName("findAllByStudentIdOrderByNameAscEndDateAsc returns an list when a student is enrolled on a course")
+    @DisplayName("findAllByStudentIdOrderByNameAscEndDateAsc returns a list when a student is enrolled on a course")
     void findAllByStudentIdOrderByNameAscEndDateAsc_givenStudentEnrolledOnACourse_returnsList() {
         var professor = UserFactory.sampleUserProfessor();
         var course = CourseFactory.sampleCourseWithProfessor(professor);
@@ -315,5 +316,44 @@ public class CourseRepositoryTest {
         assertThat(courseList).isNotEmpty();
         assertThat(courseList).hasSize(1);
         assertThat(courseList).extracting(Course::getId).contains(invitation.getCourse().getId());
+    }
+
+    @Test
+    @DisplayName("findAllByStudentIdOrderByNameAscEndDateAsc returns a list when a student is enrolled on many courses")
+    void findAllByStudentIdOrderByNameAscEndDateAsc_givenStudentEnrolledOnManyCourses_returnsList() {
+        var professor = UserFactory.sampleUserProfessor();
+        var courseA = CourseFactory.sampleCourseWithProfessor(professor);
+        var courseB = CourseFactory.sampleCourseBWithProfessor(professor);
+        var courseC = CourseFactory.sampleCourseCWithProfessor(professor);
+        var studentA = UserFactory.sampleUserStudent();
+        var studentB = UserFactory.sampleUserStudentB();
+        var invitationA = InvitationFactory.sampleInvitationWithCourse(courseA);
+        var invitationB = InvitationFactory.sampleInvitationWithCourse(courseB);
+        var invitationC = InvitationFactory.sampleInvitationWithCourse(courseC);
+        var enrollmentStudentACourseA = EnrollmentFactory.sampleEnrollment(invitationA, studentA);
+        var enrollmentStudentACourseB = EnrollmentFactory.sampleEnrollment(invitationB, studentA);
+        var enrollmentStudentBCourseC = EnrollmentFactory.sampleEnrollment(invitationC, studentB);
+        testEntityManager.persistAndFlush(professor);
+        testEntityManager.persistAndFlush(courseA);
+        testEntityManager.persistAndFlush(courseB);
+        testEntityManager.persistAndFlush(courseC);
+        testEntityManager.persistAndFlush(studentA);
+        testEntityManager.persistAndFlush(studentB);
+        testEntityManager.persistAndFlush(invitationA);
+        testEntityManager.persistAndFlush(invitationB);
+        testEntityManager.persistAndFlush(invitationC);
+        testEntityManager.persistAndFlush(enrollmentStudentACourseA);
+        testEntityManager.persistAndFlush(enrollmentStudentACourseB);
+        testEntityManager.persistAndFlush(enrollmentStudentBCourseC);
+
+        List<Course> courseList = courseRepository.findAllByStudentIdOrderByNameAscEndDateAsc(studentA.getId());
+
+        assertThat(courseList).isNotEmpty();
+        assertThat(courseList).hasSize(2);
+        assertThat(courseList).extracting(Course::getId).doesNotContain(invitationC.getCourse().getId());
+        assertThat(courseList).extracting(Course::getId).contains(
+                invitationA.getCourse().getId(),
+                invitationB.getCourse().getId()
+        );
     }
 }
