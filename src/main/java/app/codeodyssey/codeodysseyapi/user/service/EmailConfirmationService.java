@@ -1,12 +1,10 @@
 package app.codeodyssey.codeodysseyapi.user.service;
 
-import app.codeodyssey.codeodysseyapi.common.exception.ExpiredTokenException;
-import app.codeodyssey.codeodysseyapi.common.exception.InexistentTokenException;
+import app.codeodyssey.codeodysseyapi.common.exception.TokenException;
 import app.codeodyssey.codeodysseyapi.common.exception.UserAlreadyValidatedException;
 import app.codeodyssey.codeodysseyapi.user.data.User;
 import app.codeodyssey.codeodysseyapi.user.data.UserRepository;
 import lombok.AllArgsConstructor;
-import org.springframework.http.HttpStatus;
 import org.springframework.stereotype.Service;
 
 import java.util.UUID;
@@ -23,16 +21,17 @@ public class EmailConfirmationService {
                 User user = userRepository.getUserById(userId);
 
                 user.setValidated(true);
+                userRepository.save(user);
                 return user;
             }
 
             if (userRepository.getUserById(GetUserIdFromRegisterTokenService.getUserId(token)).isValidated()) {
-                throw new UserAlreadyValidatedException("User is already validated", HttpStatus.BAD_REQUEST.value());
+                throw new UserAlreadyValidatedException("User is already validated");
             }
 
-            throw new ExpiredTokenException("Expired token", HttpStatus.BAD_REQUEST.value());
+            throw new TokenException("Expired token");
         }
 
-        throw  new InexistentTokenException("Token does not exist", HttpStatus.BAD_REQUEST.value());
+        throw new TokenException("Token does not exist");
     }
 }

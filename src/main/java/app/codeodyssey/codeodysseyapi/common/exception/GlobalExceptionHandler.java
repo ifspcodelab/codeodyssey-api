@@ -42,41 +42,12 @@ public class GlobalExceptionHandler {
         return new ResponseEntity<>(problem, status);
     }
 
-    @ExceptionHandler(ExpiredTokenException.class)
-    public ResponseEntity<ProblemDetail> ExpiredTokenException(ExpiredTokenException ex) {
-        log.warn("Token problem: {}", ex.getMessage());
-
-        HttpStatus status = HttpStatus.valueOf(ex.getHttpStatus());
-        String title = "Token problem";
-        String detail = ex.getMessage();
-
-        ProblemDetail problem = ProblemDetail.forStatus(status);
-        problem.setTitle(title);
-        problem.setDetail(detail);
-
-        return new ResponseEntity<>(problem, status);
-    }
-
-    @ExceptionHandler(InexistentTokenException.class)
-    public ResponseEntity<ProblemDetail> inexistentToken(InexistentTokenException ex) {
-        log.warn("Token problem: {}", ex.getMessage());
-
-        HttpStatus status = HttpStatus.valueOf(ex.getHttpStatus());
-        String title = "Token problem";
-        String detail = ex.getMessage();
-
-        ProblemDetail problem = ProblemDetail.forStatus(status);
-        problem.setTitle(title);
-        problem.setDetail(detail);
-
-        return new ResponseEntity<>(problem, status);
-    }
 
     @ExceptionHandler(UserAlreadyValidatedException.class)
     public ResponseEntity<ProblemDetail> alreadyValidated(UserAlreadyValidatedException ex) {
         log.warn("Validation: {}", ex.getMessage());
 
-        HttpStatus status = HttpStatus.valueOf(ex.getHttpStatus());
+        HttpStatus status = HttpStatus.CONFLICT;
         String title = "Validation";
         String detail = ex.getMessage();
 
@@ -87,4 +58,18 @@ public class GlobalExceptionHandler {
         return new ResponseEntity<>(problem, status);
     }
 
+    @ExceptionHandler(TokenException.class)
+    public ResponseEntity<ProblemDetail> tokenException(TokenException ex) {
+        log.warn("Token problem: {}", ex.getMessage());
+
+        HttpStatus status = HttpStatus.UNAUTHORIZED;
+        String title = "Token problem";
+        String detail = ex.getMessage();
+
+        ProblemDetail problem = ProblemDetail.forStatus(status);
+        problem.setTitle(title);
+        problem.setDetail(detail);
+
+        return new ResponseEntity<>(problem, status);
+    }
 }
