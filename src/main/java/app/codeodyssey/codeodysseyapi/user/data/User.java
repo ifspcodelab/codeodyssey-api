@@ -35,5 +35,6 @@ public class User {
         this.role = UserRole.STUDENT;
         this.createdAt = Instant.now();
         this.isValidated = false;
+        this.token = UUID.randomUUID().toString();
     }
 }

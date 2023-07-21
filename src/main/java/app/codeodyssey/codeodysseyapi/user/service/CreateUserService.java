@@ -12,16 +12,13 @@ import lombok.AllArgsConstructor;
 import org.springframework.security.crypto.password.PasswordEncoder;
 import org.springframework.stereotype.Service;
 
-import java.net.URLEncoder;
-import java.nio.charset.StandardCharsets;
-
 @Service
 @AllArgsConstructor
 public class CreateUserService {
     private UserRepository userRepository;
     private final UserMapper userMapper;
-    private final SendEmailService sendEmailService;
     private final PasswordEncoder passwordEncoder;
+    private final SendEmailService sendEmailService;
 
     @Transactional
     public UserResponse execute(@Valid CreateUserCommand command) {
@@ -30,16 +27,9 @@ public class CreateUserService {
         }
 
         User user = new User(command.email(), command.name(), this.passwordEncoder.encode(command.password()));
-
-        String token = CreateRegisterTokenService.generateToken(user.getId());
-        user.setToken(token);
-
         user = userRepository.save(user);
 
-        String encodedToken = URLEncoder.encode(token, StandardCharsets.UTF_8);
-
-        String confirmationLink = "http://localhost:8080/api/v1/users/confirmation/" + encodedToken;
-        sendEmailService.sendConfirmationEmail(user.getEmail(), confirmationLink);
+        sendEmailService.sendEmail(user.getEmail());
 
         return userMapper.to(user);
     }
