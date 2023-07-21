@@ -103,6 +103,7 @@ public class CourseRepositoryTest {
         assertThat(courseList).isNotEmpty();
         assertThat(courseList).hasSize(2);
         assertThat(courseList).containsExactly(courseA, courseB);
+        assertThat(courseList).extracting(Course::getName).isSorted();
     }
 
     @Test
@@ -224,6 +225,7 @@ public class CourseRepositoryTest {
         assertThat(courseList).hasSize(2);
         assertThat(courseList).doesNotContain(courseC);
         assertThat(courseList).containsExactly(courseA, courseB);
+        assertThat(courseList).extracting(Course::getName).isSorted();
     }
 
     @Test
@@ -440,6 +442,7 @@ public class CourseRepositoryTest {
         assertThat(courseList).hasSize(2);
         assertThat(courseList).extracting(Course::getId).doesNotContain(invitationC.getCourse().getId());
         assertThat(courseList).containsExactly(courseA, courseB);
+        assertThat(courseList).extracting(Course::getName).isSorted();
     }
 
     @Test
