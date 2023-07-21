@@ -43,7 +43,6 @@ public class CourseRepositoryTest {
         testEntityManager.flush();
 
         List<Course> courseList = courseRepository.findAllByOrderByNameAscEndDateAsc();
-        System.out.println(courseList.toString());
 
         assertThat(courseList).isEmpty();
     }
@@ -128,7 +127,6 @@ public class CourseRepositoryTest {
         testEntityManager.persistAndFlush(courseA1);
 
         List<Course> courseList = courseRepository.findAllByOrderByNameAscEndDateAsc();
-        System.out.println(courseList.toString());
 
         assertThat(courseList).isNotEmpty();
         assertThat(courseList).hasSize(3);
@@ -144,7 +142,7 @@ public class CourseRepositoryTest {
      * case 5: returns a course list of a given professor list with element named AA and end date january 1st before element AA january 2nd
      */
     @Test
-    @DisplayName("findAllByProfessorIdOrderByNameAscEndDateAsc returns an empty list when a professor doesn't have any courses")
+    @DisplayName("findAllByProfessorIdOrderByNameAscEndDateAsc() returns an empty list when a professor doesn't have any courses")
     void findAllByProfessorIdOrderByNameAscEndDateAsc_givenNoCourseOfAProfessor_returnsEmptyList() {
         var professorA = UserFactory.sampleUserProfessor();
         var professorB = UserFactory.sampleUserProfessorB();
@@ -159,7 +157,7 @@ public class CourseRepositoryTest {
     }
 
     @Test
-    @DisplayName("findAllByProfessorIdOrderByNameAscEndDateAsc returns a list when a professor has a course")
+    @DisplayName("findAllByProfessorIdOrderByNameAscEndDateAsc() returns a list when a professor has a course")
     void findAllByProfessorIdOrderByNameAscEndDateAsc_givenOneCourseOfAProfessor_returnsList() {
         var professorA = UserFactory.sampleUserProfessor();
         var professorB = UserFactory.sampleUserProfessorB();
@@ -179,7 +177,7 @@ public class CourseRepositoryTest {
     }
 
     @Test
-    @DisplayName("findAllByProfessorIdOrderByNameAscEndDateAsc returns a list when a professor has many courses")
+    @DisplayName("findAllByProfessorIdOrderByNameAscEndDateAsc() returns a list when a professor has many courses")
     void findAllByProfessorIdOrderByNameAscEndDateAsc_givenManyCoursesOfAProfessor_returnsList() {
         var professorA = UserFactory.sampleUserProfessor();
         var professorB = UserFactory.sampleUserProfessorB();
@@ -273,7 +271,7 @@ public class CourseRepositoryTest {
      * case 6: returns a course list of a given student with element named AA and end date january 1st before element AA january 2nd
      */
     @Test
-    @DisplayName("findAllByStudentIdOrderByNameAscEndDateAsc returns an empty list when a student isn't enrolled on any courses")
+    @DisplayName("findAllByStudentIdOrderByNameAscEndDateAsc() returns an empty list when a student isn't enrolled on any courses")
     void findAllByStudentIdOrderByNameAscEndDateAsc_givenNoEnrolledCourseOfAStudent_returnsEmptyList() {
         var professor = UserFactory.sampleUserProfessor();
         var course = CourseFactory.sampleCourseWithProfessor(professor);
@@ -294,7 +292,7 @@ public class CourseRepositoryTest {
     }
 
     @Test
-    @DisplayName("findAllByStudentIdOrderByNameAscEndDateAsc returns a list when a student is enrolled on a course")
+    @DisplayName("findAllByStudentIdOrderByNameAscEndDateAsc() returns a list when a student is enrolled on a course")
     void findAllByStudentIdOrderByNameAscEndDateAsc_givenStudentEnrolledOnACourse_returnsList() {
         var professor = UserFactory.sampleUserProfessor();
         var course = CourseFactory.sampleCourseWithProfessor(professor);
@@ -319,7 +317,7 @@ public class CourseRepositoryTest {
     }
 
     @Test
-    @DisplayName("findAllByStudentIdOrderByNameAscEndDateAsc returns a list when a student is enrolled on many courses")
+    @DisplayName("findAllByStudentIdOrderByNameAscEndDateAsc() returns a list when a student is enrolled on many courses")
     void findAllByStudentIdOrderByNameAscEndDateAsc_givenStudentEnrolledOnManyCourses_returnsList() {
         var professor = UserFactory.sampleUserProfessor();
         var courseA = CourseFactory.sampleCourseWithProfessor(professor);
@@ -358,7 +356,7 @@ public class CourseRepositoryTest {
     }
 
     @Test
-    @DisplayName("findAllByStudentIdOrderByNameAscEndDateAsc returns a list when a student is enrolled on courses of many professors")
+    @DisplayName("findAllByStudentIdOrderByNameAscEndDateAsc() returns a list when a student is enrolled on courses of many professors")
     void findAllByStudentIdOrderByNameAscEndDateAsc_givenStudentEnrolledOnCoursesOfManyProfessors_returnsList() {
         var professorA = UserFactory.sampleUserProfessor();
         var professorB = UserFactory.sampleUserProfessorB();
@@ -401,7 +399,7 @@ public class CourseRepositoryTest {
     }
 
     @Test
-    @DisplayName("findAllByStudentIdOrderByNameAscEndDateAsc returns a list ordered by course name ascending")
+    @DisplayName("findAllByStudentIdOrderByNameAscEndDateAsc() returns a list ordered by course name ascending when a student is enrolled on many courses")
     void findAllByStudentIdOrderByNameAscEndDateAsc_givenStudentEnrolledOnManyCourses_returnsListOrderedByName() {
         var professorA = UserFactory.sampleUserProfessor();
         var professorB = UserFactory.sampleUserProfessorB();
@@ -445,7 +443,7 @@ public class CourseRepositoryTest {
     }
 
     @Test
-    @DisplayName("findAllByStudentIdOrderByNameAscEndDateAsc returns a list ordered by course name ascending and end date ascending when a student is enrolled on many courses")
+    @DisplayName("findAllByStudentIdOrderByNameAscEndDateAsc() returns a list ordered by course name ascending and end date ascending when a student is enrolled on many courses")
     void findAllByStudentIdOrderByNameAscEndDateAsc_givenStudentEnrolledOnManyCourses_returnsListOrderedByNameAscEndDateAsc() {
         var professorA = UserFactory.sampleUserProfessor();
         var professorB = UserFactory.sampleUserProfessorB();
