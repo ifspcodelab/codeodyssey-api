@@ -11,7 +11,7 @@ public class UserFactory {
     public static User createValidUser(){
         return new User(UUID.randomUUID(),
                 "name",
-                "email@email",
+                "email@email.com",
                 "$2a$10$Q8FZ0sHePMBw0fmUBG0xou/mfI3L.lzAKR3ErTIYihxRuj/wbigIm",
                 UserRole.STUDENT,
                 Instant.now());
