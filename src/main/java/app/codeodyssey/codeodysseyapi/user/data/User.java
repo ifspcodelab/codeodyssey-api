@@ -30,10 +30,11 @@ public class User implements UserDetails {
     private UserRole role;
     private Instant createdAt;
 
-    public User(String name, String email) {
+    public User(String name, String email, String password) {
         this.id = UUID.randomUUID();
         this.name = name;
         this.email = email;
+        this.password = password;
         this.role = UserRole.STUDENT;
         this.createdAt = Instant.now();
     }
