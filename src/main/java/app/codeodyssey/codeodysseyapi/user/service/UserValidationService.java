@@ -15,7 +15,7 @@ import java.util.Optional;
 
 @Service
 @RequiredArgsConstructor
-public class UserValidation {
+public class UserValidationService {
     private final UserRepository userRepository;
     @Value("${time.register-expiration-time}")
     private int expirationTime;
