@@ -15,7 +15,7 @@ import org.springframework.web.bind.annotation.RestController;
 @AllArgsConstructor
 public class ValidateUserEndpoint {
     private final UserValidation userValidation;
-    private final UserMapper userMapper;
+    private UserMapper userMapper;
 
     @GetMapping("confirmation/{token}")
     public ResponseEntity<UserResponse> get (@PathVariable String token) {
