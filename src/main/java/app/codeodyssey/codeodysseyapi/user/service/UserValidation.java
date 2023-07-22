@@ -17,7 +17,7 @@ import java.util.Optional;
 @RequiredArgsConstructor
 public class UserValidation {
     private final UserRepository userRepository;
-    @Value("${time.expiration-time}")
+    @Value("${time.register-expiration-time}")
     private int expirationTime;
 
     public User validateUser(String token) {
