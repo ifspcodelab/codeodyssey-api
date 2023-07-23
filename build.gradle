@@ -31,7 +31,7 @@ dependencies {
 	implementation 'org.springframework.boot:spring-boot-starter-validation'
 	implementation 'org.springframework.boot:spring-boot-starter-web'
 	implementation 'org.flywaydb:flyway-core'
-    implementation 'de.vinado.spring:dkim-javamail:1.2.2'
+	implementation 'de.vinado.spring:dkim-javamail:1.2.2'
 	implementation 'de.vinado.boot:spring-boot-dkim-javamail:1.2.2'
 	compileOnly 'org.projectlombok:lombok'
 	runtimeOnly 'org.postgresql:postgresql'
@@ -44,6 +44,8 @@ dependencies {
 	implementation 'org.springframework.security:spring-security-crypto:6.1.2'
 	implementation 'org.springframework:spring-context-support:6.0.11'
 	implementation 'org.springframework.boot:spring-boot-starter-mail'
+	testImplementation 'org.testcontainers:testcontainers:1.16.0'
+	testImplementation 'org.testcontainers:junit-jupiter:1.16.0'
 }
 
 tasks.named('test') {
