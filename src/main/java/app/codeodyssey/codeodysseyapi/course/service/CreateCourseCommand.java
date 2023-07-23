@@ -12,6 +12,4 @@ public record CreateCourseCommand(
         @NotNull @NotBlank @Size(min = 1, max = 255) String name,
         @NotNull @NotBlank @Size(min = 1, max = 255) String slug,
         @NotNull LocalDate startDate,
-        LocalDate endDate,
-        @NotNull UUID professorId,
-        Instant createdAt) {}
+        @NotNull LocalDate endDate) {}

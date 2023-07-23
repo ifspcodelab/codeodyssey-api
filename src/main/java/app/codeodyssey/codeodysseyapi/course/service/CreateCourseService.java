@@ -13,6 +13,7 @@ import lombok.AllArgsConstructor;
 import org.springframework.stereotype.Service;
 
 import java.time.LocalDate;
+import java.util.UUID;
 
 @Service
 @AllArgsConstructor
@@ -21,10 +22,10 @@ public class CreateCourseService {
     private final CourseMapper courseMapper;
     private final GetUserService getUserService;
 
-    public CourseResponse execute(CreateCourseCommand command) {
-        User professor = getUserService.execute(command.professorId());
+    public CourseResponse execute(UUID professorId, CreateCourseCommand command) {
+        User professor = getUserService.execute(professorId);
 
-        if(courseRepository.existsBySlug(command.slug())) {
+        if(courseRepository.existsBySlugAndProfessor(command.slug(), professor)) {
             throw new ResourceAlreadyExistsException(ResourceName.COURSE, "slug", command.slug());
         }
 
