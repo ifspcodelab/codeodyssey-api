@@ -13,6 +13,8 @@ import java.util.List;
 import java.util.UUID;
 import lombok.AllArgsConstructor;
 import org.springframework.http.ResponseEntity;
+import org.springframework.security.core.Authentication;
+import org.springframework.security.core.userdetails.UserDetails;
 import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.PathVariable;
 import org.springframework.web.bind.annotation.RequestMapping;
@@ -40,7 +42,9 @@ public class GetProfessorCoursesEndpoint {
                 })
     })
     @GetMapping("users/{id}/courses")
-    public ResponseEntity<List<CourseResponse>> get(@PathVariable @Valid UUID id) {
-        return ResponseEntity.ok(getProfessorCoursesService.execute(id));
+    public ResponseEntity<List<CourseResponse>> get(@PathVariable @Valid UUID id, Authentication authentication) {
+        var userDetails = (UserDetails) authentication.getPrincipal();
+        var username = userDetails.getUsername();
+        return ResponseEntity.ok(getProfessorCoursesService.execute(id, username));
     }
 }
