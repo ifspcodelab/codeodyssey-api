@@ -99,7 +99,7 @@ public class JwtService {
 
         if(usedToken != null) {
             Optional<RefreshToken> usedRefreshToken = this.refreshTokenRepository.findById(UUID.fromString(usedToken));
-            this.refreshTokenRepository.deleteById(usedRefreshToken.get().getId());
+            this.refreshTokenRepository.setUsedById(usedRefreshToken.get().getId());
         }
 
         refreshToken.setUser(this.userRepository.findById(id).get());
@@ -112,7 +112,7 @@ public class JwtService {
 
     public RefreshToken verifyRefreshTokenExpiration(RefreshToken token) {
         if (token.getExpiryAt().compareTo(Instant.now()) < 0) {
-            this.refreshTokenRepository.delete(token);
+            this.refreshTokenRepository.setUsedById(token.getId());
             throw new ForbiddenException(Resource.REFRESH_TOKEN,
                     ForbiddenType.EXPIRED_REFRESH_TOKEN,
                     "refresh token was expired");

@@ -12,7 +12,6 @@ import java.util.UUID;
 
 @Entity
 @Table(name = "refreshtokens")
-@SQLDelete(sql = "UPDATE refreshtokens SET status = 'USED' where id = ?")
 @AllArgsConstructor
 @Getter
 @Setter
