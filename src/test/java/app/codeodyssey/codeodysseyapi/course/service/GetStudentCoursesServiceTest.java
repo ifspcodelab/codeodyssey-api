@@ -15,39 +15,27 @@ import org.springframework.boot.test.context.SpringBootTest;
 import org.springframework.test.context.ContextConfiguration;
 
 @SpringBootTest
-@DisplayName("Get Professor's Courses Service tests")
+@DisplayName("Get Student's Courses Service tests")
 @AutoConfigureTestDatabase(replace = AutoConfigureTestDatabase.Replace.NONE)
 @ContextConfiguration(initializers = {DatabaseContainerInitializer.class})
-public class GetProfessorCoursesServiceTest {
+public class GetStudentCoursesServiceTest {
     @Autowired
     UserRepository userRepository;
 
     @Autowired
-    private GetProfessorCoursesService getProfessorCoursesService;
+    private GetStudentCoursesService getStudentCoursesService;
 
     @Test
-    @DisplayName("getProfessorCoursesService returns UnauthorizedException when an user is not a professor")
-    void getProfessorCoursesService_givenNonProfessor_returnsUnauthorized() {
-        var user = UserFactory.sampleUserStudent();
+    @DisplayName("getStudentCoursesService returns UnauthorizedException when an user is not a student")
+    void getStudentCoursesService_givenNonStudent_returnsUnauthorized() {
+        var user = UserFactory.sampleUserProfessor();
         userRepository.save(user);
 
         RuntimeException exception = (RuntimeException)
-                catchThrowable(() -> getProfessorCoursesService.execute(user.getId(), user.getEmail()));
+                catchThrowable(() -> getStudentCoursesService.execute(user.getId(), user.getEmail()));
 
         assertThat(exception).isInstanceOf(UnauthorizedAccessException.class);
         UnauthorizedAccessException unauthorizedAccessException = (UnauthorizedAccessException) exception;
         assertThat(unauthorizedAccessException.getId()).isEqualTo(user.getId());
-    }
-
-    @Test
-    @DisplayName("getProfessorCoursesService returns course response list when an user is a professor")
-    void getProfessorCoursesService_givenProfessor_returnsList() {
-        var user = UserFactory.sampleUserProfessor();
-        userRepository.save(user);
-
-        Throwable serviceThrowable =
-                catchThrowable(() -> getProfessorCoursesService.execute(user.getId(), user.getEmail()));
-
-        assertThat(serviceThrowable).doesNotThrowAnyException();
     }
 }
