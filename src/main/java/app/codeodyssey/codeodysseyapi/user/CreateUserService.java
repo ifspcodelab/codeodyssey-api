@@ -1,6 +1,8 @@
 package app.codeodyssey.codeodysseyapi.user;
 
 import app.codeodyssey.codeodysseyapi.user.api.UserResponse;
+import app.codeodyssey.codeodysseyapi.user.data.User;
+import app.codeodyssey.codeodysseyapi.user.data.UserRepository;
 import lombok.AllArgsConstructor;
 import org.springframework.stereotype.Service;
 

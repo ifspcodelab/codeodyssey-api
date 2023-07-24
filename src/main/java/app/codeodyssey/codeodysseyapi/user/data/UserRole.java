@@ -1,4 +1,4 @@
-package app.codeodyssey.codeodysseyapi.user;
+package app.codeodyssey.codeodysseyapi.user.data;
 
 import lombok.AllArgsConstructor;
 import lombok.Getter;

@@ -4,8 +4,8 @@ import app.codeodyssey.codeodysseyapi.common.exceptions.*;
 import app.codeodyssey.codeodysseyapi.course.api.CourseResponse;
 import app.codeodyssey.codeodysseyapi.course.data.Course;
 import app.codeodyssey.codeodysseyapi.course.data.CourseRepository;
-import app.codeodyssey.codeodysseyapi.user.User;
-import app.codeodyssey.codeodysseyapi.user.UserRepository;
+import app.codeodyssey.codeodysseyapi.user.data.User;
+import app.codeodyssey.codeodysseyapi.user.data.UserRepository;
 import lombok.AllArgsConstructor;
 import org.springframework.stereotype.Service;
 

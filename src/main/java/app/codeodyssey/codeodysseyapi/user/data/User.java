@@ -1,4 +1,4 @@
-package app.codeodyssey.codeodysseyapi.user;
+package app.codeodyssey.codeodysseyapi.user.data;
 
 import jakarta.persistence.*;
 import lombok.AllArgsConstructor;
