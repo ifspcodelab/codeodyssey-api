@@ -7,6 +7,7 @@ import app.codeodyssey.codeodysseyapi.DatabaseContainerInitializer;
 import app.codeodyssey.codeodysseyapi.common.exception.UnauthorizedAccessException;
 import app.codeodyssey.codeodysseyapi.user.data.UserRepository;
 import app.codeodyssey.codeodysseyapi.user.util.UserFactory;
+import org.junit.jupiter.api.AfterEach;
 import org.junit.jupiter.api.DisplayName;
 import org.junit.jupiter.api.Test;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -24,6 +25,11 @@ public class GetProfessorCoursesServiceTest {
 
     @Autowired
     private GetProfessorCoursesService getProfessorCoursesService;
+
+    @AfterEach
+    void afterEach() {
+        userRepository.deleteAll();
+    }
 
     @Test
     @DisplayName("getProfessorCoursesService returns UnauthorizedException when an user is not a professor")
