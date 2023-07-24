@@ -1,8 +1,8 @@
-package app.codeodyssey.codeodysseyapi.course.utils;
+package app.codeodyssey.codeodysseyapi.course.util;
 
 import app.codeodyssey.codeodysseyapi.course.data.Course;
 import app.codeodyssey.codeodysseyapi.user.data.User;
-import app.codeodyssey.codeodysseyapi.user.utils.UserFactory;
+import app.codeodyssey.codeodysseyapi.user.util.UserFactory;
 import java.time.LocalDate;
 
 public final class CourseFactory {

@@ -1,7 +1,7 @@
-package app.codeodyssey.codeodysseyapi.invitation.utils;
+package app.codeodyssey.codeodysseyapi.invitation.util;
 
 import app.codeodyssey.codeodysseyapi.course.data.Course;
-import app.codeodyssey.codeodysseyapi.course.utils.CourseFactory;
+import app.codeodyssey.codeodysseyapi.course.util.CourseFactory;
 import app.codeodyssey.codeodysseyapi.invitation.data.Invitation;
 import java.time.LocalDate;
 

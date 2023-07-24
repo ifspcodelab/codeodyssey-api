@@ -1,4 +1,4 @@
-package app.codeodyssey.codeodysseyapi.enrollment.utils;
+package app.codeodyssey.codeodysseyapi.enrollment.util;
 
 import app.codeodyssey.codeodysseyapi.enrollment.data.Enrollment;
 import app.codeodyssey.codeodysseyapi.invitation.data.Invitation;

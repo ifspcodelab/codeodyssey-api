@@ -3,10 +3,10 @@ package app.codeodyssey.codeodysseyapi.course.data;
 import static org.assertj.core.api.Assertions.assertThat;
 
 import app.codeodyssey.codeodysseyapi.DatabaseContainerInitializer;
-import app.codeodyssey.codeodysseyapi.course.utils.CourseFactory;
-import app.codeodyssey.codeodysseyapi.enrollment.utils.EnrollmentFactory;
-import app.codeodyssey.codeodysseyapi.invitation.utils.InvitationFactory;
-import app.codeodyssey.codeodysseyapi.user.utils.UserFactory;
+import app.codeodyssey.codeodysseyapi.course.util.CourseFactory;
+import app.codeodyssey.codeodysseyapi.enrollment.util.EnrollmentFactory;
+import app.codeodyssey.codeodysseyapi.invitation.util.InvitationFactory;
+import app.codeodyssey.codeodysseyapi.user.util.UserFactory;
 import java.time.LocalDate;
 import java.util.Comparator;
 import java.util.List;
