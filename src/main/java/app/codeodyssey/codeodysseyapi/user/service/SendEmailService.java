@@ -24,7 +24,7 @@ public class SendEmailService {
         message.setTo(email);
         message.setSubject("Email confirmation");
 
-        message.setText("Please click the link bellow to confirm your registration\n" + url + user.getToken());
+        message.setText("Please click the link bellow to confirm your registration\n" + url +  "/confirmation/" + user.getToken());
         mailSender.send(message);
 
     }
