@@ -38,4 +38,15 @@ public class GetCoursesServiceTest {
         UnauthorizedAccessException unauthorizedAccessException = (UnauthorizedAccessException) exception;
         assertThat(unauthorizedAccessException.getId()).isEqualTo(user.getId());
     }
+
+    @Test
+    @DisplayName("getCoursesService returns course response list when an user is admin")
+    void getCoursesService_givenAdmin_returnsList() {
+        var user = UserFactory.sampleUserAdmin();
+        userRepository.save(user);
+
+        Throwable serviceThrowable = catchThrowable(() -> getCoursesService.execute(user.getEmail()));
+
+        assertThat(serviceThrowable).doesNotThrowAnyException();
+    }
 }

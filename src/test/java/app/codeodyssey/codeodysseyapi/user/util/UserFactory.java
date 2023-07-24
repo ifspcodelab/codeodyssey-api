@@ -26,6 +26,14 @@ public class UserFactory {
         return user;
     }
 
+    public static User sampleUserAdmin() {
+        User user = new User(
+                "admin@email.com", "Administrator", "$2a$12$kSwUVPTzifbCr0KaYTaDB.05Ew.lna7OVBjpDXrBICjsmalRaOliS");
+        user.setRole(UserRole.ADMIN);
+
+        return user;
+    }
+
     public static User sampleUserProfessorB() {
         var user = sampleUserProfessor();
         user.setEmail("g.lestrade@email.com");
