@@ -1,6 +1,6 @@
 package app.codeodyssey.codeodysseyapi.user.api;
 
-import app.codeodyssey.codeodysseyapi.user.GetUserService;
+import app.codeodyssey.codeodysseyapi.user.service.GetUserService;
 import lombok.AllArgsConstructor;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;

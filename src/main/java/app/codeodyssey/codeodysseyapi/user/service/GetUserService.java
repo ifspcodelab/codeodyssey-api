@@ -1,4 +1,4 @@
-package app.codeodyssey.codeodysseyapi.user;
+package app.codeodyssey.codeodysseyapi.user.service;
 
 import app.codeodyssey.codeodysseyapi.common.exceptions.ResourceName;
 import app.codeodyssey.codeodysseyapi.common.exceptions.ResourceNotFoundException;
