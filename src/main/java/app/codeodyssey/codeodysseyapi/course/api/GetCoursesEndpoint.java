@@ -11,6 +11,8 @@ import io.swagger.v3.oas.annotations.tags.Tag;
 import java.util.List;
 import lombok.AllArgsConstructor;
 import org.springframework.http.ResponseEntity;
+import org.springframework.security.core.Authentication;
+import org.springframework.security.core.userdetails.UserDetails;
 import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RestController;
@@ -37,7 +39,9 @@ public class GetCoursesEndpoint {
                 })
     })
     @GetMapping
-    public ResponseEntity<List<CourseResponse>> get() {
-        return ResponseEntity.ok(getCoursesService.execute());
+    public ResponseEntity<List<CourseResponse>> get(Authentication authentication) {
+        var userDetails = (UserDetails) authentication.getPrincipal();
+        var username = userDetails.getUsername();
+        return ResponseEntity.ok(getCoursesService.execute(username));
     }
 }
