@@ -2,13 +2,11 @@ package app.codeodyssey.codeodysseyapi.token.data;
 
 import app.codeodyssey.codeodysseyapi.user.data.User;
 import jakarta.persistence.*;
+import java.time.Instant;
+import java.util.UUID;
 import lombok.AllArgsConstructor;
 import lombok.Getter;
 import lombok.Setter;
-import org.hibernate.annotations.SQLDelete;
-
-import java.time.Instant;
-import java.util.UUID;
 
 @Entity
 @Table(name = "refreshtokens")
