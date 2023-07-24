@@ -51,6 +51,8 @@ public class UserValidationServiceTest {
         when(userRepository.save(any(User.class))).thenReturn(user);
         when(userRepository.getUserByToken(user.getToken())).thenReturn(Optional.of(user));
 
+        userRepository.save(user);
+
         User validatedUser = userValidationService.validateUser(user.getToken());
 
         assertNotNull(validatedUser);
