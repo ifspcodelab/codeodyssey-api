@@ -17,4 +17,5 @@ public class JwtConfig {
     private String secretKey;
     private Integer accessTokenExpirationAfterMinutes;
     private Integer refreshTokenExpirationAfterMinutes;
+    private String issuer;
 }

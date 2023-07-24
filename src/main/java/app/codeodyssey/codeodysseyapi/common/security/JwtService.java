@@ -66,7 +66,8 @@ public class JwtService {
         return Jwts
                 .builder()
                 .setClaims(extraClaims)
-                .setSubject(userDetails.getUsername())
+                .setSubject(this.userRepository.findByEmail(userDetails.getUsername()).get().getId().toString())
+                .setIssuer(jwtConfig.getIssuer())
                 .setIssuedAt(new Date(System.currentTimeMillis()))
                 .setExpiration(DateUtils.addMinutes(new Date(), jwtConfig.getAccessTokenExpirationAfterMinutes()))
                 .signWith(getSignKey(), SignatureAlgorithm.HS256)
