@@ -9,5 +9,5 @@ import java.util.List;
 @Mapper(componentModel = "spring")
 public interface CourseMapper {
     CourseResponse to(Course course);
-    List<CourseResponse> to(List<Course> events);
+    List<CourseResponse> to(List<Course> course);
 }
