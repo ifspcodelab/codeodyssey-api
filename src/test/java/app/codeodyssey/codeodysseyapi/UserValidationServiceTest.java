@@ -5,51 +5,41 @@ import app.codeodyssey.codeodysseyapi.common.exception.UserAlreadyValidatedExcep
 import app.codeodyssey.codeodysseyapi.user.data.User;
 import app.codeodyssey.codeodysseyapi.user.data.UserRepository;
 import app.codeodyssey.codeodysseyapi.user.service.UserValidationService;
-import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Test;
-import org.junit.jupiter.api.extension.ExtendWith;
-import org.mockito.InjectMocks;
-import org.mockito.Mock;
-import org.mockito.junit.jupiter.MockitoExtension;
+import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.beans.factory.annotation.Value;
+import org.springframework.boot.test.autoconfigure.jdbc.AutoConfigureTestDatabase;
+import org.springframework.boot.test.context.SpringBootTest;
+import org.springframework.test.annotation.DirtiesContext;
+import org.springframework.test.context.ContextConfiguration;
 import org.testcontainers.junit.jupiter.Testcontainers;
 
 import java.time.temporal.ChronoUnit;
-import java.util.Optional;
 import java.util.UUID;
 
 import static org.junit.jupiter.api.Assertions.*;
-import static org.mockito.Mockito.*;
 
-
-@ExtendWith(MockitoExtension.class)
+@SpringBootTest
+@AutoConfigureTestDatabase(replace = AutoConfigureTestDatabase.Replace.NONE)
+@ContextConfiguration(initializers = {DatabaseContainerInitializer.class})
 @Testcontainers
+@DirtiesContext(classMode = DirtiesContext.ClassMode.BEFORE_EACH_TEST_METHOD)
 public class UserValidationServiceTest {
 
-    @Mock
+    @Autowired
     private UserRepository userRepository;
 
-    @InjectMocks
+
+    @Autowired
     private UserValidationService userValidationService;
 
     @Value("${time.register-expiration-time}")
     private int expirationTime;
 
-    public UserValidationServiceTest() {
-    }
-
-
-    @BeforeEach
-    void setUp() {
-        reset(userRepository);
-    }
 
     @Test
     void testValidateUser_ValidToken_UserNotValidated_Success() {
         User user = new User("sergio@example.com", "Sergio", "password");
-
-        when(userRepository.save(any(User.class))).thenReturn(user);
-        when(userRepository.getUserByToken(user.getToken())).thenReturn(Optional.of(user));
 
         userRepository.save(user);
 
@@ -62,30 +52,24 @@ public class UserValidationServiceTest {
 
     @Test
     void testValidateUser_ValidToken_UserAlreadyValidated_ExceptionThrown() {
-        User user = new User("sergio@example.com", "Sergio", "password");
+        User user = new User("gabs@example.com", "Gabriel", "password");
         user.setValidated(true);
         userRepository.save(user);
-
-        when(userRepository.getUserByToken(user.getToken())).thenReturn(Optional.of(user));
 
         assertThrows(UserAlreadyValidatedException.class, () -> userValidationService.validateUser(user.getToken()));
     }
 
     @Test
     void testValidateUser_ExpiredToken_ExceptionThrown() {
-        User user = new User("sergio@example.com", "Sergio", "password");
+        User user = new User("clara@example.com", "Clara", "password");
         user.setCreatedAt(user.getCreatedAt().minus(expirationTime + 1, ChronoUnit.SECONDS));
         userRepository.save(user);
-
-        when(userRepository.getUserByToken(user.getToken())).thenReturn(Optional.of(user));
 
         assertThrows(TokenException.class, () -> userValidationService.validateUser(user.getToken()));
     }
 
     @Test
     void testValidateUser_NonExistentToken_ExceptionThrown() {
-        when(userRepository.getUserByToken(anyString())).thenReturn(Optional.empty());
-
         assertThrows(TokenException.class, () -> userValidationService.validateUser(UUID.randomUUID().toString()));
     }
 }

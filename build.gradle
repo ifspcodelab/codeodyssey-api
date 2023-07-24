@@ -44,8 +44,9 @@ dependencies {
 	implementation 'org.springframework.security:spring-security-crypto:6.1.2'
 	implementation 'org.springframework:spring-context-support:6.0.11'
 	implementation 'org.springframework.boot:spring-boot-starter-mail'
-	testImplementation 'org.testcontainers:testcontainers:1.16.0'
-	testImplementation 'org.testcontainers:junit-jupiter:1.16.0'
+	testImplementation 'org.springframework.boot:spring-boot-testcontainers'
+	testImplementation 'org.testcontainers:junit-jupiter:1.18.3'
+	testImplementation 'org.testcontainers:postgresql:1.18.3'
 }
 
 tasks.named('test') {
