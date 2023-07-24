@@ -8,9 +8,6 @@ public class EnrollmentFactory {
     private EnrollmentFactory() {}
 
     public static Enrollment sampleEnrollment(Invitation invitation, User student) {
-        return new Enrollment(
-                invitation,
-                student
-        );
+        return new Enrollment(invitation, student);
     }
 }

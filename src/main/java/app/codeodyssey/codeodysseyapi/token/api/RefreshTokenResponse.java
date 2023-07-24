@@ -1,5 +1,3 @@
 package app.codeodyssey.codeodysseyapi.token.api;
 
-public record RefreshTokenResponse(String refreshToken,
-                                   String accessToken) {
-}
+public record RefreshTokenResponse(String refreshToken, String accessToken) {}

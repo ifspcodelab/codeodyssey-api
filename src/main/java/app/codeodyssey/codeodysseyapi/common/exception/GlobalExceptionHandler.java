@@ -43,7 +43,7 @@ public class GlobalExceptionHandler {
     }
 
     @ExceptionHandler(BadCredentialsException.class)
-    public ResponseEntity<ProblemDetail> badCredentials(BadCredentialsException ex){
+    public ResponseEntity<ProblemDetail> badCredentials(BadCredentialsException ex) {
         HttpStatus status = HttpStatus.FORBIDDEN;
         String className = ex.getClass().getName();
         String message = ex.getMessage();
@@ -57,7 +57,7 @@ public class GlobalExceptionHandler {
     }
 
     @ExceptionHandler(ForbiddenException.class)
-    public ResponseEntity<ProblemDetail> forbidden(ForbiddenException ex){
+    public ResponseEntity<ProblemDetail> forbidden(ForbiddenException ex) {
         HttpStatus status = HttpStatus.FORBIDDEN;
         String resource = ex.getResource().getName();
         String forbiddenType = ex.getType().getName();
@@ -71,5 +71,4 @@ public class GlobalExceptionHandler {
         log.warn("{} ({})", title, details);
         return new ResponseEntity<>(problem, status);
     }
-
 }
