@@ -59,6 +59,8 @@ public class RefreshTokenEndpoint {
                 .map(jwtService::verifyRefreshTokenExpiration)
                 .map(RefreshToken::getUser)
                 .map(user -> {
+                    claims.put("name", user.getName());
+                    claims.put("email", user.getEmail());
                     claims.put("role", user.getRole());
                     String accessToken = jwtService.generateAccessToken(claims, user);
                     return new ResponseEntity<>(new RefreshTokenResponse(

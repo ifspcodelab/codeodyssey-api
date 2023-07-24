@@ -40,6 +40,7 @@ public class LoginUserEndpoint {
                                     schema = @Schema(implementation = ProblemDetail.class),
                                     mediaType = "application/json")
                     })
+            //TODO: 400, 409
     })
     @CrossOrigin(origins = "*")
     @PostMapping("/login")
