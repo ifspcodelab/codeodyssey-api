@@ -16,7 +16,8 @@ public class CreateUserService {
         User user = userRepository.save(new User(
                 command.name(),
                 command.email(),
-                command.password()
+                command.password(),
+                command.role()
         ));
 
         return userMapper.to(user);

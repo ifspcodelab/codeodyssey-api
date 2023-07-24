@@ -15,20 +15,19 @@ import java.util.UUID;
 @Getter
 public class User {
     @Id
-    @GeneratedValue(strategy = GenerationType.UUID)
     private UUID id;
     private String name;
     private String email;
     private String password;
     private UserRole role;
-    private Instant createdAt = Instant.now();
+    private Instant createdAt;
 
-    public User (String name, String email, String password){
+    public User (String name, String email, String password, UserRole role){
         this.id = UUID.randomUUID();
         this.name = name;
         this.email = email;
         this.password = password;
-        this.role = UserRole.STUDENT;
+        this.role = role;
         this.createdAt = Instant.now();
     }
 }
