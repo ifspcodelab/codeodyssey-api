@@ -9,8 +9,8 @@ import lombok.RequiredArgsConstructor;
 import org.springframework.beans.factory.annotation.Value;
 import org.springframework.stereotype.Service;
 
+import java.time.Duration;
 import java.time.Instant;
-import java.time.temporal.ChronoUnit;
 import java.util.Optional;
 
 @Service
@@ -30,7 +30,12 @@ public class UserValidationService {
                 throw new UserAlreadyValidatedException("User is already validated");
             }
 
-            if(Instant.now().isBefore(user.getCreatedAt().plus(expirationTime, ChronoUnit.SECONDS))) {
+            Instant currentTime = Instant.now();
+            Instant userCreationTime = user.getCreatedAt();
+            Duration timeElapsed = Duration.between(userCreationTime, currentTime);
+            long secondsElapsed = timeElapsed.getSeconds();
+
+            if(secondsElapsed <= expirationTime) {
                 user.setValidated(true);
                 userRepository.save(user);
 
