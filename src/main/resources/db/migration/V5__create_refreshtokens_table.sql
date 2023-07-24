@@ -1,7 +1,6 @@
 CREATE TABLE refreshtokens(
     id UUID NOT NULL,
     user_id UUID NOT NULL,
-    token VARCHAR UNIQUE NOT NULL,
     expiry_at TIMESTAMP NOT NULL,
     status VARCHAR NOT NULL,
     CONSTRAINT refreshtokens_pk PRIMARY KEY (id),

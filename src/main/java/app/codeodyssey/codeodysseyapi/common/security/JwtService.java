@@ -90,22 +90,21 @@ public class JwtService {
         return false;
     }
 
-    public Optional<RefreshToken> findByToken(String token){
-        return this.refreshTokenRepository.findByToken(token);
+    public Optional<RefreshToken> findRefreshTokenById(UUID id){
+        return this.refreshTokenRepository.findById(id);
     }
 
     public RefreshToken generateRefreshToken(UUID id, String usedToken) {
         RefreshToken refreshToken = new RefreshToken();
 
         if(usedToken != null) {
-            Optional<RefreshToken> usedRefreshToken = this.refreshTokenRepository.findByToken(usedToken);
+            Optional<RefreshToken> usedRefreshToken = this.refreshTokenRepository.findById(UUID.fromString(usedToken));
             this.refreshTokenRepository.deleteById(usedRefreshToken.get().getId());
         }
 
         refreshToken.setUser(this.userRepository.findById(id).get());
         refreshToken.setExpiryAt(Instant.now().plus(jwtConfig.getRefreshTokenExpirationAfterMinutes(),
                 ChronoUnit.MINUTES));
-        refreshToken.setToken(UUID.randomUUID().toString());
 
         refreshToken = this.refreshTokenRepository.save(refreshToken);
         return refreshToken;

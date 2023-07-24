@@ -19,6 +19,7 @@ import org.springframework.web.bind.annotation.*;
 
 import java.util.HashMap;
 import java.util.Map;
+import java.util.UUID;
 
 @RestController
 @RequestMapping("/api/v1")
@@ -54,7 +55,7 @@ public class RefreshTokenEndpoint {
         String refreshToken = request.refreshToken();
         Map<String, Object> claims = new HashMap<>();
 
-        return jwtService.findByToken(refreshToken)
+        return jwtService.findRefreshTokenById(UUID.fromString(refreshToken))
                 .map(jwtService::verifyRefreshTokenUsed)
                 .map(jwtService::verifyRefreshTokenExpiration)
                 .map(RefreshToken::getUser)
@@ -64,7 +65,7 @@ public class RefreshTokenEndpoint {
                     claims.put("role", user.getRole());
                     String accessToken = jwtService.generateAccessToken(claims, user);
                     return new ResponseEntity<>(new RefreshTokenResponse(
-                            this.jwtService.generateRefreshToken(user.getId(), refreshToken).getToken(),
+                            this.jwtService.generateRefreshToken(user.getId(), refreshToken).getId().toString(),
                             accessToken),
                             HttpStatus.CREATED);
                 })
