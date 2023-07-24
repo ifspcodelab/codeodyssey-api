@@ -1,6 +1,6 @@
 package app.codeodyssey.codeodysseyapi.course.api;
 
-import app.codeodyssey.codeodysseyapi.user.User;
+import app.codeodyssey.codeodysseyapi.user.UserResponse;
 
 import java.time.Instant;
 import java.time.LocalDate;
@@ -12,5 +12,5 @@ public record CourseResponse(
         String slug,
         LocalDate startDate,
         LocalDate endDate,
-        User professor,
+        UserResponse professor,
         Instant createdAt) {}
