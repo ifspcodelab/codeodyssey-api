@@ -1,5 +1,6 @@
 package app.codeodyssey.codeodysseyapi.user;
 
+import app.codeodyssey.codeodysseyapi.user.api.UserResponse;
 import lombok.AllArgsConstructor;
 import org.springframework.stereotype.Service;
 

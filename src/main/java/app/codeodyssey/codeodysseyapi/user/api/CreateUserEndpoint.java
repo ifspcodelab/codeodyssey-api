@@ -1,5 +1,7 @@
-package app.codeodyssey.codeodysseyapi.user;
+package app.codeodyssey.codeodysseyapi.user.api;
 
+import app.codeodyssey.codeodysseyapi.user.CreateUserCommand;
+import app.codeodyssey.codeodysseyapi.user.CreateUserService;
 import jakarta.validation.Valid;
 import lombok.AllArgsConstructor;
 import org.springframework.http.HttpStatus;

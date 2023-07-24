@@ -1,4 +1,6 @@
-package app.codeodyssey.codeodysseyapi.user;
+package app.codeodyssey.codeodysseyapi.user.api;
+
+import app.codeodyssey.codeodysseyapi.user.UserRole;
 
 import java.time.Instant;
 import java.util.UUID;
