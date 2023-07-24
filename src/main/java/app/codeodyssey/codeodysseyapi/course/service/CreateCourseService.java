@@ -1,14 +1,11 @@
 package app.codeodyssey.codeodysseyapi.course.service;
 
-import app.codeodyssey.codeodysseyapi.common.exceptions.BusinessRuleException;
-import app.codeodyssey.codeodysseyapi.common.exceptions.BusinessRuleType;
-import app.codeodyssey.codeodysseyapi.common.exceptions.ResourceAlreadyExistsException;
-import app.codeodyssey.codeodysseyapi.common.exceptions.ResourceName;
+import app.codeodyssey.codeodysseyapi.common.exceptions.*;
 import app.codeodyssey.codeodysseyapi.course.api.CourseResponse;
 import app.codeodyssey.codeodysseyapi.course.data.Course;
 import app.codeodyssey.codeodysseyapi.course.data.CourseRepository;
 import app.codeodyssey.codeodysseyapi.user.User;
-import app.codeodyssey.codeodysseyapi.user.GetUserService;
+import app.codeodyssey.codeodysseyapi.user.UserRepository;
 import lombok.AllArgsConstructor;
 import org.springframework.stereotype.Service;
 
@@ -20,10 +17,11 @@ import java.util.UUID;
 public class CreateCourseService {
     private final CourseRepository courseRepository;
     private final CourseMapper courseMapper;
-    private final GetUserService getUserService;
+    private final UserRepository userRepository;
 
     public CourseResponse execute(UUID professorId, CreateCourseCommand command) {
-        User professor = getUserService.execute(professorId);
+        User professor = userRepository.findById(professorId)
+                .orElseThrow(() -> new ResourceNotFoundException(ResourceName.USER, professorId));
 
         if(courseRepository.existsBySlugAndProfessor(command.slug(), professor)) {
             throw new ResourceAlreadyExistsException(ResourceName.COURSE, "slug", command.slug());
