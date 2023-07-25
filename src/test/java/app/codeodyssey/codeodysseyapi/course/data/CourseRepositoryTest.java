@@ -40,14 +40,14 @@ public class CourseRepositoryTest {
     }
 
     @Test
-    @DisplayName("existsBySlugAndProfessor")
+    @DisplayName("returns true when given a existing slug and professor")
     void existsBySlugAndProfessor_givenExistingSlugAndProfessor_returnTrue() {
         boolean exists = courseRepository.existsBySlugAndProfessor(course.getSlug(), user);
         Assertions.assertTrue(exists);
     }
 
     @Test
-    @DisplayName("save a valid token when successful")
+    @DisplayName("returns false when given a non existing slug and professor")
     void existsBySlugAndProfessor_givenNonExistingSlugAndProfessor_returnFalse() {
         boolean exists = courseRepository.existsBySlugAndProfessor("non-existing-slug", new User("UserName", "non-existing-email", "Password", UserRole.PROFESSOR));
         Assertions.assertFalse(exists);

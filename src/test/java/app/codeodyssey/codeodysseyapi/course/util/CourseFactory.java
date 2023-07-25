@@ -9,8 +9,8 @@ public final class CourseFactory {
         return new Course(
                 "CourseName",
                 "Slug",
-                LocalDate.of(2024, 01, 01),
-                LocalDate.of(2024, 01, 01),
+                LocalDate.now(),
+                LocalDate.now(),
                 UserFactory.createValidUser());
     }
 
