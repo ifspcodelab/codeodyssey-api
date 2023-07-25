@@ -30,7 +30,7 @@ public class CreateUserServiceTest {
     @Test
     void testExecute_CreateUser_Success() {
         CreateUserCommand userCommand = new CreateUserCommand("sergio", "gabriel@example.com",
-                "password#123");
+                "password123");
 
         UserResponse user = createUserService.execute(userCommand);
 

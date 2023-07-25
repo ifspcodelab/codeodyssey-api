@@ -22,7 +22,7 @@ public class ValidPasswordValidator implements ConstraintValidator<ValidPassword
                 Pattern.matches(PASSWORD_PATTERN, password);
 
         if (!isValid) {
-            throw new InvalidPasswordException("A senha deve conter pelo menos uma letra maiúscula, uma letra minúscula, um número, um caractere especial e ter entre 8 e 64 caracteres.");
+            throw new InvalidPasswordException("The password must contain at least one uppercase letter, one lowercase letter, one number, one special character, and be between 8 and 64 characters.");
         }
 
         return true;
