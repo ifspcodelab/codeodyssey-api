@@ -1,0 +1,104 @@
+package app.codeodyssey.codeodysseyapi.course.e2e;
+
+import static org.assertj.core.api.Assertions.assertThat;
+
+import app.codeodyssey.codeodysseyapi.DatabaseContainerInitializer;
+import app.codeodyssey.codeodysseyapi.course.data.CourseRepository;
+import app.codeodyssey.codeodysseyapi.course.util.CourseFactory;
+import app.codeodyssey.codeodysseyapi.enrollment.data.EnrollmentRepository;
+import app.codeodyssey.codeodysseyapi.enrollment.util.EnrollmentFactory;
+import app.codeodyssey.codeodysseyapi.invitation.data.InvitationRepository;
+import app.codeodyssey.codeodysseyapi.invitation.util.InvitationFactory;
+import app.codeodyssey.codeodysseyapi.token.data.RefreshTokenRepository;
+import app.codeodyssey.codeodysseyapi.user.data.UserRepository;
+import app.codeodyssey.codeodysseyapi.user.util.AuthenticationTokenPairFactory;
+import app.codeodyssey.codeodysseyapi.user.util.UserFactory;
+import java.util.List;
+import org.junit.jupiter.api.AfterEach;
+import org.junit.jupiter.api.BeforeEach;
+import org.junit.jupiter.api.DisplayName;
+import org.junit.jupiter.api.Test;
+import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.boot.test.autoconfigure.jdbc.AutoConfigureTestDatabase;
+import org.springframework.boot.test.context.SpringBootTest;
+import org.springframework.boot.test.web.server.LocalServerPort;
+import org.springframework.http.HttpEntity;
+import org.springframework.http.HttpHeaders;
+import org.springframework.http.HttpMethod;
+import org.springframework.http.HttpStatus;
+import org.springframework.test.context.ContextConfiguration;
+import org.springframework.web.client.RestTemplate;
+import org.testcontainers.junit.jupiter.Testcontainers;
+
+@SpringBootTest(webEnvironment = SpringBootTest.WebEnvironment.RANDOM_PORT)
+@DisplayName("Get Student's Courses End to End tests")
+@Testcontainers
+@ContextConfiguration(initializers = {DatabaseContainerInitializer.class})
+@AutoConfigureTestDatabase(replace = AutoConfigureTestDatabase.Replace.NONE)
+public class GetStudentCoursesEndToEndTest {
+    @LocalServerPort
+    Integer port;
+
+    String url;
+
+    RestTemplate restTemplate;
+
+    HttpHeaders headers;
+
+    @Autowired
+    UserRepository userRepository;
+
+    @Autowired
+    CourseRepository courseRepository;
+
+    @Autowired
+    RefreshTokenRepository refreshTokenRepository;
+
+    @Autowired
+    InvitationRepository invitationRepository;
+
+    @Autowired
+    EnrollmentRepository enrollmentRepository;
+
+    @BeforeEach
+    void beforeEach() {
+        url = "http://localhost:%d/api/v1/users".formatted(port);
+        restTemplate = new RestTemplate();
+        headers = new HttpHeaders();
+    }
+
+    @AfterEach
+    void afterEach() {
+        refreshTokenRepository.deleteAll();
+        enrollmentRepository.deleteAll();
+        invitationRepository.deleteAll();
+        courseRepository.deleteAll();
+        userRepository.deleteAll();
+    }
+
+    @DisplayName("getStudentCoursesEndpoint returns courses when an user is a student")
+    @Test
+    void getStudentCoursesEndpoint_givenStudent_returnsList() {
+        var course = CourseFactory.sampleCourse();
+        var professor = course.getProfessor();
+        var invitation = InvitationFactory.sampleInvitationWithCourse(course);
+        var student = UserFactory.sampleUserStudent();
+        var enrollment = EnrollmentFactory.sampleEnrollment(invitation, student);
+        var authenticationTokenPair = AuthenticationTokenPairFactory.sampleAuthenticationTokenPair(student);
+        userRepository.saveAll(List.of(professor, student));
+        courseRepository.save(course);
+        invitationRepository.save(invitation);
+        enrollmentRepository.save(enrollment);
+        refreshTokenRepository.save(authenticationTokenPair.getRefreshToken());
+        headers.setBearerAuth(authenticationTokenPair.getAccessToken());
+        HttpEntity<?> request = new HttpEntity<>(null, headers);
+        url += "/%s/enrollments".formatted(student.getId());
+
+        var response = restTemplate.exchange(url, HttpMethod.GET, request, List.class);
+
+        assertThat(response).isNotNull();
+        assertThat(response.getStatusCode()).isEqualTo(HttpStatus.OK);
+        assertThat(response.getBody()).isNotNull();
+        assertThat(response.getBody()).hasSize(1);
+    }
+}
