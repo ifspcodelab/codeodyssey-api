@@ -45,7 +45,7 @@ public class UserCleanupServiceTest {
     }
 
     @Test
-    void testCleanup_CleanUserWithInvalidExpirationTime_ReturnsNull() {
+    void testCleanup_CleanUserOutExpirationTime_ReturnsNull() {
         User user = new User("Sergio", "sergio@example.com", "password");
         user.setCreatedAt(user.getCreatedAt().minus(expirationTime, ChronoUnit.SECONDS));
         userRepository.save(user);
@@ -57,7 +57,7 @@ public class UserCleanupServiceTest {
     }
 
     @Test
-    void testCleanup_CleanUsersWithInvalidExpirationTime_ReturnsEmpty() {
+    void testCleanup_CleanUsersOutExpirationTime_ReturnsEmpty() {
         User user1 = new User("user1@example.com", "User 1", "password");
         user1.setCreatedAt(user1.getCreatedAt().minus(expirationTime, ChronoUnit.SECONDS));
 
@@ -75,7 +75,7 @@ public class UserCleanupServiceTest {
     }
 
     @Test
-    void testCleanup_DontCleanUserWithValidExpirationTime_ReturnsValidUser() {
+    void testCleanup_DontCleanUserWithinExpirationTime_ReturnsValidUser() {
         User user = new User("Sergio", "sergio@example.com", "password");
         userRepository.save(user);
 
@@ -88,7 +88,7 @@ public class UserCleanupServiceTest {
     }
 
     @Test
-    void testCleanup_DontCleanUsersWithValidExpirationTime_ReturnsValidUsers() {
+    void testCleanup_DontCleanUsersWithinExpirationTime_ReturnsValidUsers() {
         User user1 = new User("user1@example.com", "User 1", "password");
         User user2 = new User("user2@example.com", "User 2", "password");
         User user3 = new User("user3@example.com", "user3", "password");
