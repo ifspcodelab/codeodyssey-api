@@ -4,6 +4,7 @@ import lombok.extern.slf4j.Slf4j;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ProblemDetail;
 import org.springframework.http.ResponseEntity;
+import org.springframework.web.bind.MethodArgumentNotValidException;
 import org.springframework.web.bind.annotation.ControllerAdvice;
 import org.springframework.web.bind.annotation.ExceptionHandler;
 
@@ -68,6 +69,21 @@ public class GlobalExceptionHandler {
         ProblemDetail problem = ProblemDetail.forStatus(status);
         problem.setTitle(title);
         problem.setDetail(detail);
+
+        return new ResponseEntity<>(problem, status);
+    }
+
+    @ExceptionHandler(MethodArgumentNotValidException.class)
+    public ResponseEntity<ProblemDetail> handleValidationException() {
+        HttpStatus status = HttpStatus.BAD_REQUEST;
+        String title = "Validation Error";
+        String detail = "Invalid email format";
+
+        ProblemDetail problem = ProblemDetail.forStatus(status);
+        problem.setTitle(title);
+        problem.setDetail(detail);
+
+        log.warn("{} - {}", title, detail);
 
         return new ResponseEntity<>(problem, status);
     }
