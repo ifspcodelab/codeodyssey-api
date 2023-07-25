@@ -1,6 +1,6 @@
 package app.codeodyssey.codeodysseyapi.course.service;
 
-import app.codeodyssey.codeodysseyapi.common.exceptions.*;
+import app.codeodyssey.codeodysseyapi.common.exception.*;
 import app.codeodyssey.codeodysseyapi.course.api.CourseResponse;
 import app.codeodyssey.codeodysseyapi.course.data.Course;
 import app.codeodyssey.codeodysseyapi.course.data.CourseRepository;
@@ -24,15 +24,15 @@ public class CreateCourseService {
                 .orElseThrow(() -> new ResourceNotFoundException(professorId, Resource.COURSE));
 
         if (courseRepository.existsBySlugAndProfessor(command.slug(), professor)) {
-            throw new ResourceAlreadyExistsException(Resource.COURSE, "slug", command.slug());
+            throw new ViolationException(Resource.COURSE, ViolationType.ALREADY_EXISTS, command.slug());
         }
 
         if (command.startDate().isBefore(LocalDate.now())) {
-            throw new BusinessRuleException(BusinessRuleType.COURSE_START_DATE_BEFORE_TODAY);
+            throw new BusinessRuleException(Resource.COURSE, BusinessRuleType.COURSE_START_DATE_BEFORE_TODAY, command.startDate().toString());
         }
 
         if (command.endDate().isBefore(command.startDate())) {
-            throw new BusinessRuleException(BusinessRuleType.COURSE_END_DATE_BEFORE_START_DATE);
+            throw new BusinessRuleException(Resource.COURSE, BusinessRuleType.COURSE_END_DATE_BEFORE_START_DATE, command.endDate().toString());
         }
 
         Course course = courseRepository.save(

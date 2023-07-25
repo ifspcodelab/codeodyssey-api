@@ -34,13 +34,6 @@ public class CreateCourseEndpoint {
                             @Content(
                                     array = @ArraySchema(schema = @Schema(implementation = CourseResponse.class)),
                                     mediaType = "application/json")
-                    }),
-            @ApiResponse(
-                    responseCode = "404",
-                    content = {
-                            @Content(
-                                    array = @ArraySchema(schema = @Schema(implementation = ProblemDetail.class)),
-                                    mediaType = "application/json")
                     })
     })
 

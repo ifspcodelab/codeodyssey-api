@@ -1,7 +1,7 @@
 package app.codeodyssey.codeodysseyapi.course.service;
 
 import app.codeodyssey.codeodysseyapi.DatabaseContainerInitializer;
-import app.codeodyssey.codeodysseyapi.common.exceptions.ResourceNotFoundException;
+import app.codeodyssey.codeodysseyapi.common.exception.ResourceNotFoundException;
 import app.codeodyssey.codeodysseyapi.course.api.CourseResponse;
 import app.codeodyssey.codeodysseyapi.user.api.UserResponse;
 import app.codeodyssey.codeodysseyapi.user.data.UserRole;
