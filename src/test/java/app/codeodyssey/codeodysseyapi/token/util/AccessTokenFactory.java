@@ -10,7 +10,7 @@ import java.util.HashMap;
 import java.util.Map;
 import org.apache.commons.lang3.time.DateUtils;
 
-public class AccessTokenFactory {
+public final class AccessTokenFactory {
     private AccessTokenFactory() {}
 
     public static String sampleAccessToken(User user) {

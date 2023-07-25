@@ -5,7 +5,7 @@ import app.codeodyssey.codeodysseyapi.course.util.CourseFactory;
 import app.codeodyssey.codeodysseyapi.invitation.data.Invitation;
 import java.time.LocalDate;
 
-public class InvitationFactory {
+public final class InvitationFactory {
     private InvitationFactory() {}
 
     public static Invitation sampleInvitation() {

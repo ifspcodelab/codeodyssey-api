@@ -6,7 +6,9 @@ import app.codeodyssey.codeodysseyapi.user.data.User;
 import java.time.Instant;
 import java.util.UUID;
 
-public class RefreshTokenFactory {
+public final class RefreshTokenFactory {
+    private RefreshTokenFactory() {}
+
     public static RefreshToken createValidRefreshToken(User user) {
         return new RefreshToken(
                 UUID.randomUUID(), user, UUID.randomUUID().toString(), Instant.now(), RefreshTokenStatus.UNUSED);

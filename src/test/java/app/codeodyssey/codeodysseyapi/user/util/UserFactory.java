@@ -5,7 +5,7 @@ import app.codeodyssey.codeodysseyapi.user.data.UserRole;
 import java.time.Instant;
 import java.util.UUID;
 
-public class UserFactory {
+public final class UserFactory {
     private UserFactory() {}
 
     public static User createValidUser() {
