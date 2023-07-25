@@ -32,7 +32,7 @@ public class SendEmailServiceTest {
 
 
     @Test
-    void testExecute_sendEmail(){
+    void testSendEmail_sendEmail(){
         User user = new User("aquino.lima@aluno.ifsp.edu.br", "Sergio", "password");
         userRepository.save(user);
 
