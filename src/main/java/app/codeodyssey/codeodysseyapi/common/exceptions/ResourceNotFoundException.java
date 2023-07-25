@@ -1,11 +1,10 @@
 package app.codeodyssey.codeodysseyapi.common.exceptions;
 
+import java.util.UUID;
 import lombok.Getter;
 
-import java.util.UUID;
-
 @Getter
-public class ResourceNotFoundException extends RuntimeException{
+public class ResourceNotFoundException extends RuntimeException {
     private final ResourceName resourceName;
     private final UUID resourceId;
 

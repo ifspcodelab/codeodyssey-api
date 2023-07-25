@@ -1,7 +1,6 @@
 package app.codeodyssey.codeodysseyapi.course.api;
 
 import app.codeodyssey.codeodysseyapi.user.api.UserResponse;
-
 import java.time.Instant;
 import java.time.LocalDate;
 import java.util.UUID;
