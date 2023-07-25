@@ -72,4 +72,20 @@ public class GlobalExceptionHandler {
 
         return new ResponseEntity<>(problem, status);
     }
+
+    @ExceptionHandler(InvalidPasswordException.class)
+    public ResponseEntity<ProblemDetail> passwordException(InvalidPasswordException ex) {
+        log.warn("Password problem: {}", ex.getMessage());
+
+        HttpStatus status = HttpStatus.BAD_REQUEST;
+        String title = "Password problem";
+        String detail = ex.getMessage();
+
+        ProblemDetail problem = ProblemDetail.forStatus(status);
+        problem.setTitle(title);
+        problem.setDetail(detail);
+
+        return new ResponseEntity<>(problem, status);
+
+    }
 }
