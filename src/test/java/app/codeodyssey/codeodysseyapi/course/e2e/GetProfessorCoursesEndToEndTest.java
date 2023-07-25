@@ -66,9 +66,9 @@ public class GetProfessorCoursesEndToEndTest {
         userRepository.deleteAll();
     }
 
-    @DisplayName("getProfessorCoursesEndpoint return courses when an user is a professor")
+    @DisplayName("getProfessorCoursesEndpoint returns courses when an user is a professor")
     @Test
-    void getProfessorCoursesEndpoint_givenProfessor_returnList() {
+    void getProfessorCoursesEndpoint_givenProfessor_returnsList() {
         var course = CourseFactory.sampleCourse();
         var professor = course.getProfessor();
         var authenticationTokenPair = AuthenticationTokenPairFactory.sampleAuthenticationTokenPair(professor);

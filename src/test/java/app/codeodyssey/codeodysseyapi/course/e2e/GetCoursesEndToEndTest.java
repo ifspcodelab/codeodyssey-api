@@ -63,9 +63,9 @@ public class GetCoursesEndToEndTest {
         userRepository.deleteAll();
     }
 
-    @DisplayName("getCoursesEndpoint return courses when an user is admin")
+    @DisplayName("getCoursesEndpoint returns courses when an user is admin")
     @Test
-    void getCoursesEndpoint_givenAdmin_returnList() {
+    void getCoursesEndpoint_givenAdmin_returnsList() {
         var course = CourseFactory.sampleCourse();
         var professor = course.getProfessor();
         var admin = UserFactory.sampleUserAdmin();
@@ -84,9 +84,9 @@ public class GetCoursesEndToEndTest {
         assertThat(response.getBody()).hasSize(1);
     }
 
-    @DisplayName("getCoursesEndpoint return unauthorized when an user is not an admin")
+    @DisplayName("getCoursesEndpoint returns unauthorized when an user is not an admin")
     @Test
-    void getCoursesEndpoint_givenNonAdmin_returnUnauthorized() {
+    void getCoursesEndpoint_givenNonAdmin_returnsUnauthorized() {
         var course = CourseFactory.sampleCourse();
         var professor = course.getProfessor();
         var student = UserFactory.sampleUserStudent();
