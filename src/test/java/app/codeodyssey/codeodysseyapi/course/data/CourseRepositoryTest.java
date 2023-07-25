@@ -52,8 +52,7 @@ public class CourseRepositoryTest {
     void findAll_givenOneStoredRow_returnsList() {
         var user = UserFactory.sampleUserProfessor();
         var course = CourseFactory.sampleCourseWithProfessor(user);
-        testEntityManager.persistAndFlush(user);
-        testEntityManager.persistAndFlush(course);
+        persistAllAndFlush(user, course);
 
         List<Course> courseList = courseRepository.findAllByOrderByNameAscEndDateAsc();
 
@@ -72,10 +71,7 @@ public class CourseRepositoryTest {
         course2.setSlug("spring-security");
         course3.setName("Spring Cloud");
         course3.setSlug("spring-cloud");
-        testEntityManager.persistAndFlush(user);
-        testEntityManager.persistAndFlush(course1);
-        testEntityManager.persistAndFlush(course2);
-        testEntityManager.persistAndFlush(course3);
+        persistAllAndFlush(user, course1, course2, course3);
 
         List<Course> courseList = courseRepository.findAllByOrderByNameAscEndDateAsc();
 
@@ -95,9 +91,7 @@ public class CourseRepositoryTest {
         courseA.setSlug("spring-cloud");
         courseB.setName("Spring Security");
         courseB.setSlug("spring-security");
-        testEntityManager.persistAndFlush(user);
-        testEntityManager.persistAndFlush(courseB);
-        testEntityManager.persistAndFlush(courseA);
+        persistAllAndFlush(user, courseA, courseB);
 
         List<Course> courseList = courseRepository.findAllByOrderByNameAscEndDateAsc();
 
@@ -124,10 +118,7 @@ public class CourseRepositoryTest {
         courseB.setName("Spring Security");
         courseB.setSlug("spring-security");
         courseB.setEndDate(LocalDate.of(2023, 7, 17));
-        testEntityManager.persistAndFlush(user);
-        testEntityManager.persistAndFlush(courseB);
-        testEntityManager.persistAndFlush(courseA2);
-        testEntityManager.persistAndFlush(courseA1);
+        persistAllAndFlush(user, courseA1, courseA2, courseB);
 
         List<Course> courseList = courseRepository.findAllByOrderByNameAscEndDateAsc();
 
@@ -152,9 +143,7 @@ public class CourseRepositoryTest {
         var professorA = UserFactory.sampleUserProfessor();
         var professorB = UserFactory.sampleUserProfessorB();
         var course = CourseFactory.sampleCourseWithProfessor(professorB);
-        testEntityManager.persistAndFlush(professorA);
-        testEntityManager.persistAndFlush(professorB);
-        testEntityManager.persistAndFlush(course);
+        persistAllAndFlush(professorA, professorB, course);
 
         List<Course> courseList = courseRepository.findAllByProfessorIdOrderByNameAscEndDateAsc(professorA.getId());
 
@@ -168,10 +157,7 @@ public class CourseRepositoryTest {
         var professorB = UserFactory.sampleUserProfessorB();
         var courseA = CourseFactory.sampleCourseWithProfessor(professorA);
         var courseB = CourseFactory.sampleCourseBWithProfessor(professorB);
-        testEntityManager.persistAndFlush(professorA);
-        testEntityManager.persistAndFlush(professorB);
-        testEntityManager.persistAndFlush(courseA);
-        testEntityManager.persistAndFlush(courseB);
+        persistAllAndFlush(professorA, professorB, courseA, courseB);
 
         List<Course> courseList = courseRepository.findAllByProfessorIdOrderByNameAscEndDateAsc(professorA.getId());
 
@@ -189,11 +175,7 @@ public class CourseRepositoryTest {
         var courseA = CourseFactory.sampleCourseWithProfessor(professorA);
         var courseB = CourseFactory.sampleCourseBWithProfessor(professorA);
         var courseC = CourseFactory.sampleCourseCWithProfessor(professorB);
-        testEntityManager.persistAndFlush(professorA);
-        testEntityManager.persistAndFlush(professorB);
-        testEntityManager.persistAndFlush(courseA);
-        testEntityManager.persistAndFlush(courseB);
-        testEntityManager.persistAndFlush(courseC);
+        persistAllAndFlush(professorA, professorB, courseA, courseB, courseC);
 
         List<Course> courseList = courseRepository.findAllByProfessorIdOrderByNameAscEndDateAsc(professorA.getId());
 
@@ -218,11 +200,7 @@ public class CourseRepositoryTest {
         courseB.setSlug("spring-security");
         courseC.setName("Spring MVC");
         courseC.setSlug("spring-mvc");
-        testEntityManager.persistAndFlush(professorA);
-        testEntityManager.persistAndFlush(professorB);
-        testEntityManager.persistAndFlush(courseB);
-        testEntityManager.persistAndFlush(courseC);
-        testEntityManager.persistAndFlush(courseA);
+        persistAllAndFlush(professorA, professorB, courseA, courseB, courseC);
 
         List<Course> courseList = courseRepository.findAllByProfessorIdOrderByNameAscEndDateAsc(professorA.getId());
 
@@ -254,12 +232,7 @@ public class CourseRepositoryTest {
         courseC.setEndDate(LocalDate.of(2023, 7, 7));
         courseD.setName("Spring Security");
         courseD.setSlug("spring-security");
-        testEntityManager.persistAndFlush(professorA);
-        testEntityManager.persistAndFlush(professorB);
-        testEntityManager.persistAndFlush(courseB);
-        testEntityManager.persistAndFlush(courseC);
-        testEntityManager.persistAndFlush(courseD);
-        testEntityManager.persistAndFlush(courseA);
+        persistAllAndFlush(professorA, professorB, courseA, courseB, courseC, courseD);
 
         List<Course> courseList = courseRepository.findAllByProfessorIdOrderByNameAscEndDateAsc(professorA.getId());
 
@@ -289,12 +262,7 @@ public class CourseRepositoryTest {
         var studentB = UserFactory.sampleUserStudentB();
         var invitation = InvitationFactory.sampleInvitationWithCourse(course);
         var enrollment = EnrollmentFactory.sampleEnrollment(invitation, studentB);
-        testEntityManager.persistAndFlush(professor);
-        testEntityManager.persistAndFlush(course);
-        testEntityManager.persistAndFlush(studentA);
-        testEntityManager.persistAndFlush(studentB);
-        testEntityManager.persistAndFlush(invitation);
-        testEntityManager.persistAndFlush(enrollment);
+        persistAllAndFlush(professor, course, studentA, studentB, invitation, enrollment);
 
         List<Course> courseList = courseRepository.findAllByStudentIdOrderByNameAscEndDateAsc(studentA.getId());
 
@@ -311,13 +279,7 @@ public class CourseRepositoryTest {
         var invitation = InvitationFactory.sampleInvitationWithCourse(course);
         var enrollmentStudentA = EnrollmentFactory.sampleEnrollment(invitation, studentA);
         var enrollmentStudentB = EnrollmentFactory.sampleEnrollment(invitation, studentB);
-        testEntityManager.persistAndFlush(professor);
-        testEntityManager.persistAndFlush(course);
-        testEntityManager.persistAndFlush(studentA);
-        testEntityManager.persistAndFlush(studentB);
-        testEntityManager.persistAndFlush(invitation);
-        testEntityManager.persistAndFlush(enrollmentStudentA);
-        testEntityManager.persistAndFlush(enrollmentStudentB);
+        persistAllAndFlush(professor, course, studentA, studentB, invitation, enrollmentStudentA, enrollmentStudentB);
 
         List<Course> courseList = courseRepository.findAllByStudentIdOrderByNameAscEndDateAsc(studentA.getId());
 
@@ -344,18 +306,8 @@ public class CourseRepositoryTest {
         var enrollmentStudentACourseA = EnrollmentFactory.sampleEnrollment(invitationA, studentA);
         var enrollmentStudentACourseB = EnrollmentFactory.sampleEnrollment(invitationB, studentA);
         var enrollmentStudentBCourseC = EnrollmentFactory.sampleEnrollment(invitationC, studentB);
-        testEntityManager.persistAndFlush(professor);
-        testEntityManager.persistAndFlush(courseA);
-        testEntityManager.persistAndFlush(courseB);
-        testEntityManager.persistAndFlush(courseC);
-        testEntityManager.persistAndFlush(studentA);
-        testEntityManager.persistAndFlush(studentB);
-        testEntityManager.persistAndFlush(invitationA);
-        testEntityManager.persistAndFlush(invitationB);
-        testEntityManager.persistAndFlush(invitationC);
-        testEntityManager.persistAndFlush(enrollmentStudentACourseA);
-        testEntityManager.persistAndFlush(enrollmentStudentACourseB);
-        testEntityManager.persistAndFlush(enrollmentStudentBCourseC);
+        persistAllAndFlush(professor, courseA, courseB, courseC, studentA, studentB,
+                invitationA, invitationB, invitationC, enrollmentStudentACourseA, enrollmentStudentACourseB, enrollmentStudentBCourseC);
 
         List<Course> courseList = courseRepository.findAllByStudentIdOrderByNameAscEndDateAsc(studentA.getId());
 
@@ -388,20 +340,8 @@ public class CourseRepositoryTest {
         var enrollmentStudentACourseA = EnrollmentFactory.sampleEnrollment(invitationA, studentA);
         var enrollmentStudentACourseB = EnrollmentFactory.sampleEnrollment(invitationB, studentA);
         var enrollmentStudentBCourseC = EnrollmentFactory.sampleEnrollment(invitationC, studentB);
-        testEntityManager.persistAndFlush(professorA);
-        testEntityManager.persistAndFlush(professorB);
-        testEntityManager.persistAndFlush(professorC);
-        testEntityManager.persistAndFlush(courseA);
-        testEntityManager.persistAndFlush(courseB);
-        testEntityManager.persistAndFlush(courseC);
-        testEntityManager.persistAndFlush(studentA);
-        testEntityManager.persistAndFlush(studentB);
-        testEntityManager.persistAndFlush(invitationA);
-        testEntityManager.persistAndFlush(invitationB);
-        testEntityManager.persistAndFlush(invitationC);
-        testEntityManager.persistAndFlush(enrollmentStudentACourseA);
-        testEntityManager.persistAndFlush(enrollmentStudentACourseB);
-        testEntityManager.persistAndFlush(enrollmentStudentBCourseC);
+        persistAllAndFlush(professorA, professorB, professorC, courseA, courseB, courseC, studentA, studentB,
+                invitationA, invitationB, invitationC, enrollmentStudentACourseA, enrollmentStudentACourseB, enrollmentStudentBCourseC);
 
         List<Course> courseList = courseRepository.findAllByStudentIdOrderByNameAscEndDateAsc(studentA.getId());
 
@@ -439,19 +379,8 @@ public class CourseRepositoryTest {
         var enrollmentStudentACourseA = EnrollmentFactory.sampleEnrollment(invitationA, studentA);
         var enrollmentStudentACourseB = EnrollmentFactory.sampleEnrollment(invitationB, studentA);
         var enrollmentStudentBCourseC = EnrollmentFactory.sampleEnrollment(invitationC, studentB);
-        testEntityManager.persistAndFlush(professorA);
-        testEntityManager.persistAndFlush(professorB);
-        testEntityManager.persistAndFlush(courseB);
-        testEntityManager.persistAndFlush(courseC);
-        testEntityManager.persistAndFlush(courseA);
-        testEntityManager.persistAndFlush(studentA);
-        testEntityManager.persistAndFlush(studentB);
-        testEntityManager.persistAndFlush(invitationA);
-        testEntityManager.persistAndFlush(invitationB);
-        testEntityManager.persistAndFlush(invitationC);
-        testEntityManager.persistAndFlush(enrollmentStudentACourseA);
-        testEntityManager.persistAndFlush(enrollmentStudentACourseB);
-        testEntityManager.persistAndFlush(enrollmentStudentBCourseC);
+        persistAllAndFlush(professorA, professorB, courseA, courseB, courseC, studentA, studentB,
+                invitationA, invitationB, invitationC, enrollmentStudentACourseA, enrollmentStudentACourseB, enrollmentStudentBCourseC);
 
         List<Course> courseList = courseRepository.findAllByStudentIdOrderByNameAscEndDateAsc(studentA.getId());
 
@@ -495,22 +424,9 @@ public class CourseRepositoryTest {
         var enrollmentStudentACourseB = EnrollmentFactory.sampleEnrollment(invitationB, studentA);
         var enrollmentStudentACourseC = EnrollmentFactory.sampleEnrollment(invitationC, studentA);
         var enrollmentStudentBCourseC = EnrollmentFactory.sampleEnrollment(invitationD, studentB);
-        testEntityManager.persistAndFlush(professorA);
-        testEntityManager.persistAndFlush(professorB);
-        testEntityManager.persistAndFlush(courseB);
-        testEntityManager.persistAndFlush(courseC);
-        testEntityManager.persistAndFlush(courseD);
-        testEntityManager.persistAndFlush(courseA);
-        testEntityManager.persistAndFlush(studentA);
-        testEntityManager.persistAndFlush(studentB);
-        testEntityManager.persistAndFlush(invitationA);
-        testEntityManager.persistAndFlush(invitationB);
-        testEntityManager.persistAndFlush(invitationC);
-        testEntityManager.persistAndFlush(invitationD);
-        testEntityManager.persistAndFlush(enrollmentStudentACourseA);
-        testEntityManager.persistAndFlush(enrollmentStudentACourseB);
-        testEntityManager.persistAndFlush(enrollmentStudentACourseC);
-        testEntityManager.persistAndFlush(enrollmentStudentBCourseC);
+        persistAllAndFlush(professorA, professorB, courseA, courseB, courseC, courseD, studentA, studentB,
+                invitationA, invitationB, invitationC, invitationD,
+                enrollmentStudentACourseA, enrollmentStudentACourseB, enrollmentStudentACourseC, enrollmentStudentBCourseC);
 
         List<Course> courseList = courseRepository.findAllByStudentIdOrderByNameAscEndDateAsc(studentA.getId());
 
@@ -522,5 +438,11 @@ public class CourseRepositoryTest {
         assertThat(courseList).containsExactly(courseA, courseB, courseC);
         assertThat(courseList)
                 .isSortedAccordingTo(Comparator.comparing(Course::getName).thenComparing(Course::getEndDate));
+    }
+
+    private void persistAllAndFlush(Object... entities) {
+        for (Object entity : entities) {
+            testEntityManager.persistAndFlush(entity);
+        }
     }
 }
