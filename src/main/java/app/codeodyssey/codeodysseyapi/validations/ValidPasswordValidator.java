@@ -14,7 +14,7 @@ public class ValidPasswordValidator implements ConstraintValidator<ValidPassword
     @Override
     public boolean isValid(String password, ConstraintValidatorContext context) {
         if (password == null || password.trim().isEmpty()) {
-            return false;
+            throw new InvalidPasswordException("A senha deve conter pelo menos uma letra maiúscula, uma letra minúscula, um número, um caractere especial e ter entre 8 e 64 caracteres.");
         }
 
         int passwordLength = password.length();
