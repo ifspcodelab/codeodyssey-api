@@ -21,10 +21,10 @@ public class CreateCourseService {
     public CourseResponse execute(UUID professorId, CreateCourseCommand command) {
         User professor = userRepository
                 .findById(professorId)
-                .orElseThrow(() -> new ResourceNotFoundException(ResourceName.USER, professorId));
+                .orElseThrow(() -> new ResourceNotFoundException(professorId, Resource.COURSE));
 
         if (courseRepository.existsBySlugAndProfessor(command.slug(), professor)) {
-            throw new ResourceAlreadyExistsException(ResourceName.COURSE, "slug", command.slug());
+            throw new ResourceAlreadyExistsException(Resource.COURSE, "slug", command.slug());
         }
 
         if (command.startDate().isBefore(LocalDate.now())) {

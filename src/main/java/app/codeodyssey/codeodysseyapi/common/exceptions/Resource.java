@@ -5,7 +5,7 @@ import lombok.Getter;
 
 @Getter
 @AllArgsConstructor
-public enum ResourceName {
+public enum Resource {
     COURSE("Course"),
     USER("User");
 
