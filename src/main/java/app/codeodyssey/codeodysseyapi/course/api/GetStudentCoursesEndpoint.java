@@ -30,7 +30,8 @@ public class GetStudentCoursesEndpoint {
     @Operation(
             summary = "Get all student's courses.",
             description =
-                    "Returns a list containing all courses of a student given their id. This course list is ordered by name and end date.",
+                    "Returns a list containing all courses of a student given their id."
+                            + "This course list is ordered by name and end date.",
             tags = {"Courses"})
     @ApiResponses({
         @ApiResponse(
