@@ -44,6 +44,5 @@ public class CreateUserServiceTest {
         userRepository.save(new User("sergio@example.com", "Sergio", "password"));
 
         assertThrows(ViolationException.class, () -> createUserService.execute(command));
-
     }
 }
