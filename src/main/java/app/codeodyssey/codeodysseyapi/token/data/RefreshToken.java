@@ -11,7 +11,7 @@ import org.hibernate.annotations.SQLDelete;
 
 @Entity
 @Table(name = "refreshtokens")
-@SQLDelete(sql = "UPDATE refreshtokens SET status = 'USED' where id = ?")
+//@SQLDelete(sql = "UPDATE refreshtokens SET status = 'USED' where id = ?")
 @AllArgsConstructor
 @Getter
 @Setter
