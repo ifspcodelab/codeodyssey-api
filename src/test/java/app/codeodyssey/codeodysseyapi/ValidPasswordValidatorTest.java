@@ -3,10 +3,7 @@ package app.codeodyssey.codeodysseyapi;
 import app.codeodyssey.codeodysseyapi.common.exception.InvalidPasswordException;
 import app.codeodyssey.codeodysseyapi.validations.ValidPasswordValidator;
 import org.junit.jupiter.api.Test;
-import org.springframework.boot.test.autoconfigure.jdbc.AutoConfigureTestDatabase;
 import org.springframework.boot.test.context.SpringBootTest;
-import org.springframework.test.context.ContextConfiguration;
-import org.testcontainers.junit.jupiter.Testcontainers;
 
 import static org.junit.jupiter.api.Assertions.assertDoesNotThrow;
 import static org.junit.jupiter.api.Assertions.assertThrows;
@@ -14,11 +11,7 @@ import static org.junit.jupiter.api.Assertions.assertThrows;
 
 
 @SpringBootTest
-@AutoConfigureTestDatabase(replace = AutoConfigureTestDatabase.Replace.NONE)
-@ContextConfiguration(initializers = {DatabaseContainerInitializer.class})
-@Testcontainers
 public class ValidPasswordValidatorTest {
-    
     private final ValidPasswordValidator validPasswordValidator = new ValidPasswordValidator();
 
     @Test
