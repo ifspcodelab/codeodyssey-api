@@ -6,6 +6,7 @@ import app.codeodyssey.codeodysseyapi.course.util.CourseFactory;
 import app.codeodyssey.codeodysseyapi.token.data.RefreshTokenRepository;
 import app.codeodyssey.codeodysseyapi.user.data.UserRepository;
 import app.codeodyssey.codeodysseyapi.user.util.AuthenticationTokenPairFactory;
+import app.codeodyssey.codeodysseyapi.user.util.UserFactory;
 import org.junit.jupiter.api.AfterEach;
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.DisplayName;
@@ -19,12 +20,14 @@ import org.springframework.http.HttpHeaders;
 import org.springframework.http.HttpMethod;
 import org.springframework.http.HttpStatus;
 import org.springframework.test.context.ContextConfiguration;
+import org.springframework.web.client.HttpClientErrorException;
 import org.springframework.web.client.RestTemplate;
 import org.testcontainers.junit.jupiter.Testcontainers;
 
 import java.util.List;
 
 import static org.assertj.core.api.Assertions.assertThat;
+import static org.assertj.core.api.Assertions.catchThrowable;
 
 @SpringBootTest(webEnvironment = SpringBootTest.WebEnvironment.RANDOM_PORT)
 @DisplayName("Get Professor's Courses End to End tests")
@@ -83,5 +86,28 @@ public class GetProfessorCoursesEndToEndTest {
         assertThat(response.getStatusCode()).isEqualTo(HttpStatus.OK);
         assertThat(response.getBody()).isNotNull();
         assertThat(response.getBody()).hasSize(1);
+    }
+
+    @DisplayName("getProfessorCoursesEndpoint returns unauthorized when an user is not a professor")
+    @Test
+    void getProfessorCoursesEndpoint_givenNonProfessor_returnsUnauthorized() {
+        var course = CourseFactory.sampleCourse();
+        var professor = course.getProfessor();
+        var student = UserFactory.sampleUserStudent();
+        var authenticationTokenPair = AuthenticationTokenPairFactory.sampleAuthenticationTokenPair(student);
+        userRepository.saveAll(List.of(professor, student));
+        courseRepository.save(course);
+        refreshTokenRepository.save(authenticationTokenPair.getRefreshToken());
+        headers.setBearerAuth(authenticationTokenPair.getAccessToken());
+        HttpEntity<?> request = new HttpEntity<>(null, headers);
+        url += "/%s/courses".formatted(student.getId());
+
+        var throwable = catchThrowable(() -> restTemplate.exchange(url, HttpMethod.GET, request, String.class));
+
+        assertThat(throwable).isNotNull();
+        assertThat(throwable).isInstanceOf(HttpClientErrorException.class);
+        HttpClientErrorException httpException = (HttpClientErrorException) throwable;
+        assertThat(httpException.getStatusCode()).isEqualTo(HttpStatus.UNAUTHORIZED);
+        assertThat(httpException.getResponseBodyAsString()).isNotNull();
     }
 }
