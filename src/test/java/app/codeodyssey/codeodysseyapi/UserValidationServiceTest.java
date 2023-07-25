@@ -5,6 +5,8 @@ import app.codeodyssey.codeodysseyapi.common.exception.UserAlreadyValidatedExcep
 import app.codeodyssey.codeodysseyapi.user.data.User;
 import app.codeodyssey.codeodysseyapi.user.data.UserRepository;
 import app.codeodyssey.codeodysseyapi.user.service.UserValidationService;
+import org.junit.jupiter.api.AfterEach;
+import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Test;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.beans.factory.annotation.Value;
@@ -34,6 +36,16 @@ public class UserValidationServiceTest {
     @Value("${time.register-expiration-time}")
     private int expirationTime;
 
+    @BeforeEach
+    void setUp() {
+        userRepository.deleteAll();
+    }
+
+    @AfterEach
+    void tearDown() {
+        userRepository.deleteAll();
+    }
+
 
     @Test
     void testValidateUser_ValidToken_UserNotValidated_Success() {
@@ -50,7 +62,7 @@ public class UserValidationServiceTest {
 
     @Test
     void testValidateUser_ValidToken_UserAlreadyValidated_ExceptionThrown() {
-        User user = new User("gabs@example.com", "Gabriel", "password");
+        User user = new User("sergio@example.com", "Sergio", "password");
         user.setValidated(true);
         userRepository.save(user);
 
@@ -59,7 +71,7 @@ public class UserValidationServiceTest {
 
     @Test
     void testValidateUser_ExpiredToken_ExceptionThrown() {
-        User user = new User("clara@example.com", "Clara", "password");
+        User user = new User("sergio@example.com", "Sergio", "password");
         user.setCreatedAt(user.getCreatedAt().minus(expirationTime + 1, ChronoUnit.SECONDS));
         userRepository.save(user);
 

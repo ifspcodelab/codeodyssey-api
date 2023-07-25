@@ -3,6 +3,8 @@ package app.codeodyssey.codeodysseyapi;
 import app.codeodyssey.codeodysseyapi.user.data.User;
 import app.codeodyssey.codeodysseyapi.user.data.UserRepository;
 import app.codeodyssey.codeodysseyapi.user.service.UserCleanupService;
+import org.junit.jupiter.api.AfterEach;
+import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Test;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.boot.test.autoconfigure.jdbc.AutoConfigureTestDatabase;
@@ -12,8 +14,8 @@ import org.testcontainers.junit.jupiter.Testcontainers;
 
 import java.time.temporal.ChronoUnit;
 
-import static org.junit.jupiter.api.Assertions.*;
 import static org.assertj.core.api.Assertions.assertThat;
+import static org.junit.jupiter.api.Assertions.assertEquals;
 
 
 @SpringBootTest
@@ -26,6 +28,16 @@ public class UserCleanupServiceTest {
 
     @Autowired
     private UserRepository userRepository;
+
+    @BeforeEach
+    void setUp() {
+        userRepository.deleteAll();
+    }
+
+    @AfterEach
+    void tearDown() {
+        userRepository.deleteAll();
+    }
 
     @Test
     void testExecute_cleanNonValidatedUser() {
@@ -40,7 +52,7 @@ public class UserCleanupServiceTest {
     }
 
     @Test
-    void testExecute_dontCleanValidUsers() {
+    void testExecute_dontCleanValidUser() {
         User user = new User("Sergio", "sergio@example.com", "password");
         userRepository.save(user);
 
