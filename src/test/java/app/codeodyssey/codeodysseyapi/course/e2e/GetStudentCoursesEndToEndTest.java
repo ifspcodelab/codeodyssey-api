@@ -1,6 +1,7 @@
 package app.codeodyssey.codeodysseyapi.course.e2e;
 
 import static org.assertj.core.api.Assertions.assertThat;
+import static org.assertj.core.api.Assertions.catchThrowable;
 
 import app.codeodyssey.codeodysseyapi.DatabaseContainerInitializer;
 import app.codeodyssey.codeodysseyapi.course.data.CourseRepository;
@@ -27,6 +28,7 @@ import org.springframework.http.HttpHeaders;
 import org.springframework.http.HttpMethod;
 import org.springframework.http.HttpStatus;
 import org.springframework.test.context.ContextConfiguration;
+import org.springframework.web.client.HttpClientErrorException;
 import org.springframework.web.client.RestTemplate;
 import org.testcontainers.junit.jupiter.Testcontainers;
 
@@ -100,5 +102,32 @@ public class GetStudentCoursesEndToEndTest {
         assertThat(response.getStatusCode()).isEqualTo(HttpStatus.OK);
         assertThat(response.getBody()).isNotNull();
         assertThat(response.getBody()).hasSize(1);
+    }
+
+    @DisplayName("getStudentCoursesEndpoint returns unauthorized when an user is not a student")
+    @Test
+    void getStudentCoursesEndpoint_givenNonStudent_returnsUnauthorized() {
+        var course = CourseFactory.sampleCourse();
+        var professor = course.getProfessor();
+        var invitation = InvitationFactory.sampleInvitationWithCourse(course);
+        var student = UserFactory.sampleUserStudent();
+        var enrollment = EnrollmentFactory.sampleEnrollment(invitation, student);
+        var authenticationTokenPair = AuthenticationTokenPairFactory.sampleAuthenticationTokenPair(student);
+        userRepository.saveAll(List.of(professor, student));
+        courseRepository.save(course);
+        invitationRepository.save(invitation);
+        enrollmentRepository.save(enrollment);
+        refreshTokenRepository.save(authenticationTokenPair.getRefreshToken());
+        headers.setBearerAuth(authenticationTokenPair.getAccessToken());
+        HttpEntity<?> request = new HttpEntity<>(null, headers);
+        url += "/%s/enrollments".formatted(professor.getId());
+
+        var throwable = catchThrowable(() -> restTemplate.exchange(url, HttpMethod.GET, request, String.class));
+
+        assertThat(throwable).isNotNull();
+        assertThat(throwable).isInstanceOf(HttpClientErrorException.class);
+        HttpClientErrorException httpException = (HttpClientErrorException) throwable;
+        assertThat(httpException.getStatusCode()).isEqualTo(HttpStatus.UNAUTHORIZED);
+        assertThat(httpException.getResponseBodyAsString()).isNotNull();
     }
 }
