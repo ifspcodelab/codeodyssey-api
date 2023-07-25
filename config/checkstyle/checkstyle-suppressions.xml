@@ -6,4 +6,7 @@
 
 <suppressions>
     <suppress checks="HideUtilityClassConstructorCheck" files="CodeodysseyApiApplication.java"/>
+    <suppress checks="MethodName" files=".*[\\/]src[\\/]test[\\/]"/>
+    <suppress checks="VisibilityModifier" files=".*[\\/]src[\\/]test[\\/]"/>
+    <suppress checks="JavadocStyle" files=".*[\\/]src[\\/]test[\\/]"/>
 </suppressions>
