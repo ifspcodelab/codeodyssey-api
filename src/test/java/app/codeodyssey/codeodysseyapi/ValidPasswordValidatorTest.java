@@ -15,7 +15,7 @@ public class ValidPasswordValidatorTest {
     private final ValidPasswordValidator validPasswordValidator = new ValidPasswordValidator();
 
     @Test
-    void testIsValid_ValidPassword_DoesNotThrowInvalidPasswordException() {
+    void testIsValid_ValidPassword_DoesNotThrowException() {
         String[] validPassword = {
                 "Password@123",
                 "MyPa$$word2023",
@@ -29,7 +29,7 @@ public class ValidPasswordValidatorTest {
     }
 
     @Test
-    void testIsValid_InvalidPassword_ThrowsInvalidPasswordException() {
+    void testIsValid_InvalidPassword_ExceptionThrown() {
         String[] invalidPasswords = {
                 "", // Empty password
                 "Short@1", // Password less than 8 characters
