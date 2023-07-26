@@ -61,9 +61,14 @@ public class ValidateUserEndpointTest {
 
         User foundUser = userRepository.getUserByEmail(user.getEmail());
 
-        Assertions.assertTrue(foundUser.isValidated());
         Assertions.assertNotNull(foundUser);
+        Assertions.assertTrue(foundUser.isValidated());
         Assertions.assertEquals(user.getId(), foundUser.getId());
+        Assertions.assertEquals(user.getToken(), foundUser.getToken());
+        Assertions.assertEquals(user.getName(), foundUser.getName());
+        Assertions.assertEquals(user.getEmail(), foundUser.getEmail());
+        Assertions.assertEquals(user.getRole(), foundUser.getRole());
+        Assertions.assertEquals(user.getPassword(), foundUser.getPassword());
     }
 
     @Test
@@ -78,6 +83,18 @@ public class ValidateUserEndpointTest {
                 .andExpect(content().contentType(MediaType.APPLICATION_PROBLEM_JSON))
                 .andExpect(jsonPath("$.title").value("Token problem"))
                 .andExpect(jsonPath("$.detail").value(TokenProblem.EXPIRED.getMessage()));
+
+        User foundUser = userRepository.getUserByEmail(user.getEmail());
+
+        Assertions.assertNotNull(foundUser);
+        Assertions.assertFalse(foundUser.isValidated());
+        Assertions.assertEquals(user.getId(), foundUser.getId());
+        Assertions.assertEquals(user.getToken(), foundUser.getToken());
+        Assertions.assertEquals(user.getName(), foundUser.getName());
+        Assertions.assertEquals(user.getEmail(), foundUser.getEmail());
+        Assertions.assertEquals(user.isValidated(), foundUser.isValidated());
+        Assertions.assertEquals(user.getRole(), foundUser.getRole());
+        Assertions.assertEquals(user.getPassword(), foundUser.getPassword());
     }
 
     @Test
@@ -102,5 +119,17 @@ public class ValidateUserEndpointTest {
                 .andExpect(content().contentType(MediaType.APPLICATION_PROBLEM_JSON))
                 .andExpect(jsonPath("$.title").value("Validation"))
                 .andExpect(jsonPath("$.detail").value("User is already validated"));
+
+        User foundUser = userRepository.getUserByEmail(user.getEmail());
+
+        Assertions.assertTrue(foundUser.isValidated());
+        Assertions.assertNotNull(foundUser);
+        Assertions.assertEquals(user.getId(), foundUser.getId());
+        Assertions.assertEquals(user.getToken(), foundUser.getToken());
+        Assertions.assertEquals(user.getName(), foundUser.getName());
+        Assertions.assertEquals(user.getEmail(), foundUser.getEmail());
+        Assertions.assertEquals(user.isValidated(), foundUser.isValidated());
+        Assertions.assertEquals(user.getRole(), foundUser.getRole());
+        Assertions.assertEquals(user.getPassword(), foundUser.getPassword());
     }
 }
