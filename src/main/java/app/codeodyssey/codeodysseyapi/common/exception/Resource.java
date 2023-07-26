@@ -8,7 +8,8 @@ import lombok.Getter;
 public enum Resource {
     USER("User"),
     REFRESH_TOKEN("RefreshToken"),
-    ACCESS_TOKEN("AccessToken");
+    ACCESS_TOKEN("AccessToken"),
+    COURSE("Course");
 
     private final String name;
 }
