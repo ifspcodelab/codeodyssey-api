@@ -5,6 +5,7 @@ import app.codeodyssey.codeodysseyapi.user.data.UserRepository;
 import app.codeodyssey.codeodysseyapi.user.service.UserCleanupService;
 import org.junit.jupiter.api.AfterEach;
 import org.junit.jupiter.api.BeforeEach;
+import org.junit.jupiter.api.DisplayName;
 import org.junit.jupiter.api.Test;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.beans.factory.annotation.Value;
@@ -21,6 +22,7 @@ import static org.junit.jupiter.api.Assertions.assertEquals;
 
 
 @SpringBootTest
+@DisplayName("test for the UserCleanupService")
 @AutoConfigureTestDatabase(replace = AutoConfigureTestDatabase.Replace.NONE)
 @ContextConfiguration(initializers = {DatabaseContainerInitializer.class})
 @Testcontainers
@@ -45,7 +47,8 @@ public class UserCleanupServiceTest {
     }
 
     @Test
-    void testCleanup_CleanUserOutExpirationTime_ReturnsNull() {
+    @DisplayName("clean user who is out the expiration time")
+    void cleanup_givenUserOutExpirationTime_returnsNull() {
         User user = new User("Sergio", "sergio@example.com", "password");
         user.setCreatedAt(user.getCreatedAt().minus(expirationTime, ChronoUnit.SECONDS));
         userRepository.save(user);
@@ -57,7 +60,8 @@ public class UserCleanupServiceTest {
     }
 
     @Test
-    void testCleanup_CleanUsersOutExpirationTime_ReturnsEmpty() {
+    @DisplayName("clean users who are out the expiration time")
+    void cleanup_givenUsersOutExpirationTime_returnsEmpty() {
         User user1 = new User("user1@example.com", "User 1", "password");
         user1.setCreatedAt(user1.getCreatedAt().minus(expirationTime, ChronoUnit.SECONDS));
 
@@ -75,7 +79,8 @@ public class UserCleanupServiceTest {
     }
 
     @Test
-    void testCleanup_DontCleanUserWithinExpirationTime_ReturnsValidUser() {
+    @DisplayName("do not clean user who is within the expiration time")
+    void cleanup_givenUserWithinExpirationTime_returnsValidUser() {
         User user = new User("Sergio", "sergio@example.com", "password");
         userRepository.save(user);
 
@@ -88,7 +93,8 @@ public class UserCleanupServiceTest {
     }
 
     @Test
-    void testCleanup_DontCleanUsersWithinExpirationTime_ReturnsValidUsers() {
+    @DisplayName("do not clean users who are within the expiration time")
+    void cleanup_givenUsersWithinExpirationTime_returnsValidUsers() {
         User user1 = new User("user1@example.com", "User 1", "password");
         User user2 = new User("user2@example.com", "User 2", "password");
         User user3 = new User("user3@example.com", "user3", "password");
