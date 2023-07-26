@@ -39,9 +39,8 @@ public class LoginUserEndpoint {
         @ApiResponse(
                 responseCode = "400",
                 content = {
-                        @Content(schema = @Schema(implementation = ProblemDetail.class), mediaType = "application/json")
+                    @Content(schema = @Schema(implementation = ProblemDetail.class), mediaType = "application/json")
                 })
-        // TODO: 409
     })
     @CrossOrigin(origins = "*")
     @PostMapping("/login")

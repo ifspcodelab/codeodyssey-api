@@ -18,7 +18,7 @@ import org.testcontainers.junit.jupiter.Testcontainers;
 @DataJpaTest
 @DisplayName("tests for the refresh token repository")
 @AutoConfigureTestDatabase(replace = AutoConfigureTestDatabase.Replace.NONE)
-@ContextConfiguration(initializers = { DatabaseContainerInitializer.class })
+@ContextConfiguration(initializers = {DatabaseContainerInitializer.class})
 public class RefreshTokenRepositoryTest {
 
     @Autowired
@@ -29,7 +29,7 @@ public class RefreshTokenRepositoryTest {
 
     @Test
     @DisplayName("save a valid token when successful")
-    void save_givenAValidToken_returnsToken(){
+    void save_givenAValidToken_returnsToken() {
         User user = this.userRepository.save(UserFactory.createValidUser());
         RefreshToken refreshToken = RefreshTokenFactory.createValidRefreshToken(user);
         RefreshToken saved = this.refreshTokenRepository.save(refreshToken);
@@ -40,7 +40,7 @@ public class RefreshTokenRepositoryTest {
 
     @Test
     @DisplayName("save a valid and updated token when successful")
-    void save_givenAValidAndUpdatedToken_returnsToken(){
+    void save_givenAValidAndUpdatedToken_returnsToken() {
         User user = this.userRepository.save(UserFactory.createValidUser());
         RefreshToken refreshToken = RefreshTokenFactory.createValidRefreshToken(user);
         RefreshToken saved = this.refreshTokenRepository.save(refreshToken);
@@ -50,5 +50,4 @@ public class RefreshTokenRepositoryTest {
         Assertions.assertThat(updated.getId()).isNotNull();
         Assertions.assertThat(saved.getStatus()).isEqualTo(RefreshTokenStatus.USED);
     }
-
 }

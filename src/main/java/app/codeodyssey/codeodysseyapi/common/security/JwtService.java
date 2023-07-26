@@ -101,8 +101,7 @@ public class JwtService {
         }
 
         refreshToken.setUser(this.userRepository.findById(id).get());
-        refreshToken.setExpiryAt(
-                Instant.now().plus(jwtConfig.getRefreshTokenExp(), ChronoUnit.MINUTES));
+        refreshToken.setExpiryAt(Instant.now().plus(jwtConfig.getRefreshTokenExp(), ChronoUnit.MINUTES));
 
         refreshToken = this.tokenRepository.save(refreshToken);
         return refreshToken;

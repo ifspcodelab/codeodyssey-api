@@ -16,9 +16,12 @@ import org.springframework.stereotype.Component;
 @Setter
 public class JwtConfig {
     private String secretKey;
+
     @Value("${application.jwt.access-token-expiration-after-minutes}")
     private Integer accessTokenExp;
+
     @Value("${application.jwt.refresh-token-expiration-after-minutes}")
     private Integer refreshTokenExp;
+
     private String issuer;
 }

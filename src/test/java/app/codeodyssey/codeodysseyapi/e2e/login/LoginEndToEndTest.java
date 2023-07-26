@@ -9,6 +9,8 @@ import app.codeodyssey.codeodysseyapi.user.data.UserRepository;
 import app.codeodyssey.codeodysseyapi.user.data.UserRole;
 import io.jsonwebtoken.Claims;
 import io.jsonwebtoken.Jwts;
+import java.time.Instant;
+import java.util.UUID;
 import org.junit.jupiter.api.Assertions;
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.DisplayName;
@@ -20,20 +22,16 @@ import org.springframework.boot.test.context.SpringBootTest;
 import org.springframework.boot.test.web.server.LocalServerPort;
 import org.springframework.dao.DataIntegrityViolationException;
 import org.springframework.http.HttpEntity;
-import org.springframework.security.authentication.BadCredentialsException;
 import org.springframework.test.context.ContextConfiguration;
 import org.springframework.web.client.HttpClientErrorException;
 import org.springframework.web.client.RestTemplate;
 import org.testcontainers.junit.jupiter.Testcontainers;
 
-import java.time.Instant;
-import java.util.UUID;
-
 @SpringBootTest(webEnvironment = SpringBootTest.WebEnvironment.RANDOM_PORT)
 @Testcontainers
 @ContextConfiguration(initializers = {DatabaseContainerInitializer.class})
 @AutoConfigureTestDatabase(replace = AutoConfigureTestDatabase.Replace.NONE)
-@DisplayName("tests for login endpoint")
+@DisplayName("tests for login e2e")
 public class LoginEndToEndTest {
 
     @Autowired
@@ -74,9 +72,7 @@ public class LoginEndToEndTest {
                 .createdAt(Instant.now())
                 .build());
 
-        HttpEntity<LoginRequest> request = new HttpEntity<>(
-                new LoginRequest("john@email.com", "123456")
-        );
+        HttpEntity<LoginRequest> request = new HttpEntity<>(new LoginRequest("john@email.com", "123456"));
 
         LoginResponse response = restTemplate.postForObject(url, request, LoginResponse.class);
 
@@ -107,33 +103,32 @@ public class LoginEndToEndTest {
                 "john@email.com",
                 "$2a$10$oe40I38YdnKGq/QiH99kfOaJUY4QwMCSBDwpUR60iOXhD48/y/dDe",
                 UserRole.STUDENT,
-                Instant.now()
-        );
+                Instant.now());
 
         userRepository.save(user);
 
         user.setId(UUID.randomUUID());
 
-        Assertions.assertThrows(DataIntegrityViolationException.class,
+        Assertions.assertThrows(
+                DataIntegrityViolationException.class,
                 () -> userRepository.save(user),
                 "should throw DataIntegrityViolationException");
     }
 
     @Test
     @DisplayName("login given an invalid email returns bad request")
-    void login_givenAnInvalidEmail_returnsException(){
-        HttpEntity<LoginRequest> request = new HttpEntity<>(
-                new LoginRequest("john@email.com", "123456")
-        );
+    void login_givenAnInvalidEmail_returnsException() {
+        HttpEntity<LoginRequest> request = new HttpEntity<>(new LoginRequest("john@email.com", "123456"));
 
-        Assertions.assertThrows(HttpClientErrorException.BadRequest.class,
+        Assertions.assertThrows(
+                HttpClientErrorException.BadRequest.class,
                 () -> restTemplate.postForObject(url, request, LoginResponse.class),
                 "should throw BadRequest");
     }
 
     @Test
     @DisplayName("login given an invalid password returns bad credentials")
-    void login_givenAnInvalidPassword_returnsException(){
+    void login_givenAnInvalidPassword_returnsException() {
         var name = "John Doe";
         var email = "john@email.com";
         var password = "$2a$10$oe40I38YdnKGq/QiH99kfOaJUY4QwMCSBDwpUR60iOXhD48/y/dDe";
@@ -146,13 +141,11 @@ public class LoginEndToEndTest {
                 .createdAt(Instant.now())
                 .build());
 
-        HttpEntity<LoginRequest> request = new HttpEntity<>(
-                new LoginRequest("john@email.com", "654321")
-        );
+        HttpEntity<LoginRequest> request = new HttpEntity<>(new LoginRequest("john@email.com", "654321"));
 
-        Assertions.assertThrows(HttpClientErrorException.Forbidden.class,
+        Assertions.assertThrows(
+                HttpClientErrorException.Forbidden.class,
                 () -> restTemplate.postForObject(url, request, LoginResponse.class),
                 "should throw ForbiddenException");
     }
-
 }

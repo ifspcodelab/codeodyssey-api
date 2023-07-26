@@ -12,9 +12,9 @@ import io.swagger.v3.oas.annotations.responses.ApiResponse;
 import io.swagger.v3.oas.annotations.responses.ApiResponses;
 import io.swagger.v3.oas.annotations.tags.Tag;
 import jakarta.transaction.Transactional;
-import java.util.HashMap;
 import java.util.Map;
 import java.util.UUID;
+import java.util.concurrent.ConcurrentHashMap;
 import lombok.RequiredArgsConstructor;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ProblemDetail;
@@ -52,7 +52,7 @@ public class RefreshTokenEndpoint {
     @Transactional
     public ResponseEntity<RefreshTokenResponse> refreshToken(@RequestBody RefreshTokenRequest request) {
         String refreshToken = request.refreshToken();
-        Map<String, Object> claims = new HashMap<>();
+        Map<String, Object> claims = new ConcurrentHashMap<>();
 
         return jwtService
                 .findRefreshTokenById(UUID.fromString(refreshToken))

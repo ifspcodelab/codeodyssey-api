@@ -1,9 +1,9 @@
 package app.codeodyssey.codeodysseyapi.common.security;
 
 import app.codeodyssey.codeodysseyapi.common.exception.Resource;
-import app.codeodyssey.codeodysseyapi.common.exception.ResourceNotFoundException;
 import app.codeodyssey.codeodysseyapi.common.exception.UserNotFoundException;
 import app.codeodyssey.codeodysseyapi.user.data.UserRepository;
+import java.util.UUID;
 import lombok.RequiredArgsConstructor;
 import lombok.SneakyThrows;
 import lombok.extern.slf4j.Slf4j;
@@ -17,8 +17,6 @@ import org.springframework.security.core.userdetails.UserDetailsService;
 import org.springframework.security.crypto.bcrypt.BCryptPasswordEncoder;
 import org.springframework.security.crypto.password.PasswordEncoder;
 
-import java.util.UUID;
-
 @Configuration
 @RequiredArgsConstructor
 @Slf4j
@@ -30,7 +28,7 @@ public class ApplicationConfig {
     public UserDetailsService userDetailsService() {
         return id -> userRepository
                 .findById(UUID.fromString(id))
-                .orElseThrow(() -> new UserNotFoundException("user #"+id+" not found", Resource.USER));
+                .orElseThrow(() -> new UserNotFoundException("user #" + id + " not found", Resource.USER));
     }
 
     @Bean

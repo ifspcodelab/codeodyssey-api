@@ -5,8 +5,7 @@ import lombok.Getter;
 
 @AllArgsConstructor
 @Getter
-public enum ViolationType {
-    ALREADY_EXISTS("already exists");
-
-    private final String name;
+public class UserNotFoundException extends RuntimeException {
+    private String message;
+    private Resource resource;
 }

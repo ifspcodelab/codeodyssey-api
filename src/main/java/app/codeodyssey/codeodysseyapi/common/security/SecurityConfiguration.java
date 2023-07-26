@@ -19,40 +19,40 @@ import org.springframework.security.web.authentication.UsernamePasswordAuthentic
 public class SecurityConfiguration {
 
     private final JwtAuthenticationFilter jwtAuthFilter;
-    private final AuthenticationProvider authenticationProvider;
+    private final AuthenticationProvider authProvider;
 
     private static final String[] NO_AUTH_REQUIRED = {
-            "/api/v1/login",
-            "/swagger-ui/**",
-            "/v3/api-docs/**",
-            "/api/v1/refreshtoken",
+        "/api/v1/login", "/swagger-ui/**", "/v3/api-docs/**", "/api/v1/refreshtoken",
     };
 
-    private static final String[] STUDENTS_ALLOWED = {
+    private static final String[] STUDENTS_ALLOWED = {};
 
-    };
-
-    private static final String[] PROFESSORS_ALLOWED = {
-
-    };
+    private static final String[] PROF_ALLOWED = {};
 
     @Bean
-    public SecurityFilterChain securityFilterChain(HttpSecurity http) throws Exception {
-        http
-                .csrf(AbstractHttpConfigurer::disable)
-                .authorizeHttpRequests(auth -> auth
-                        .requestMatchers(NO_AUTH_REQUIRED).permitAll()
-                        .requestMatchers(STUDENTS_ALLOWED).hasAnyAuthority("STUDENT")
-                        .requestMatchers(PROFESSORS_ALLOWED).hasAnyAuthority("PROFESSOR")
-                        .anyRequest()
-                        .authenticated()
-                )
-                .sessionManagement(sess -> sess.sessionCreationPolicy(SessionCreationPolicy.STATELESS))
-                .authenticationProvider(authenticationProvider)
-                .addFilterBefore(jwtAuthFilter, UsernamePasswordAuthenticationFilter.class)
-                .formLogin(AbstractHttpConfigurer::disable);
+    public SecurityFilterChain securityFilterChain(HttpSecurity http) {
+        try {
+            http.csrf(AbstractHttpConfigurer::disable)
+                    .authorizeHttpRequests(auth -> auth.requestMatchers(NO_AUTH_REQUIRED)
+                            .permitAll()
+                            .requestMatchers(STUDENTS_ALLOWED)
+                            .hasAnyAuthority("STUDENT")
+                            .requestMatchers(PROF_ALLOWED)
+                            .hasAnyAuthority("PROFESSOR")
+                            .anyRequest()
+                            .authenticated())
+                    .sessionManagement(sess -> sess.sessionCreationPolicy(SessionCreationPolicy.STATELESS))
+                    .authenticationProvider(authProvider)
+                    .addFilterBefore(jwtAuthFilter, UsernamePasswordAuthenticationFilter.class)
+                    .formLogin(AbstractHttpConfigurer::disable);
+        } catch (Exception e) {
+            throw new RuntimeException(e);
+        }
 
-        return http.build();
+        try {
+            return http.build();
+        } catch (Exception e) {
+            throw new RuntimeException(e);
+        }
     }
-
 }
