@@ -34,7 +34,8 @@ public class SendEmailServiceTest {
 
 
     @Test
-    void testSendEmail_sendEmail_Success(){
+    @DisplayName("send email to the provided email")
+    void sendEmail_givenEmail_success(){
         User user = new User("aquino.lima@aluno.ifsp.edu.br", "Sergio", "password");
         userRepository.save(user);
 
