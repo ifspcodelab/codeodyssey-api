@@ -74,7 +74,7 @@ public class GlobalExceptionHandler {
     }
 
     @ExceptionHandler(MethodArgumentNotValidException.class)
-    public ResponseEntity<ProblemDetail> handleValidationException() {
+    public ResponseEntity<ProblemDetail> handleValidationException(MethodArgumentNotValidException ex) {
         HttpStatus status = HttpStatus.BAD_REQUEST;
         String title = "Validation Error";
         String detail = "Invalid email format";

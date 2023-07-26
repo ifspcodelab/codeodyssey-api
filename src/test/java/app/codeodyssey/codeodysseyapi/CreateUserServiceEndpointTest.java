@@ -5,10 +5,7 @@ import app.codeodyssey.codeodysseyapi.user.data.UserRepository;
 import app.codeodyssey.codeodysseyapi.user.service.CreateUserCommand;
 import com.fasterxml.jackson.databind.ObjectMapper;
 import jakarta.transaction.Transactional;
-import org.junit.jupiter.api.AfterEach;
-import org.junit.jupiter.api.Assertions;
-import org.junit.jupiter.api.BeforeEach;
-import org.junit.jupiter.api.Test;
+import org.junit.jupiter.api.*;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.boot.test.autoconfigure.jdbc.AutoConfigureTestDatabase;
 import org.springframework.boot.test.autoconfigure.web.servlet.AutoConfigureMockMvc;
@@ -20,6 +17,7 @@ import org.springframework.test.web.servlet.result.MockMvcResultMatchers;
 import org.testcontainers.junit.jupiter.Testcontainers;
 
 @SpringBootTest
+@DisplayName("test for the CreateUserEndpointService")
 @AutoConfigureMockMvc
 @AutoConfigureTestDatabase(replace = AutoConfigureTestDatabase.Replace.NONE)
 @Testcontainers
@@ -46,7 +44,8 @@ public class CreateUserServiceEndpointTest {
 
     @Test
     @Transactional
-    void testPost_Success() throws Exception {
+    @DisplayName("post a valid user")
+    void post_givenValidUser_returnsUser() throws Exception {
         CreateUserCommand command = new CreateUserCommand("Sergio", "sergio@example.com",
                 "Password#123");
 
@@ -65,7 +64,8 @@ public class CreateUserServiceEndpointTest {
 
     @Test
     @Transactional
-    void testPost_UserAlreadyExists_ExceptionThrown() throws Exception {
+    @DisplayName("throws exception due the attempt to register a registered email")
+    void post_givenUserAlreadyExists_exceptionThrown() throws Exception {
         CreateUserCommand command = new CreateUserCommand("Sergio", "sergio@example.com",
                 "Password#123");
 
@@ -86,7 +86,8 @@ public class CreateUserServiceEndpointTest {
 
     @Test
     @Transactional
-    void testPost_InvalidPassword_ExceptionThrown() throws Exception {
+    @DisplayName("throws exception due to weak password")
+    void post_givenInvalidPassword_exceptionThrown() throws Exception {
         CreateUserCommand command = new CreateUserCommand("Sergio", "sergio@example.com",
                 "Password123");
 
@@ -103,7 +104,8 @@ public class CreateUserServiceEndpointTest {
 
     @Test
     @Transactional
-    void testPost_InvalidEmail_ExceptionThrown() throws Exception {
+    @DisplayName("throws exception due to invalid email format")
+    void post_givenInvalidEmail_exceptionThrown() throws Exception {
         CreateUserCommand command = new CreateUserCommand("Sergio", "s",
                 "Password#123");
 
