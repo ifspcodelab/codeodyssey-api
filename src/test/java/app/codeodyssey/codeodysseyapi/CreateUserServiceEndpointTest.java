@@ -11,6 +11,7 @@ import org.springframework.boot.test.autoconfigure.jdbc.AutoConfigureTestDatabas
 import org.springframework.boot.test.autoconfigure.web.servlet.AutoConfigureMockMvc;
 import org.springframework.boot.test.context.SpringBootTest;
 import org.springframework.http.MediaType;
+import org.springframework.security.crypto.password.PasswordEncoder;
 import org.springframework.test.web.servlet.MockMvc;
 import org.springframework.test.web.servlet.request.MockMvcRequestBuilders;
 import org.springframework.test.web.servlet.result.MockMvcResultMatchers;
@@ -30,6 +31,9 @@ public class CreateUserServiceEndpointTest {
 
     @Autowired
     private UserRepository userRepository;
+
+    @Autowired
+    private PasswordEncoder passwordEncoder;
 
     @BeforeEach
     void setUp() {
@@ -56,9 +60,12 @@ public class CreateUserServiceEndpointTest {
                 .andExpect(MockMvcResultMatchers.jsonPath("$.name").value(command.name()))
                 .andExpect(MockMvcResultMatchers.jsonPath("$.email").value(command.email()));
 
-        User user = userRepository.getUserByEmail(command.email());
-        Assertions.assertNotNull(user);
-        Assertions.assertEquals(command.email(), user.getEmail());
+        User foundUser = userRepository.getUserByEmail(command.email());
+
+        Assertions.assertNotNull(foundUser);
+        Assertions.assertEquals(command.email(), foundUser.getEmail());
+        Assertions.assertEquals(command.name(), foundUser.getName());
+        Assertions.assertTrue(passwordEncoder.matches(command.password(), foundUser.getPassword()));
     }
 
 
@@ -80,8 +87,15 @@ public class CreateUserServiceEndpointTest {
                 .andExpect(MockMvcResultMatchers.jsonPath("$.detail").value("Email already exists"));
 
         User foundUser = userRepository.getUserByEmail(existingUser.getEmail());
+
         Assertions.assertNotNull(foundUser);
         Assertions.assertEquals(existingUser.getId(), foundUser.getId());
+        Assertions.assertEquals(existingUser.getEmail(), foundUser.getEmail());
+        Assertions.assertEquals(existingUser.isValidated(), foundUser.isValidated());
+        Assertions.assertEquals(existingUser.getToken(), foundUser.getToken());
+        Assertions.assertEquals(existingUser.getRole(), foundUser.getRole());
+        Assertions.assertEquals(existingUser.getName(), foundUser.getName());
+        Assertions.assertEquals(existingUser.getPassword(), foundUser.getPassword());
     }
 
     @Test
