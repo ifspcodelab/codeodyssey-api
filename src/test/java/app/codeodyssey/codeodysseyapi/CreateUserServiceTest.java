@@ -6,6 +6,8 @@ import app.codeodyssey.codeodysseyapi.user.data.User;
 import app.codeodyssey.codeodysseyapi.user.data.UserRepository;
 import app.codeodyssey.codeodysseyapi.user.service.CreateUserCommand;
 import app.codeodyssey.codeodysseyapi.user.service.CreateUserService;
+import org.junit.jupiter.api.AfterEach;
+import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.DisplayName;
 import org.junit.jupiter.api.Test;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -30,18 +32,32 @@ public class CreateUserServiceTest {
     @Autowired
     private CreateUserService createUserService;
 
+    @BeforeEach
+    void setUp() {
+        userRepository.deleteAll();
+    }
+
+    @AfterEach
+    void tearDown() {
+        userRepository.deleteAll();
+    }
+
+
     @Test
     @DisplayName("create and save a user")
     void execute_givenValidUser_returnsUserResponse() {
-        CreateUserCommand userCommand = new CreateUserCommand("sergio", "gabriel@example.com",
-                "password123");
-
+        CreateUserCommand userCommand = new CreateUserCommand("Sergio", "sergio@example.com",
+                "password#123");
         UserResponse user = createUserService.execute(userCommand);
 
-        User foundUser = userRepository.getUserByEmail(userCommand.email());
+        User foundUser = userRepository.getUserByEmail(user.email());
 
         assertThat(user).isNotNull();
         assertEquals(user.id(), foundUser.getId());
+        assertEquals(user.createdAt(), foundUser.getCreatedAt());
+        assertEquals(user.role(), foundUser.getRole());
+        assertEquals(user.name(), foundUser.getName());
+        assertEquals(user.email(), foundUser.getEmail());
     }
 
     @Test
@@ -49,8 +65,21 @@ public class CreateUserServiceTest {
     void execute_givenDuplicateUser_throwsException() {
         CreateUserCommand command = new CreateUserCommand("Sergio", "sergio@example.com", "password#123");
 
-        userRepository.save(new User("sergio@example.com", "Sergio", "password"));
+        User existingUser = new User("sergio@example.com", "Sergio", "password");
+
+        userRepository.save(existingUser);
 
         assertThrows(ViolationException.class, () -> createUserService.execute(command));
+
+        User foundUser = userRepository.getUserByEmail(existingUser.getEmail());
+
+        assertThat(foundUser).isNotNull();
+        assertEquals(existingUser.getId(), foundUser.getId());
+        assertEquals(existingUser.getToken(), foundUser.getToken());
+        assertEquals(existingUser.getName(), foundUser.getName());
+        assertEquals(existingUser.isValidated(), foundUser.isValidated());
+        assertEquals(existingUser.getPassword(), foundUser.getPassword());
+        assertEquals(existingUser.getRole(), foundUser.getRole());
     }
 }
+
