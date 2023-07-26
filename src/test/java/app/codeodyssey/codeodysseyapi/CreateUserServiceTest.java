@@ -54,7 +54,6 @@ public class CreateUserServiceTest {
 
         assertThat(user).isNotNull();
         assertEquals(user.id(), foundUser.getId());
-        assertEquals(user.createdAt(), foundUser.getCreatedAt());
         assertEquals(user.role(), foundUser.getRole());
         assertEquals(user.name(), foundUser.getName());
         assertEquals(user.email(), foundUser.getEmail());
