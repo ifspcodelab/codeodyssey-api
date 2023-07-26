@@ -15,7 +15,6 @@ import org.springframework.web.bind.annotation.ExceptionHandler;
 @Slf4j
 @RequiredArgsConstructor
 public class GlobalExceptionHandler {
-
     private final MessageSource messageSource;
 
     @ExceptionHandler(ViolationException.class)
