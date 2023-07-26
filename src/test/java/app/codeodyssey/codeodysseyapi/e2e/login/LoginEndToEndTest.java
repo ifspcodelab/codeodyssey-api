@@ -20,6 +20,7 @@ import org.springframework.boot.test.context.SpringBootTest;
 import org.springframework.boot.test.web.server.LocalServerPort;
 import org.springframework.dao.DataIntegrityViolationException;
 import org.springframework.http.HttpEntity;
+import org.springframework.security.authentication.BadCredentialsException;
 import org.springframework.test.context.ContextConfiguration;
 import org.springframework.web.client.HttpClientErrorException;
 import org.springframework.web.client.RestTemplate;
@@ -119,7 +120,7 @@ public class LoginEndToEndTest {
     }
 
     @Test
-    @DisplayName("login given an invalid email returns user not found exception")
+    @DisplayName("login given an invalid email returns bad request")
     void login_givenAnInvalidEmail_returnsException(){
         HttpEntity<LoginRequest> request = new HttpEntity<>(
                 new LoginRequest("john@email.com", "123456")
@@ -128,6 +129,30 @@ public class LoginEndToEndTest {
         Assertions.assertThrows(HttpClientErrorException.BadRequest.class,
                 () -> restTemplate.postForObject(url, request, LoginResponse.class),
                 "should throw BadRequest");
+    }
+
+    @Test
+    @DisplayName("login given an invalid password returns bad credentials")
+    void login_givenAnInvalidPassword_returnsException(){
+        var name = "John Doe";
+        var email = "john@email.com";
+        var password = "$2a$10$oe40I38YdnKGq/QiH99kfOaJUY4QwMCSBDwpUR60iOXhD48/y/dDe";
+        User user = userRepository.save(User.builder()
+                .id(UUID.randomUUID())
+                .name(name)
+                .email(email)
+                .password(password)
+                .role(UserRole.STUDENT)
+                .createdAt(Instant.now())
+                .build());
+
+        HttpEntity<LoginRequest> request = new HttpEntity<>(
+                new LoginRequest("john@email.com", "654321")
+        );
+
+        Assertions.assertThrows(HttpClientErrorException.Forbidden.class,
+                () -> restTemplate.postForObject(url, request, LoginResponse.class),
+                "should throw ForbiddenException");
     }
 
 }
