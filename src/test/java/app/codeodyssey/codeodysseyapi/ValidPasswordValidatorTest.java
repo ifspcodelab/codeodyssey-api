@@ -2,6 +2,7 @@ package app.codeodyssey.codeodysseyapi;
 
 import app.codeodyssey.codeodysseyapi.common.exception.InvalidPasswordException;
 import app.codeodyssey.codeodysseyapi.validations.ValidPasswordValidator;
+import org.junit.jupiter.api.DisplayName;
 import org.junit.jupiter.api.Test;
 import org.springframework.boot.test.context.SpringBootTest;
 
@@ -11,11 +12,13 @@ import static org.junit.jupiter.api.Assertions.assertThrows;
 
 
 @SpringBootTest
+@DisplayName("test for the ValidPasswordValidator")
 public class ValidPasswordValidatorTest {
     private final ValidPasswordValidator validPasswordValidator = new ValidPasswordValidator();
 
     @Test
-    void testIsValid_ValidPassword_DoesNotThrowException() {
+    @DisplayName("try to validate valid passwords and success")
+    void isValid_givenValidPassword_doesNotThrowException() {
         String[] validPassword = {
                 "Password@123",
                 "MyPa$$word2023",
@@ -29,7 +32,8 @@ public class ValidPasswordValidatorTest {
     }
 
     @Test
-    void testIsValid_InvalidPassword_ExceptionThrown() {
+    @DisplayName("try to validate invalid passwords and throw exception")
+    void isValid_givenInvalidPassword_exceptionThrown() {
         String[] invalidPasswords = {
                 "", // Empty password
                 "Short@1", // Password less than 8 characters
