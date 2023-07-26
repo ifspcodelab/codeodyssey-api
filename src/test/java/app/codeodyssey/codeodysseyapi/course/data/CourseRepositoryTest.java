@@ -2,7 +2,7 @@ package app.codeodyssey.codeodysseyapi.course.data;
 
 import app.codeodyssey.codeodysseyapi.DatabaseContainerInitializer;
 import app.codeodyssey.codeodysseyapi.course.util.CourseFactory;
-import app.codeodyssey.codeodysseyapi.course.util.UserFactory;
+import app.codeodyssey.codeodysseyapi.user.util.UserFactory;
 import app.codeodyssey.codeodysseyapi.user.data.User;
 import org.junit.jupiter.api.Assertions;
 import org.junit.jupiter.api.BeforeEach;
@@ -30,7 +30,7 @@ public class CourseRepositoryTest {
 
     @BeforeEach
     public void setup() {
-        user = UserFactory.createValidUser();
+        user = UserFactory.createValidProfessor();
         course = CourseFactory.createValidCourseWithProfessor(user);
 
         entityManager.persist(user);

@@ -36,7 +36,7 @@ public class SecurityConfiguration {
     };
 
     private static final String[] PROFESSORS_ALLOWED = {
-
+            "/api/v1/users/{professorId}/courses"
     };
 
     @Bean

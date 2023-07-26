@@ -8,6 +8,8 @@ import app.codeodyssey.codeodysseyapi.user.data.User;
 import app.codeodyssey.codeodysseyapi.user.data.UserRepository;
 import java.time.LocalDate;
 import java.util.UUID;
+
+import app.codeodyssey.codeodysseyapi.user.data.UserRole;
 import lombok.AllArgsConstructor;
 import org.springframework.stereotype.Service;
 
@@ -20,7 +22,11 @@ public class CreateCourseService {
 
     public CourseResponse execute(UUID professorId, CreateCourseCommand command) {
         User professor = userRepository.findById(professorId)
-                .orElseThrow(() -> new ResourceNotFoundException(professorId, Resource.COURSE));
+                .orElseThrow(() -> new ResourceNotFoundException(professorId, Resource.USER));
+
+        if (!professor.getRole().equals(UserRole.PROFESSOR)) {
+            throw new UnauthorizedAccessException(professorId);
+        }
 
         if (courseRepository.existsBySlugAndProfessor(command.slug(), professor)) {
             throw new ViolationException(Resource.COURSE, ViolationType.ALREADY_EXISTS, command.slug());
