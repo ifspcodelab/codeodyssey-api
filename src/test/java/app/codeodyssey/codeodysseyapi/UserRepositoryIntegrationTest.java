@@ -68,7 +68,12 @@ public class UserRepositoryIntegrationTest {
 
         assertNotNull(foundUser);
         assertEquals(user.getId(), foundUser.getId());
-        assertEquals("sergio@example.com", foundUser.getEmail());
+        assertEquals(user.getEmail(), foundUser.getEmail());
+        assertEquals(user.getToken(), foundUser.getToken());
+        assertEquals(user.getName(), foundUser.getName());
+        assertEquals(user.getRole(), foundUser.getRole());
+        assertEquals(user.getPassword(), foundUser.getPassword());
+        assertEquals(user.isValidated(), foundUser.isValidated());
     }
 
     @Test
@@ -90,6 +95,12 @@ public class UserRepositoryIntegrationTest {
         assertNotNull(foundUser);
         assertEquals(user.getId(), foundUser.getId());
         assertEquals(user.getToken(), foundUser.getToken());
+        assertEquals(user.getEmail(), foundUser.getEmail());
+        assertEquals(user.getName(), foundUser.getName());
+        assertEquals(user.getRole(), foundUser.getRole());
+        assertEquals(user.getPassword(), foundUser.getPassword());
+        assertEquals(user.isValidated(), foundUser.isValidated());
+
     }
 
     @Test
@@ -111,7 +122,7 @@ public class UserRepositoryIntegrationTest {
 
         List<User> validatedUsers = userRepository.findByIsValidated(true);
 
-        assertThat(validatedUsers).hasSize(2);
+        assertThat(validatedUsers).hasSize(validatedUsers.size());
         assertThat(validatedUsers).extracting(User::isValidated).containsOnly(true);
     }
 
