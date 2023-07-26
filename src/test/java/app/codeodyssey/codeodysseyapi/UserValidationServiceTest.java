@@ -7,6 +7,7 @@ import app.codeodyssey.codeodysseyapi.user.data.UserRepository;
 import app.codeodyssey.codeodysseyapi.user.service.UserValidationService;
 import org.junit.jupiter.api.AfterEach;
 import org.junit.jupiter.api.BeforeEach;
+import org.junit.jupiter.api.DisplayName;
 import org.junit.jupiter.api.Test;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.beans.factory.annotation.Value;
@@ -21,6 +22,7 @@ import java.util.UUID;
 import static org.junit.jupiter.api.Assertions.*;
 
 @SpringBootTest
+@DisplayName("test for the UserValidationService")
 @AutoConfigureTestDatabase(replace = AutoConfigureTestDatabase.Replace.NONE)
 @ContextConfiguration(initializers = {DatabaseContainerInitializer.class})
 @Testcontainers
@@ -48,7 +50,8 @@ public class UserValidationServiceTest {
 
 
     @Test
-    void testValidateUser_ValidToken_UserNotValidated_Success() {
+    @DisplayName("validate user who has a valid token and return the user")
+    void validateUser_givenValidToken_UserNotValidated_returnUser() {
         User user = new User("sergio@example.com", "Sergio", "password");
 
         userRepository.save(user);
@@ -58,10 +61,16 @@ public class UserValidationServiceTest {
         assertNotNull(validatedUser);
         assertTrue(validatedUser.isValidated());
         assertEquals(user.getId(), validatedUser.getId());
+        assertEquals(user.getToken(), validatedUser.getToken());
+        assertEquals(user.getEmail(), validatedUser.getEmail());
+        assertEquals(user.getName(), validatedUser.getName());
+        assertEquals(user.getRole(), validatedUser.getRole());
+        assertEquals(user.getPassword(), validatedUser.getPassword());
     }
 
     @Test
-    void testValidateUser_ValidToken_UserAlreadyValidated_ExceptionThrown() {
+    @DisplayName("try to validate user who is already validated and throw an exception")
+    void validateUser_givenValidToken_UserAlreadyValidated_exceptionThrown() {
         User user = new User("sergio@example.com", "Sergio", "password");
         user.setValidated(true);
         userRepository.save(user);
@@ -70,16 +79,19 @@ public class UserValidationServiceTest {
     }
 
     @Test
-    void testValidateUser_ExpiredToken_ExceptionThrown() {
+    @DisplayName("try to validate user with an expired token and throw an exception")
+    void validateUser_givenExpiredToken_exceptionThrown() {
         User user = new User("sergio@example.com", "Sergio", "password");
         user.setCreatedAt(user.getCreatedAt().minus(expirationTime + 1, ChronoUnit.SECONDS));
         userRepository.save(user);
 
         assertThrows(TokenException.class, () -> userValidationService.validateUser(user.getToken()));
+        assertFalse(user.isValidated());
     }
 
     @Test
-    void testValidateUser_NonExistentToken_ExceptionThrown() {
+    @DisplayName("try to validate a user with a non-existent token and throw an exception")
+    void validateUser_givenNonExistentToken_exceptionThrown() {
         assertThrows(TokenException.class, () -> userValidationService.validateUser(UUID.randomUUID().toString()));
     }
 }
