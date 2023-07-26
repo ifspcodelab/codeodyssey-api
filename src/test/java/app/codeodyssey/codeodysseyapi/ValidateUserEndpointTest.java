@@ -61,6 +61,8 @@ public class ValidateUserEndpointTest {
                 .andExpect(jsonPath("$.email").value(user.getEmail()));
 
         User foundUser = userRepository.getUserByEmail(user.getEmail());
+
+        Assertions.assertTrue(foundUser.isValidated());
         Assertions.assertNotNull(foundUser);
         Assertions.assertEquals(user.getId(), foundUser.getId());
     }
