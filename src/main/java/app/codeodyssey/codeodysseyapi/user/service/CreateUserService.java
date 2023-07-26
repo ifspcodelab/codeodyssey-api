@@ -13,7 +13,7 @@ public class CreateUserService {
     private final UserMapper userMapper;
 
     public UserResponse execute(CreateUserCommand command) {
-        User user = userRepository.save(new User(command.name(), command.email(), command.password(), command.role()));
+        User user = userRepository.save(new User(command.name(), command.email(), command.password()));
 
         return userMapper.to(user);
     }

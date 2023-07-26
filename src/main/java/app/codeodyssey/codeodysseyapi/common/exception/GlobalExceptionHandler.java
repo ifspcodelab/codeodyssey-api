@@ -4,6 +4,7 @@ import lombok.extern.slf4j.Slf4j;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ProblemDetail;
 import org.springframework.http.ResponseEntity;
+import org.springframework.security.authentication.BadCredentialsException;
 import org.springframework.web.bind.annotation.ControllerAdvice;
 import org.springframework.web.bind.annotation.ExceptionHandler;
 
@@ -31,6 +32,36 @@ public class GlobalExceptionHandler {
         String resource = ex.getResource().getName();
         String violationType = ex.getType().getName();
         String title = "%s %s".formatted(resource, violationType);
+        String details = ex.getDetails();
+
+        ProblemDetail problem = ProblemDetail.forStatus(status);
+        problem.setTitle(title);
+        problem.setDetail(details);
+
+        log.warn("{} ({})", title, details);
+        return new ResponseEntity<>(problem, status);
+    }
+
+    @ExceptionHandler(BadCredentialsException.class)
+    public ResponseEntity<ProblemDetail> badCredentials(BadCredentialsException ex){
+        HttpStatus status = HttpStatus.FORBIDDEN;
+        String className = ex.getClass().getName();
+        String message = ex.getMessage();
+
+        ProblemDetail problem = ProblemDetail.forStatus(status);
+        problem.setTitle(className);
+        problem.setDetail(message);
+
+        log.warn("{} ({})", className, message);
+        return new ResponseEntity<>(problem, status);
+    }
+
+    @ExceptionHandler(ForbiddenException.class)
+    public ResponseEntity<ProblemDetail> forbidden(ForbiddenException ex){
+        HttpStatus status = HttpStatus.FORBIDDEN;
+        String resource = ex.getResource().getName();
+        String forbiddenType = ex.getType().getName();
+        String title = "%s %s".formatted(resource, forbiddenType);
         String details = ex.getDetails();
 
         ProblemDetail problem = ProblemDetail.forStatus(status);

@@ -10,7 +10,6 @@ import app.codeodyssey.codeodysseyapi.course.data.CourseRepository;
 import app.codeodyssey.codeodysseyapi.user.api.UserResponse;
 import app.codeodyssey.codeodysseyapi.user.data.User;
 import app.codeodyssey.codeodysseyapi.user.data.UserRepository;
-import app.codeodyssey.codeodysseyapi.user.data.UserRole;
 import app.codeodyssey.codeodysseyapi.user.service.CreateUserCommand;
 import app.codeodyssey.codeodysseyapi.user.service.CreateUserService;
 import org.assertj.core.api.Assertions;
@@ -50,7 +49,7 @@ public class CreateCourseServiceTest {
         courseRepository.deleteAll();
         userRepository.deleteAll();
 
-        userCommand = new CreateUserCommand("UserName", "Email",  "Password", UserRole.PROFESSOR);
+        userCommand = new CreateUserCommand("UserName", "Email",  "Password");
         courseCommand = new CreateCourseCommand("CourseName", "Slug",  LocalDate.now(), LocalDate.now());
     }
 

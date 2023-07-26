@@ -4,7 +4,6 @@ import app.codeodyssey.codeodysseyapi.DatabaseContainerInitializer;
 import app.codeodyssey.codeodysseyapi.course.util.CourseFactory;
 import app.codeodyssey.codeodysseyapi.course.util.UserFactory;
 import app.codeodyssey.codeodysseyapi.user.data.User;
-import app.codeodyssey.codeodysseyapi.user.data.UserRole;
 import org.junit.jupiter.api.Assertions;
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.DisplayName;
@@ -49,7 +48,7 @@ public class CourseRepositoryTest {
     @Test
     @DisplayName("returns false when given a non existing slug and professor")
     void existsBySlugAndProfessor_givenNonExistingSlugAndProfessor_returnFalse() {
-        boolean exists = courseRepository.existsBySlugAndProfessor("non-existing-slug", new User("UserName", "non-existing-email", "Password", UserRole.PROFESSOR));
+        boolean exists = courseRepository.existsBySlugAndProfessor("non-existing-slug", new User("UserName", "non-existing-email", "Password"));
         Assertions.assertFalse(exists);
     }
 }

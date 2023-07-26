@@ -7,7 +7,7 @@ import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
 
 @RestController
-@RequestMapping("api/v1/courses")
+@RequestMapping("/api/v1/courses")
 @AllArgsConstructor
 public class GetCoursesEndpoint {
     private final GetCoursesService getCoursesService;

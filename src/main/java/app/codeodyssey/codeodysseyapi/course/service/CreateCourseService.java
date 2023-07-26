@@ -19,8 +19,7 @@ public class CreateCourseService {
     private final UserRepository userRepository;
 
     public CourseResponse execute(UUID professorId, CreateCourseCommand command) {
-        User professor = userRepository
-                .findById(professorId)
+        User professor = userRepository.findById(professorId)
                 .orElseThrow(() -> new ResourceNotFoundException(professorId, Resource.COURSE));
 
         if (courseRepository.existsBySlugAndProfessor(command.slug(), professor)) {
