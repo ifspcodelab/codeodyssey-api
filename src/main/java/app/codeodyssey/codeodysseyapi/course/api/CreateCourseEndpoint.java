@@ -12,12 +12,11 @@ import jakarta.validation.Valid;
 import java.util.UUID;
 import lombok.AllArgsConstructor;
 import org.springframework.http.HttpStatus;
-import org.springframework.http.ProblemDetail;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
 
 @RestController
-@RequestMapping("api/v1/users/{professorId}/courses")
+@RequestMapping("/api/v1/users/{professorId}/courses")
 @AllArgsConstructor
 public class CreateCourseEndpoint {
     private final CreateCourseService courseService;
