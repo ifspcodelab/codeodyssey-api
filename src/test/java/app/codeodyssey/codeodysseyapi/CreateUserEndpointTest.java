@@ -136,5 +136,18 @@ public class CreateUserEndpointTest {
                 .andExpect(MockMvcResultMatchers.jsonPath("$.detail").value(messageSource.getMessage("jakarta.validation.constraints.Email.message", null, LocaleContextHolder.getLocale())));
     }
 
+    @Test
+    @Transactional
+    @DisplayName("throws exception due to invalid name size")
+    void post_givenInvalidName_exceptionThrown() throws Exception {
+        CreateUserCommand command = new CreateUserCommand("Serg", "sergio@example.com",
+                "Password#123");
 
+        mockMvc.perform(MockMvcRequestBuilders.post("/api/v1/users")
+                        .contentType(MediaType.APPLICATION_JSON)
+                        .content(objectMapper.writeValueAsString(command)))
+                .andExpect(MockMvcResultMatchers.status().isBadRequest())
+                .andExpect(MockMvcResultMatchers.jsonPath("$.title").value("Validation Error"))
+                .andExpect(MockMvcResultMatchers.jsonPath("$.detail").value(messageSource.getMessage("jakarta.validation.constraints.Size.message", null, LocaleContextHolder.getLocale())));
+    }
 }
