@@ -14,6 +14,7 @@ import app.codeodyssey.codeodysseyapi.user.data.UserRole;
 import app.codeodyssey.codeodysseyapi.user.service.CreateUserCommand;
 import app.codeodyssey.codeodysseyapi.user.service.CreateUserService;
 import org.assertj.core.api.Assertions;
+import org.junit.jupiter.api.AfterEach;
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.DisplayName;
 import org.junit.jupiter.api.Test;
@@ -46,12 +47,21 @@ public class CreateCourseServiceTest {
 
     @BeforeEach
     public void setup() {
+        courseRepository.deleteAll();
+        userRepository.deleteAll();
+
         userCommand = new CreateUserCommand("UserName", "Email",  "Password", UserRole.PROFESSOR);
         courseCommand = new CreateCourseCommand("CourseName", "Slug",  LocalDate.now(), LocalDate.now());
     }
 
+    @AfterEach
+    public void tearDown() {
+        courseRepository.deleteAll();
+        userRepository.deleteAll();
+    }
+
     @Test
-    @DisplayName("return CourseResponse when given a professorId and CourseCommand")
+    @DisplayName("returns CourseResponse when given a professorId and CourseCommand")
     void execute_givenProfessorIdAndCourseCommand_returnCourseResponse() {
         UserResponse user = createUserService.execute(userCommand);
         CourseResponse course = createCourseService.execute(user.id(), courseCommand);
@@ -60,7 +70,7 @@ public class CreateCourseServiceTest {
     }
 
     @Test
-    @DisplayName("return ResourceNotFoundException when given a non existing professorId")
+    @DisplayName("returns ViolationException when given a existing professorId and CourseCommand")
     void execute_givenExistingProfessorIdAndCourseCommand_returnException() {
         UserResponse userResponse = createUserService.execute(userCommand);
         User user = userRepository.findById(userResponse.id()).orElseThrow(() -> new ResourceNotFoundException(userResponse.id(), Resource.USER));

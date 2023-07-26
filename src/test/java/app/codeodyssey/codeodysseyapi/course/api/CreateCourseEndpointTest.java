@@ -12,15 +12,11 @@ import app.codeodyssey.codeodysseyapi.user.data.UserRole;
 import app.codeodyssey.codeodysseyapi.user.service.CreateUserCommand;
 import app.codeodyssey.codeodysseyapi.user.service.CreateUserService;
 import org.assertj.core.api.Assertions;
-import org.junit.jupiter.api.AfterEach;
-import org.junit.jupiter.api.BeforeEach;
-import org.junit.jupiter.api.Test;
-import org.junit.jupiter.api.TestInstance;
+import org.junit.jupiter.api.*;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.boot.test.autoconfigure.web.servlet.AutoConfigureMockMvc;
 import org.springframework.boot.test.context.SpringBootTest;
 import org.springframework.http.MediaType;
-import org.springframework.test.annotation.DirtiesContext;
 import org.springframework.test.web.servlet.MockMvc;
 import org.springframework.test.web.servlet.request.MockMvcRequestBuilders;
 import org.springframework.test.web.servlet.result.MockMvcResultMatchers;
@@ -30,8 +26,7 @@ import java.time.LocalDate;
 
 @SpringBootTest
 @AutoConfigureMockMvc
-@TestInstance(TestInstance.Lifecycle.PER_CLASS)
-@DirtiesContext(classMode = DirtiesContext.ClassMode.BEFORE_EACH_TEST_METHOD)
+@DisplayName("Tests for Create Course Endpoint")
 public class CreateCourseEndpointTest {
     @Autowired
     private MockMvc mockMvc;
@@ -53,7 +48,7 @@ public class CreateCourseEndpointTest {
     UserResponse userResponse;
 
     @BeforeEach
-    void setUp() {
+    public void setUp() {
         courseRepository.deleteAll();
         userRepository.deleteAll();
 
@@ -63,13 +58,14 @@ public class CreateCourseEndpointTest {
     }
 
     @AfterEach
-    void tearDown() {
+    public void tearDown() {
         courseRepository.deleteAll();
         userRepository.deleteAll();
     }
 
     @Test
-    void createCourse_givenValidCourseRequest_returnCreatedCourseResponse() throws Exception{
+    @DisplayName("register a new course when given a valid course request")
+    void createCourse_givenValidCourseRequest_return201Created() throws Exception{
         String professorId = String.valueOf(userResponse.id());
 
         mockMvc
@@ -87,7 +83,8 @@ public class CreateCourseEndpointTest {
     }
 
     @Test
-    void createCourse_givenExistingCourseRequest_returnException() throws Exception{
+    @DisplayName("returns conflict when given a existing course")
+    void createCourse_givenExistingCourse_return409Conflict() throws Exception{
         User user = userRepository.findById(userResponse.id()).orElseThrow(() -> new ResourceNotFoundException(userResponse.id(), Resource.USER));
         Course existingCourse = new Course("CourseName", "Slug",  LocalDate.now(), LocalDate.now(), user);
         courseRepository.save(existingCourse);
@@ -106,7 +103,8 @@ public class CreateCourseEndpointTest {
     }
 
     @Test
-    void createCourse_givenStartDateBeforeCurrentDate_returnException() throws Exception{
+    @DisplayName("returns conflict when the start date is before the current date")
+    void createCourse_givenStartDateBeforeCurrentDate_return409Conflict() throws Exception{
         CreateCourseCommand courseCommand2 = new CreateCourseCommand("CourseName", "Slug",  LocalDate.of(1000, 01, 01), LocalDate.now());
         String professorId = String.valueOf(userResponse.id());
 
@@ -123,7 +121,8 @@ public class CreateCourseEndpointTest {
     }
 
     @Test
-    void createCourse_givenEndDateBeforeStartDate_returnException() throws Exception{
+    @DisplayName("returns conflict when the end date is before the start date")
+    void createCourse_givenEndDateBeforeStartDate_return409Conflict() throws Exception{
         CreateCourseCommand courseCommand2 = new CreateCourseCommand("CourseName", "Slug",  LocalDate.now(), LocalDate.of(1000, 01, 01));
         String professorId = String.valueOf(userResponse.id());
 
