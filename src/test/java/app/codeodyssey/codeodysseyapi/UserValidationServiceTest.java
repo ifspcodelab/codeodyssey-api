@@ -77,6 +77,17 @@ public class UserValidationServiceTest {
 
         assertThrows(UserAlreadyValidatedException.class, () -> userValidationService.validateUser(user.getToken()));
         assertTrue(user.isValidated());
+
+        User foundUser = userRepository.getUserByEmail(user.getEmail());
+
+        assertNotNull(foundUser);
+        assertTrue(foundUser.isValidated());
+        assertEquals(user.getId(), foundUser.getId());
+        assertEquals(user.getToken(), foundUser.getToken());
+        assertEquals(user.getEmail(), foundUser.getEmail());
+        assertEquals(user.getName(), foundUser.getName());
+        assertEquals(user.getRole(), foundUser.getRole());
+        assertEquals(user.getPassword(), foundUser.getPassword());
     }
 
     @Test
@@ -88,6 +99,17 @@ public class UserValidationServiceTest {
 
         assertThrows(TokenException.class, () -> userValidationService.validateUser(user.getToken()));
         assertFalse(user.isValidated());
+
+        User foundUser = userRepository.getUserByEmail(user.getEmail());
+
+        assertNotNull(foundUser);
+        assertFalse(foundUser.isValidated());
+        assertEquals(user.getId(), foundUser.getId());
+        assertEquals(user.getToken(), foundUser.getToken());
+        assertEquals(user.getEmail(), foundUser.getEmail());
+        assertEquals(user.getName(), foundUser.getName());
+        assertEquals(user.getRole(), foundUser.getRole());
+        assertEquals(user.getPassword(), foundUser.getPassword());
     }
 
     @Test
