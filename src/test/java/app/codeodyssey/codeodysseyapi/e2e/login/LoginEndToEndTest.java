@@ -9,10 +9,6 @@ import app.codeodyssey.codeodysseyapi.user.data.UserRepository;
 import app.codeodyssey.codeodysseyapi.user.data.UserRole;
 import io.jsonwebtoken.Claims;
 import io.jsonwebtoken.Jwts;
-
-import java.time.Instant;
-import java.util.UUID;
-
 import org.junit.jupiter.api.Assertions;
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.DisplayName;
@@ -25,8 +21,12 @@ import org.springframework.boot.test.web.server.LocalServerPort;
 import org.springframework.dao.DataIntegrityViolationException;
 import org.springframework.http.HttpEntity;
 import org.springframework.test.context.ContextConfiguration;
+import org.springframework.web.client.HttpClientErrorException;
 import org.springframework.web.client.RestTemplate;
 import org.testcontainers.junit.jupiter.Testcontainers;
+
+import java.time.Instant;
+import java.util.UUID;
 
 @SpringBootTest(webEnvironment = SpringBootTest.WebEnvironment.RANDOM_PORT)
 @Testcontainers
@@ -60,7 +60,7 @@ public class LoginEndToEndTest {
 
     @Test
     @DisplayName("login given a valid request returns tokens")
-    void login_givenLoginRequest_returnsLoginResponse() {
+    void login_givenAValidLoginRequest_returnsLoginResponse() {
         var name = "John Doe";
         var email = "john@email.com";
         var password = "$2a$10$oe40I38YdnKGq/QiH99kfOaJUY4QwMCSBDwpUR60iOXhD48/y/dDe";
@@ -73,7 +73,9 @@ public class LoginEndToEndTest {
                 .createdAt(Instant.now())
                 .build());
 
-        HttpEntity<LoginRequest> request = new HttpEntity<>(new LoginRequest("john@email.com", "123456"));
+        HttpEntity<LoginRequest> request = new HttpEntity<>(
+                new LoginRequest("john@email.com", "123456")
+        );
 
         LoginResponse response = restTemplate.postForObject(url, request, LoginResponse.class);
 
@@ -96,7 +98,7 @@ public class LoginEndToEndTest {
 
     @Test
     @DisplayName("should throw data integrity exception when tries to save an already saved user")
-    void tryToSaveSameUser() {
+    void save_givenAnAlreadySavedUser_returnsException() {
 
         User user = new User(
                 UUID.randomUUID(),
@@ -112,7 +114,20 @@ public class LoginEndToEndTest {
         user.setId(UUID.randomUUID());
 
         Assertions.assertThrows(DataIntegrityViolationException.class,
-                () -> userRepository.save(user), "should throw DataIntegrityViolationException");
+                () -> userRepository.save(user),
+                "should throw DataIntegrityViolationException");
+    }
+
+    @Test
+    @DisplayName("login given an invalid email returns user not found exception")
+    void login_givenAnInvalidEmail_returnsException(){
+        HttpEntity<LoginRequest> request = new HttpEntity<>(
+                new LoginRequest("john@email.com", "123456")
+        );
+
+        Assertions.assertThrows(HttpClientErrorException.BadRequest.class,
+                () -> restTemplate.postForObject(url, request, LoginResponse.class),
+                "should throw BadRequest");
     }
 
 }
