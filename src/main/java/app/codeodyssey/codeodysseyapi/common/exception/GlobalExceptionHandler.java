@@ -1,6 +1,9 @@
 package app.codeodyssey.codeodysseyapi.common.exception;
 
+import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
+import org.springframework.context.MessageSource;
+import org.springframework.context.i18n.LocaleContextHolder;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ProblemDetail;
 import org.springframework.http.ResponseEntity;
@@ -10,7 +13,11 @@ import org.springframework.web.bind.annotation.ExceptionHandler;
 
 @ControllerAdvice
 @Slf4j
+@RequiredArgsConstructor
 public class GlobalExceptionHandler {
+
+    private final MessageSource messageSource;
+
     @ExceptionHandler(ViolationException.class)
     public ResponseEntity<ProblemDetail> violation(ViolationException ex) {
         HttpStatus status = HttpStatus.CONFLICT;
@@ -77,7 +84,14 @@ public class GlobalExceptionHandler {
     public ResponseEntity<ProblemDetail> handleValidationException(MethodArgumentNotValidException ex) {
         HttpStatus status = HttpStatus.BAD_REQUEST;
         String title = "Validation Error";
-        String detail = "Invalid email format";
+        StringBuilder detailBuilder = new StringBuilder();
+
+        ex.getBindingResult().getFieldErrors().forEach(error -> {
+            String errorMessage = messageSource.getMessage(error, LocaleContextHolder.getLocale());
+
+            detailBuilder.append(errorMessage);
+        });
+        String detail = detailBuilder.toString();
 
         ProblemDetail problem = ProblemDetail.forStatus(status);
         problem.setTitle(title);

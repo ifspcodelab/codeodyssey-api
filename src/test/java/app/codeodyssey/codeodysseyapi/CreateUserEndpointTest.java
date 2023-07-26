@@ -10,6 +10,8 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.boot.test.autoconfigure.jdbc.AutoConfigureTestDatabase;
 import org.springframework.boot.test.autoconfigure.web.servlet.AutoConfigureMockMvc;
 import org.springframework.boot.test.context.SpringBootTest;
+import org.springframework.context.MessageSource;
+import org.springframework.context.i18n.LocaleContextHolder;
 import org.springframework.http.MediaType;
 import org.springframework.security.crypto.password.PasswordEncoder;
 import org.springframework.test.web.servlet.MockMvc;
@@ -22,7 +24,7 @@ import org.testcontainers.junit.jupiter.Testcontainers;
 @AutoConfigureMockMvc
 @AutoConfigureTestDatabase(replace = AutoConfigureTestDatabase.Replace.NONE)
 @Testcontainers
-public class CreateUserServiceEndpointTest {
+public class CreateUserEndpointTest {
     @Autowired
     private MockMvc mockMvc;
 
@@ -34,6 +36,9 @@ public class CreateUserServiceEndpointTest {
 
     @Autowired
     private PasswordEncoder passwordEncoder;
+
+    @Autowired
+    private MessageSource messageSource;
 
     @BeforeEach
     void setUp() {
@@ -128,6 +133,8 @@ public class CreateUserServiceEndpointTest {
                         .content(objectMapper.writeValueAsString(command)))
                 .andExpect(MockMvcResultMatchers.status().isBadRequest())
                 .andExpect(MockMvcResultMatchers.jsonPath("$.title").value("Validation Error"))
-                .andExpect(MockMvcResultMatchers.jsonPath("$.detail").value("Invalid email format"));
+                .andExpect(MockMvcResultMatchers.jsonPath("$.detail").value(messageSource.getMessage("jakarta.validation.constraints.Email.message", null, LocaleContextHolder.getLocale())));
     }
+
+
 }
