@@ -8,6 +8,8 @@ import org.springframework.security.authentication.BadCredentialsException;
 import org.springframework.web.bind.annotation.ControllerAdvice;
 import org.springframework.web.bind.annotation.ExceptionHandler;
 
+import java.util.UUID;
+
 @ControllerAdvice
 @Slf4j
 public class GlobalExceptionHandler {
@@ -85,6 +87,21 @@ public class GlobalExceptionHandler {
         problem.setDetail(details);
 
         log.warn("{} ({})", title, details);
+        return new ResponseEntity<>(problem, status);
+    }
+
+    @ExceptionHandler(UnauthorizedAccessException.class)
+    public ResponseEntity<ProblemDetail> unauthorizedAccess(UnauthorizedAccessException ex) {
+        HttpStatus status = HttpStatus.UNAUTHORIZED;
+        UUID userId = ex.getId();
+        String title = "Unauthorized access";
+        String detail = "User with id %s not authorized to access this content.".formatted(userId);
+
+        ProblemDetail problem = ProblemDetail.forStatus(status);
+        problem.setTitle(title);
+        problem.setDetail(detail);
+
+        log.warn(detail);
         return new ResponseEntity<>(problem, status);
     }
 }
