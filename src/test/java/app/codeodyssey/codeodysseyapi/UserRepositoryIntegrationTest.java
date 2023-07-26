@@ -4,6 +4,7 @@ import app.codeodyssey.codeodysseyapi.user.data.User;
 import app.codeodyssey.codeodysseyapi.user.data.UserRepository;
 import org.junit.jupiter.api.AfterEach;
 import org.junit.jupiter.api.BeforeEach;
+import org.junit.jupiter.api.DisplayName;
 import org.junit.jupiter.api.Test;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.boot.test.autoconfigure.jdbc.AutoConfigureTestDatabase;
@@ -20,6 +21,7 @@ import static org.junit.jupiter.api.Assertions.*;
 
 
 @SpringBootTest
+@DisplayName("test for the UserRepository")
 @AutoConfigureTestDatabase(replace = AutoConfigureTestDatabase.Replace.NONE)
 @ContextConfiguration(initializers = {DatabaseContainerInitializer.class})
 @Testcontainers
@@ -38,7 +40,8 @@ public class UserRepositoryIntegrationTest {
     }
 
     @Test
-    void testExistsByEmail_ExistingEmail_ReturnsTrue() {
+    @DisplayName("check if a email exists and return true")
+    void existsByEmail_givenExistingEmail_returnsTrue() {
         User user = new User("sergio@example.com", "Sergio", "password");
         userRepository.save(user);
 
@@ -48,14 +51,16 @@ public class UserRepositoryIntegrationTest {
     }
 
     @Test
-    void testExistsByEmail_NonExistingEmail_ReturnsFalse() {
+    @DisplayName("check if a email does not exist and return false")
+    void existsByEmail_givenNonExistingEmail_returnsFalse() {
         boolean exists = userRepository.existsByEmail("nonexistent@example.com");
 
         assertFalse(exists);
     }
 
     @Test
-    void testGetUserByEmail_ExistingEmail_ReturnsUser() {
+    @DisplayName("get an existing email and return its associated user")
+    void getUserByEmail_givenExistingEmail_returnsUser() {
         User user = new User("sergio@example.com", "Sergio", "password");
         userRepository.save(user);
 
@@ -67,14 +72,16 @@ public class UserRepositoryIntegrationTest {
     }
 
     @Test
-    void testGetUserByEmail_NonExistingEmail_ReturnsNull() {
+    @DisplayName("get a nonexistent email and return null")
+    void getUserByEmail_givenNonExistingEmail_returnsNull() {
         User foundUser = userRepository.getUserByEmail("nonexistent@example.com");
 
         assertNull(foundUser);
     }
 
     @Test
-    void testGetUserByToken_ExistingToken_ReturnsUser() {
+    @DisplayName("get an existing token and return its associated user" )
+    void getUserByToken_givenExistingToken_returnsUser() {
         User user = new User("sergio@example.com", "Sergio", "password");
         userRepository.save(user);
 
@@ -86,14 +93,16 @@ public class UserRepositoryIntegrationTest {
     }
 
     @Test
-    void testGetUserByToken_NonExistingToken_ReturnsEmptyOptional() {
+    @DisplayName("get a nonexistent token and return an optional empty")
+    void getUserByToken_givenNonExistingToken_returnsEmptyOptional() {
         Optional<User> foundUser = userRepository.getUserByToken(UUID.randomUUID().toString());
 
         assertTrue(foundUser.isEmpty());
     }
 
     @Test
-    void testFindByIsValidated_ValidatedUsers_ReturnsValidatedUsers() {
+    @DisplayName("get validated users and return them in a list")
+    void findByIsValidated_givenValidatedUsers_returnsValidatedUsers() {
         User user1 = new User("user1@example.com", "User 1", "password");
         User user2 = new User("user2@example.com", "User 2", "password");
         user1.setValidated(true);
@@ -107,7 +116,8 @@ public class UserRepositoryIntegrationTest {
     }
 
     @Test
-    void testFindByIsValidated_NotValidatedUsers_ReturnsEmptyList() {
+    @DisplayName("get non-validated users and return an empty list")
+    void findByIsValidated_givenNotValidatedUsers_returnsEmptyList() {
         User user1 = new User("user1@example.com", "User 1", "password");
         User user2 = new User("user2@example.com", "User 2", "password");
         userRepository.saveAll(List.of(user1, user2));
