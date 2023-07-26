@@ -76,6 +76,7 @@ public class UserValidationServiceTest {
         userRepository.save(user);
 
         assertThrows(UserAlreadyValidatedException.class, () -> userValidationService.validateUser(user.getToken()));
+        assertTrue(user.isValidated());
     }
 
     @Test

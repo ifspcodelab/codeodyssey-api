@@ -3,10 +3,7 @@ package app.codeodyssey.codeodysseyapi;
 import app.codeodyssey.codeodysseyapi.common.exception.TokenProblem;
 import app.codeodyssey.codeodysseyapi.user.data.User;
 import app.codeodyssey.codeodysseyapi.user.data.UserRepository;
-import org.junit.jupiter.api.AfterEach;
-import org.junit.jupiter.api.Assertions;
-import org.junit.jupiter.api.BeforeEach;
-import org.junit.jupiter.api.Test;
+import org.junit.jupiter.api.*;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.beans.factory.annotation.Value;
 import org.springframework.boot.test.autoconfigure.jdbc.AutoConfigureTestDatabase;
@@ -25,6 +22,7 @@ import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.
 import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.jsonPath;
 
 @SpringBootTest
+@DisplayName("test for the ValidateUserEndpoint")
 @AutoConfigureMockMvc
 @AutoConfigureTestDatabase(replace = AutoConfigureTestDatabase.Replace.NONE)
 @Testcontainers
@@ -50,7 +48,8 @@ public class ValidateUserEndpointTest {
 
 
     @Test
-    void testPatch_ValidateUser_Success() throws Exception {
+    @DisplayName("patch a valid user to validate and return its response")
+    void patch_givenValidUser_returnsUserResponse() throws Exception {
         User user = new User("sergio@example.com", "sergio", "password");
         userRepository.save(user);
 
@@ -68,7 +67,8 @@ public class ValidateUserEndpointTest {
     }
 
     @Test
-    void testPatch_UserWithExpiredToken_ExceptionThrown() throws Exception {
+    @DisplayName("try to patch a user with an expired token and throw exception")
+    void patch_givenUserWithExpiredToken_exceptionThrown() throws Exception {
         User user = new User("sergio@example.com", "sergio", "password");
         user.setCreatedAt(user.getCreatedAt().minus(expirationTime + 1, ChronoUnit.SECONDS));
         userRepository.save(user);
@@ -81,7 +81,8 @@ public class ValidateUserEndpointTest {
     }
 
     @Test
-    void testPatch_NonexistentToken_ExceptionThrown() throws Exception {
+    @DisplayName("try to patch a user with a non-existent token and throw an exception")
+    void patch_givenNonexistentToken_exceptionThrown() throws Exception {
         mockMvc.perform(MockMvcRequestBuilders.patch("/api/v1/users/confirmation/" + UUID.randomUUID()))
                 .andExpect(MockMvcResultMatchers.status().isUnauthorized())
                 .andExpect(content().contentType(MediaType.APPLICATION_PROBLEM_JSON))
@@ -90,7 +91,8 @@ public class ValidateUserEndpointTest {
     }
 
     @Test
-    void testPatch_UserAlreadyValidated_ExceptionThrown() throws Exception {
+    @DisplayName("try to validate a user already validated and throw an exception")
+    void patch_givenUserAlreadyValidated_exceptionThrown() throws Exception {
         User user = new User("sergio@example.com", "sergio", "password");
         user.setValidated(true);
         userRepository.save(user);
