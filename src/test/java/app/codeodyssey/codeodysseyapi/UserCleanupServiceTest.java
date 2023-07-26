@@ -90,6 +90,12 @@ public class UserCleanupServiceTest {
 
         assertThat(userRepository.getUserByEmail(user.getEmail())).isNotNull();
         assertEquals(receivedUser.getEmail(), user.getEmail());
+        assertEquals(receivedUser.getId(), user.getId());
+        assertEquals(receivedUser.getToken(), user.getToken());
+        assertEquals(receivedUser.getPassword(), user.getPassword());
+        assertEquals(receivedUser.getRole(), user.getRole());
+        assertEquals(receivedUser.isValidated(), user.isValidated());
+        assertEquals(receivedUser.getName(), user.getName());
     }
 
     @Test
@@ -108,8 +114,16 @@ public class UserCleanupServiceTest {
         User receivedUser3 = userRepository.getUserByEmail("user3@example.com");
 
         assertEquals(receivedUser1.getEmail(), user1.getEmail());
+        assertEquals(receivedUser1.getId(), user1.getId());
+        assertEquals(receivedUser1.getToken(), user1.getToken());
+
         assertEquals(receivedUser2.getEmail(), user2.getEmail());
+        assertEquals(receivedUser2.getId(), user2.getId());
+        assertEquals(receivedUser2.getToken(), user2.getToken());
+
         assertEquals(receivedUser3.getEmail(), user3.getEmail());
+        assertEquals(receivedUser3.getId(), user3.getId());
+        assertEquals(receivedUser3.getToken(), user3.getToken());
     }
 
 }
