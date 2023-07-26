@@ -45,6 +45,6 @@ public class UserValidationService {
             throw new TokenException(TokenProblem.EXPIRED.getMessage());
         }
 
-        throw new TokenException(TokenProblem.INEXISTENT.getMessage());
+        throw new TokenException(TokenProblem.NONEXISTENT.getMessage());
     }
 }

@@ -7,7 +7,7 @@ import lombok.Getter;
 @Getter
 public enum TokenProblem {
     EXPIRED("Token Expired"),
-    INEXISTENT("No user associated with this token");
+    NONEXISTENT("No user associated with this token");
 
     private final String message;
 }

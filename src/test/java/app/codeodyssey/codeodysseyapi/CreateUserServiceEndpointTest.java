@@ -54,12 +54,12 @@ public class CreateUserServiceEndpointTest {
                         .contentType(MediaType.APPLICATION_JSON)
                         .content(objectMapper.writeValueAsString(command)))
                 .andExpect(MockMvcResultMatchers.status().isCreated())
-                .andExpect(MockMvcResultMatchers.jsonPath("$.name").value("Sergio"))
-                .andExpect(MockMvcResultMatchers.jsonPath("$.email").value("sergio@example.com"));
+                .andExpect(MockMvcResultMatchers.jsonPath("$.name").value(command.name()))
+                .andExpect(MockMvcResultMatchers.jsonPath("$.email").value(command.email()));
 
-        User user = userRepository.getUserByEmail("sergio@example.com");
+        User user = userRepository.getUserByEmail(command.email());
         Assertions.assertNotNull(user);
-        Assertions.assertEquals("Sergio", user.getName());
+        Assertions.assertEquals(command.email(), user.getEmail());
     }
 
 
@@ -99,5 +99,19 @@ public class CreateUserServiceEndpointTest {
                         "contain at least one uppercase letter, one lowercase letter, one number, " +
                         "one special character, " +
                         "and be between 8 and 64 characters."));
+    }
+
+    @Test
+    @Transactional
+    void testPost_InvalidEmail_ExceptionThrown() throws Exception {
+        CreateUserCommand command = new CreateUserCommand("Sergio", "s",
+                "Password#123");
+
+        mockMvc.perform(MockMvcRequestBuilders.post("/api/v1/users")
+                        .contentType(MediaType.APPLICATION_JSON)
+                        .content(objectMapper.writeValueAsString(command)))
+                .andExpect(MockMvcResultMatchers.status().isBadRequest())
+                .andExpect(MockMvcResultMatchers.jsonPath("$.title").value("Validation Error"))
+                .andExpect(MockMvcResultMatchers.jsonPath("$.detail").value("Invalid email format"));
     }
 }
