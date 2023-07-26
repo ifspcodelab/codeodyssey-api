@@ -3,6 +3,7 @@ package app.codeodyssey.codeodysseyapi;
 import app.codeodyssey.codeodysseyapi.user.data.User;
 import app.codeodyssey.codeodysseyapi.user.data.UserRepository;
 import app.codeodyssey.codeodysseyapi.user.service.SendEmailService;
+import org.junit.jupiter.api.Assertions;
 import org.junit.jupiter.api.DisplayName;
 import org.junit.jupiter.api.Test;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -36,12 +37,22 @@ public class SendEmailServiceTest {
     @Test
     @DisplayName("send email to the provided email")
     void sendEmail_givenEmail_success(){
-        User user = new User("aquino.lima@aluno.ifsp.edu.br", "Sergio", "password");
+        User user = new User("sergio@example.com", "Sergio", "password");
         userRepository.save(user);
 
         sendEmailService.sendEmail(user.getEmail());
 
+        User foundUser = userRepository.getUserByEmail(user.getEmail());
+
         verify(mailSender).send(any(SimpleMailMessage.class));
+        Assertions.assertNotNull(foundUser);
+        Assertions.assertEquals(user.getToken(), foundUser.getToken());
+        Assertions.assertEquals(user.getEmail(), foundUser.getEmail());
+        Assertions.assertEquals(user.getId(), foundUser.getId());
+        Assertions.assertEquals(user.getPassword(), foundUser.getPassword());
+        Assertions.assertEquals(user.isValidated(), foundUser.isValidated());
+        Assertions.assertEquals(user.getRole(), foundUser.getRole());
+        Assertions.assertEquals(user.getName(), foundUser.getName());
     }
 
 }
