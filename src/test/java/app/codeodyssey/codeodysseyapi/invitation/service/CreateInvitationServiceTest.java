@@ -1,5 +1,9 @@
 package app.codeodyssey.codeodysseyapi.invitation.service;
 
+import static org.assertj.core.api.Assertions.assertThat;
+import static org.assertj.core.api.Assertions.catchThrowable;
+import static org.junit.jupiter.api.Assertions.assertDoesNotThrow;
+
 import app.codeodyssey.codeodysseyapi.DatabaseContainerInitializer;
 import app.codeodyssey.codeodysseyapi.common.exception.Resource;
 import app.codeodyssey.codeodysseyapi.common.exception.ResourceNotFoundException;
@@ -10,6 +14,9 @@ import app.codeodyssey.codeodysseyapi.invitation.api.InvitationResponse;
 import app.codeodyssey.codeodysseyapi.invitation.data.InvitationRepository;
 import app.codeodyssey.codeodysseyapi.user.data.UserRepository;
 import app.codeodyssey.codeodysseyapi.user.util.UserFactory;
+import java.time.LocalDate;
+import java.util.List;
+import java.util.UUID;
 import org.junit.jupiter.api.AfterEach;
 import org.junit.jupiter.api.DisplayName;
 import org.junit.jupiter.api.Test;
@@ -17,14 +24,6 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.boot.test.autoconfigure.jdbc.AutoConfigureTestDatabase;
 import org.springframework.boot.test.context.SpringBootTest;
 import org.springframework.test.context.ContextConfiguration;
-
-import java.time.LocalDate;
-import java.util.List;
-import java.util.UUID;
-
-import static org.assertj.core.api.Assertions.assertThat;
-import static org.assertj.core.api.Assertions.catchThrowable;
-import static org.junit.jupiter.api.Assertions.assertDoesNotThrow;
 
 @SpringBootTest
 @DisplayName("Create Invitation Service tests")
@@ -59,9 +58,8 @@ public class CreateInvitationServiceTest {
         userRepository.save(professor);
         courseRepository.save(course);
 
-        var invitation = assertDoesNotThrow(() ->
-                createInvitationService.execute(command, course.getId(), professor.getEmail())
-        );
+        var invitation = assertDoesNotThrow(
+                () -> createInvitationService.execute(command, course.getId(), professor.getEmail()));
 
         assertThat(invitation).isNotNull();
         assertThat(invitation).isInstanceOf(InvitationResponse.class);
@@ -79,9 +77,8 @@ public class CreateInvitationServiceTest {
         userRepository.saveAll(List.of(professor, user));
         courseRepository.save(course);
 
-        var serviceThrowable = (RuntimeException) catchThrowable(() ->
-                createInvitationService.execute(command, course.getId(), user.getEmail())
-        );
+        var serviceThrowable = (RuntimeException)
+                catchThrowable(() -> createInvitationService.execute(command, course.getId(), user.getEmail()));
 
         assertThat(serviceThrowable).isNotNull();
         assertThat(serviceThrowable).isInstanceOf(UnauthorizedAccessException.class);
@@ -97,9 +94,8 @@ public class CreateInvitationServiceTest {
         var courseId = UUID.randomUUID();
         userRepository.save(professor);
 
-        var serviceThrowable = (RuntimeException) catchThrowable(() ->
-                createInvitationService.execute(command, courseId, professor.getEmail())
-        );
+        var serviceThrowable = (RuntimeException)
+                catchThrowable(() -> createInvitationService.execute(command, courseId, professor.getEmail()));
 
         assertThat(serviceThrowable).isNotNull();
         assertThat(serviceThrowable).isInstanceOf(ResourceNotFoundException.class);
@@ -118,9 +114,8 @@ public class CreateInvitationServiceTest {
         userRepository.saveAll(List.of(professor, professorB));
         courseRepository.save(course);
 
-        var serviceThrowable = (RuntimeException) catchThrowable(() ->
-                createInvitationService.execute(command, course.getId(), professorB.getEmail())
-        );
+        var serviceThrowable = (RuntimeException)
+                catchThrowable(() -> createInvitationService.execute(command, course.getId(), professorB.getEmail()));
 
         assertThat(serviceThrowable).isNotNull();
         assertThat(serviceThrowable).isInstanceOf(UnauthorizedAccessException.class);

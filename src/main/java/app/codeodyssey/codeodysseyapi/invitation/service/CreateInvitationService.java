@@ -12,11 +12,10 @@ import app.codeodyssey.codeodysseyapi.invitation.data.InvitationRepository;
 import app.codeodyssey.codeodysseyapi.user.data.User;
 import app.codeodyssey.codeodysseyapi.user.data.UserRepository;
 import app.codeodyssey.codeodysseyapi.user.data.UserRole;
-import lombok.AllArgsConstructor;
-import org.springframework.stereotype.Service;
-
 import java.util.Optional;
 import java.util.UUID;
+import lombok.AllArgsConstructor;
+import org.springframework.stereotype.Service;
 
 @Service
 @AllArgsConstructor

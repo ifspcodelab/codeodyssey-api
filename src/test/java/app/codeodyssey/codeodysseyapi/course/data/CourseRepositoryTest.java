@@ -306,8 +306,19 @@ public class CourseRepositoryTest {
         var enrollmentStudentACourseA = EnrollmentFactory.sampleEnrollment(invitationA, studentA);
         var enrollmentStudentACourseB = EnrollmentFactory.sampleEnrollment(invitationB, studentA);
         var enrollmentStudentBCourseC = EnrollmentFactory.sampleEnrollment(invitationC, studentB);
-        persistAllAndFlush(professor, courseA, courseB, courseC, studentA, studentB,
-                invitationA, invitationB, invitationC, enrollmentStudentACourseA, enrollmentStudentACourseB, enrollmentStudentBCourseC);
+        persistAllAndFlush(
+                professor,
+                courseA,
+                courseB,
+                courseC,
+                studentA,
+                studentB,
+                invitationA,
+                invitationB,
+                invitationC,
+                enrollmentStudentACourseA,
+                enrollmentStudentACourseB,
+                enrollmentStudentBCourseC);
 
         List<Course> courseList = courseRepository.findAllByStudentIdOrderByNameAscEndDateAsc(studentA.getId());
 
@@ -340,8 +351,21 @@ public class CourseRepositoryTest {
         var enrollmentStudentACourseA = EnrollmentFactory.sampleEnrollment(invitationA, studentA);
         var enrollmentStudentACourseB = EnrollmentFactory.sampleEnrollment(invitationB, studentA);
         var enrollmentStudentBCourseC = EnrollmentFactory.sampleEnrollment(invitationC, studentB);
-        persistAllAndFlush(professorA, professorB, professorC, courseA, courseB, courseC, studentA, studentB,
-                invitationA, invitationB, invitationC, enrollmentStudentACourseA, enrollmentStudentACourseB, enrollmentStudentBCourseC);
+        persistAllAndFlush(
+                professorA,
+                professorB,
+                professorC,
+                courseA,
+                courseB,
+                courseC,
+                studentA,
+                studentB,
+                invitationA,
+                invitationB,
+                invitationC,
+                enrollmentStudentACourseA,
+                enrollmentStudentACourseB,
+                enrollmentStudentBCourseC);
 
         List<Course> courseList = courseRepository.findAllByStudentIdOrderByNameAscEndDateAsc(studentA.getId());
 
@@ -379,8 +403,20 @@ public class CourseRepositoryTest {
         var enrollmentStudentACourseA = EnrollmentFactory.sampleEnrollment(invitationA, studentA);
         var enrollmentStudentACourseB = EnrollmentFactory.sampleEnrollment(invitationB, studentA);
         var enrollmentStudentBCourseC = EnrollmentFactory.sampleEnrollment(invitationC, studentB);
-        persistAllAndFlush(professorA, professorB, courseA, courseB, courseC, studentA, studentB,
-                invitationA, invitationB, invitationC, enrollmentStudentACourseA, enrollmentStudentACourseB, enrollmentStudentBCourseC);
+        persistAllAndFlush(
+                professorA,
+                professorB,
+                courseA,
+                courseB,
+                courseC,
+                studentA,
+                studentB,
+                invitationA,
+                invitationB,
+                invitationC,
+                enrollmentStudentACourseA,
+                enrollmentStudentACourseB,
+                enrollmentStudentBCourseC);
 
         List<Course> courseList = courseRepository.findAllByStudentIdOrderByNameAscEndDateAsc(studentA.getId());
 
@@ -424,9 +460,23 @@ public class CourseRepositoryTest {
         var enrollmentStudentACourseB = EnrollmentFactory.sampleEnrollment(invitationB, studentA);
         var enrollmentStudentACourseC = EnrollmentFactory.sampleEnrollment(invitationC, studentA);
         var enrollmentStudentBCourseC = EnrollmentFactory.sampleEnrollment(invitationD, studentB);
-        persistAllAndFlush(professorA, professorB, courseA, courseB, courseC, courseD, studentA, studentB,
-                invitationA, invitationB, invitationC, invitationD,
-                enrollmentStudentACourseA, enrollmentStudentACourseB, enrollmentStudentACourseC, enrollmentStudentBCourseC);
+        persistAllAndFlush(
+                professorA,
+                professorB,
+                courseA,
+                courseB,
+                courseC,
+                courseD,
+                studentA,
+                studentB,
+                invitationA,
+                invitationB,
+                invitationC,
+                invitationD,
+                enrollmentStudentACourseA,
+                enrollmentStudentACourseB,
+                enrollmentStudentACourseC,
+                enrollmentStudentBCourseC);
 
         List<Course> courseList = courseRepository.findAllByStudentIdOrderByNameAscEndDateAsc(studentA.getId());
 
