@@ -12,6 +12,10 @@ public final class InvitationFactory {
         return new Invitation(LocalDate.of(2023, 7, 3), CourseFactory.sampleCourse());
     }
 
+    public static Invitation sampleInvitation(LocalDate expirationDate, Course course) {
+        return new Invitation(expirationDate, course);
+    }
+
     public static Invitation sampleInvitationWithCourse(Course course) {
         var invitation = sampleInvitation();
         invitation.setCourse(course);
