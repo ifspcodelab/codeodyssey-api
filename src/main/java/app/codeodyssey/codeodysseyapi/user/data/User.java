@@ -1,7 +1,6 @@
 package app.codeodyssey.codeodysseyapi.user.data;
 
 import jakarta.persistence.*;
-
 import java.time.Instant;
 import java.util.Collection;
 import java.util.List;
@@ -28,6 +27,7 @@ public class User implements UserDetails {
 
     @Enumerated(EnumType.STRING)
     private UserRole role;
+
     private Instant createdAt;
 
     public User(String name, String email, String password) {

@@ -1,5 +1,7 @@
 package app.codeodyssey.codeodysseyapi.token.api;
 
+import static org.mockito.Mockito.when;
+
 import app.codeodyssey.codeodysseyapi.common.security.JwtService;
 import app.codeodyssey.codeodysseyapi.token.data.RefreshToken;
 import app.codeodyssey.codeodysseyapi.token.util.RefreshTokenFactory;
@@ -9,6 +11,10 @@ import io.jsonwebtoken.Jwts;
 import io.jsonwebtoken.SignatureAlgorithm;
 import io.jsonwebtoken.io.Decoders;
 import io.jsonwebtoken.security.Keys;
+import java.util.Date;
+import java.util.HashMap;
+import java.util.Map;
+import java.util.Optional;
 import org.apache.commons.lang3.time.DateUtils;
 import org.junit.jupiter.api.DisplayName;
 import org.junit.jupiter.api.Test;
@@ -21,13 +27,6 @@ import org.springframework.http.MediaType;
 import org.springframework.test.web.servlet.MockMvc;
 import org.springframework.test.web.servlet.request.MockMvcRequestBuilders;
 import org.springframework.test.web.servlet.result.MockMvcResultMatchers;
-
-import java.util.Date;
-import java.util.HashMap;
-import java.util.Map;
-import java.util.Optional;
-
-import static org.mockito.Mockito.when;
 
 @SpringBootTest
 @AutoConfigureMockMvc
@@ -50,16 +49,17 @@ class RefreshTokenEndpointTest {
         userClaims.put("role", user.getRole().toString());
         String rawKey = "404E635266556A586E3272357538782F413F4428472B4B6250645367566B5970";
 
-        String postPayload = """
+        String postPayload =
+                """
                 {
                 "refreshToken":"%s"
                 }
-                """.formatted(refreshToken.getToken());
+                """
+                        .formatted(refreshToken.getToken());
 
         RefreshToken newRefreshToken = RefreshTokenFactory.createValidRefreshToken(user);
 
-        String accessToken = Jwts
-                .builder()
+        String accessToken = Jwts.builder()
                 .setClaims(userClaims)
                 .setSubject(user.getUsername())
                 .setIssuedAt(new Date(System.currentTimeMillis()))
@@ -67,31 +67,20 @@ class RefreshTokenEndpointTest {
                 .signWith(Keys.hmacShaKeyFor(Decoders.BASE64.decode(rawKey)), SignatureAlgorithm.HS256)
                 .compact();
 
-        when(jwtService.findByToken(ArgumentMatchers.any()))
-                .thenReturn(Optional.of(refreshToken));
-        when(jwtService.verifyRefreshTokenUsed(ArgumentMatchers.any()))
-                .thenReturn(refreshToken);
-        when(jwtService.verifyRefreshTokenExpiration(ArgumentMatchers.any()))
-                .thenReturn(refreshToken);
+        when(jwtService.findByToken(ArgumentMatchers.any())).thenReturn(Optional.of(refreshToken));
+        when(jwtService.verifyRefreshTokenUsed(ArgumentMatchers.any())).thenReturn(refreshToken);
+        when(jwtService.verifyRefreshTokenExpiration(ArgumentMatchers.any())).thenReturn(refreshToken);
         when(jwtService.generateAccessToken(ArgumentMatchers.any(), ArgumentMatchers.any()))
                 .thenReturn(accessToken);
         when(jwtService.generateRefreshToken(ArgumentMatchers.any(), ArgumentMatchers.any()))
                 .thenReturn(newRefreshToken);
 
         this.mockMvc
-                .perform(MockMvcRequestBuilders
-                        .post("/api/v1/refreshtoken")
+                .perform(MockMvcRequestBuilders.post("/api/v1/refreshtoken")
                         .contentType(MediaType.APPLICATION_JSON)
-                        .content(postPayload)
-                ).andExpect(
-                        MockMvcResultMatchers.status().isCreated()
-                ).andExpect(
-                        MockMvcResultMatchers.jsonPath("$.refreshToken")
-                                .value(newRefreshToken.getToken())
-                ).andExpect(
-                        MockMvcResultMatchers.jsonPath("$.accessToken")
-                                .value(accessToken)
-                );
+                        .content(postPayload))
+                .andExpect(MockMvcResultMatchers.status().isCreated())
+                .andExpect(MockMvcResultMatchers.jsonPath("$.refreshToken").value(newRefreshToken.getToken()))
+                .andExpect(MockMvcResultMatchers.jsonPath("$.accessToken").value(accessToken));
     }
-
 }

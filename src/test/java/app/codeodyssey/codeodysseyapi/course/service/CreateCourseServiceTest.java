@@ -8,6 +8,7 @@ import app.codeodyssey.codeodysseyapi.course.data.CourseRepository;
 import app.codeodyssey.codeodysseyapi.user.data.User;
 import app.codeodyssey.codeodysseyapi.user.data.UserRepository;
 import app.codeodyssey.codeodysseyapi.user.util.UserFactory;
+import java.time.LocalDate;
 import org.assertj.core.api.Assertions;
 import org.junit.jupiter.api.AfterEach;
 import org.junit.jupiter.api.BeforeEach;
@@ -17,8 +18,6 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.boot.test.autoconfigure.jdbc.AutoConfigureTestDatabase;
 import org.springframework.boot.test.context.SpringBootTest;
 import org.springframework.test.context.ContextConfiguration;
-
-import java.time.LocalDate;
 
 @SpringBootTest
 @DisplayName("Tests for Course Service")
@@ -41,7 +40,7 @@ public class CreateCourseServiceTest {
         courseRepository.deleteAll();
         userRepository.deleteAll();
 
-        courseCommand = new CreateCourseCommand("CourseName", "Slug",  LocalDate.now(), LocalDate.now());
+        courseCommand = new CreateCourseCommand("CourseName", "Slug", LocalDate.now(), LocalDate.now());
     }
 
     @AfterEach
@@ -67,9 +66,10 @@ public class CreateCourseServiceTest {
         User professor = UserFactory.createValidProfessor();
         userRepository.save(professor);
 
-        Course existingCourse = new Course("CourseName", "Slug",  LocalDate.now(), LocalDate.now(), professor);
+        Course existingCourse = new Course("CourseName", "Slug", LocalDate.now(), LocalDate.now(), professor);
         courseRepository.save(existingCourse);
 
-        Assertions.assertThatExceptionOfType(ViolationException.class).isThrownBy(() -> createCourseService.execute(professor.getId(), courseCommand));
+        Assertions.assertThatExceptionOfType(ViolationException.class)
+                .isThrownBy(() -> createCourseService.execute(professor.getId(), courseCommand));
     }
 }

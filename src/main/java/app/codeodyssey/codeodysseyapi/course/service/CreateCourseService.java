@@ -6,10 +6,9 @@ import app.codeodyssey.codeodysseyapi.course.data.Course;
 import app.codeodyssey.codeodysseyapi.course.data.CourseRepository;
 import app.codeodyssey.codeodysseyapi.user.data.User;
 import app.codeodyssey.codeodysseyapi.user.data.UserRepository;
+import app.codeodyssey.codeodysseyapi.user.data.UserRole;
 import java.time.LocalDate;
 import java.util.UUID;
-
-import app.codeodyssey.codeodysseyapi.user.data.UserRole;
 import lombok.AllArgsConstructor;
 import org.springframework.stereotype.Service;
 
@@ -21,7 +20,8 @@ public class CreateCourseService {
     private final UserRepository userRepository;
 
     public CourseResponse execute(UUID professorId, CreateCourseCommand command) {
-        User professor = userRepository.findById(professorId)
+        User professor = userRepository
+                .findById(professorId)
                 .orElseThrow(() -> new ResourceNotFoundException(professorId, Resource.USER));
 
         if (!professor.getRole().equals(UserRole.PROFESSOR)) {
@@ -33,11 +33,17 @@ public class CreateCourseService {
         }
 
         if (command.startDate().isBefore(LocalDate.now())) {
-            throw new BusinessRuleException(Resource.COURSE, BusinessRuleType.COURSE_START_DATE_BEFORE_TODAY, command.startDate().toString());
+            throw new BusinessRuleException(
+                    Resource.COURSE,
+                    BusinessRuleType.COURSE_START_DATE_BEFORE_TODAY,
+                    command.startDate().toString());
         }
 
         if (command.endDate().isBefore(command.startDate())) {
-            throw new BusinessRuleException(Resource.COURSE, BusinessRuleType.COURSE_END_DATE_BEFORE_START_DATE, command.endDate().toString());
+            throw new BusinessRuleException(
+                    Resource.COURSE,
+                    BusinessRuleType.COURSE_END_DATE_BEFORE_START_DATE,
+                    command.endDate().toString());
         }
 
         Course course = courseRepository.save(

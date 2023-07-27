@@ -19,7 +19,5 @@ class CodeodysseyApiApplicationTests {
             .withDatabaseName("codeodyssey-api-test");
 
     @Test
-    void contextLoads() {
-
-    }
+    void contextLoads() {}
 }

@@ -22,31 +22,24 @@ public class SecurityConfiguration {
     private final AuthenticationProvider authenticationProvider;
 
     private static final String[] NO_AUTH_REQUIRED = {
-            "/api/v1/login",
-            "/swagger-ui/**",
-            "/v3/api-docs/**",
-            "/api/v1/refreshtoken"
+        "/api/v1/login", "/swagger-ui/**", "/v3/api-docs/**", "/api/v1/refreshtoken"
     };
 
-    private static final String[] STUDENTS_ALLOWED = {
+    private static final String[] STUDENTS_ALLOWED = {};
 
-    };
-
-    private static final String[] PROFESSORS_ALLOWED = {
-            "/api/v1/users/{professorId}/courses"
-    };
+    private static final String[] PROFESSORS_ALLOWED = {"/api/v1/users/{professorId}/courses"};
 
     @Bean
     public SecurityFilterChain securityFilterChain(HttpSecurity http) throws Exception {
-        http
-                .csrf(AbstractHttpConfigurer::disable)
-                .authorizeHttpRequests(auth -> auth
-                        .requestMatchers(NO_AUTH_REQUIRED).permitAll()
-                        .requestMatchers(STUDENTS_ALLOWED).hasAnyAuthority("STUDENT")
-                        .requestMatchers(PROFESSORS_ALLOWED).hasAnyAuthority("PROFESSOR")
+        http.csrf(AbstractHttpConfigurer::disable)
+                .authorizeHttpRequests(auth -> auth.requestMatchers(NO_AUTH_REQUIRED)
+                        .permitAll()
+                        .requestMatchers(STUDENTS_ALLOWED)
+                        .hasAnyAuthority("STUDENT")
+                        .requestMatchers(PROFESSORS_ALLOWED)
+                        .hasAnyAuthority("PROFESSOR")
                         .anyRequest()
-                        .authenticated()
-                )
+                        .authenticated())
                 .sessionManagement(sess -> sess.sessionCreationPolicy(SessionCreationPolicy.STATELESS))
                 .authenticationProvider(authenticationProvider)
                 .addFilterBefore(jwtAuthFilter, UsernamePasswordAuthenticationFilter.class)
@@ -54,5 +47,4 @@ public class SecurityConfiguration {
 
         return http.build();
     }
-
 }

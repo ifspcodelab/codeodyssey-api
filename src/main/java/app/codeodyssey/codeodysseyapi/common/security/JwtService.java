@@ -10,13 +10,6 @@ import app.codeodyssey.codeodysseyapi.user.data.UserRepository;
 import io.jsonwebtoken.*;
 import io.jsonwebtoken.io.Decoders;
 import io.jsonwebtoken.security.Keys;
-import lombok.RequiredArgsConstructor;
-import lombok.extern.slf4j.Slf4j;
-import org.apache.commons.lang3.time.DateUtils;
-import org.springframework.security.core.userdetails.UserDetails;
-import org.springframework.stereotype.Component;
-import org.springframework.stereotype.Service;
-
 import java.security.Key;
 import java.time.Instant;
 import java.time.temporal.ChronoUnit;
@@ -25,6 +18,12 @@ import java.util.Map;
 import java.util.Optional;
 import java.util.UUID;
 import java.util.function.Function;
+import lombok.RequiredArgsConstructor;
+import lombok.extern.slf4j.Slf4j;
+import org.apache.commons.lang3.time.DateUtils;
+import org.springframework.security.core.userdetails.UserDetails;
+import org.springframework.stereotype.Component;
+import org.springframework.stereotype.Service;
 
 @Service
 @Component
@@ -36,18 +35,17 @@ public class JwtService {
     private final RefreshTokenRepository refreshTokenRepository;
     private final UserRepository userRepository;
 
-    public String extractUsername(String token){
+    public String extractUsername(String token) {
         return extractClaim(token, Claims::getSubject);
     }
 
-    public <T> T extractClaim(String token, Function<Claims, T> claimsResolver){
+    public <T> T extractClaim(String token, Function<Claims, T> claimsResolver) {
         final Claims claims = extractAllClaims(token);
         return claimsResolver.apply(claims);
     }
 
-    public Claims extractAllClaims(String token){
-        return Jwts
-                .parserBuilder()
+    public Claims extractAllClaims(String token) {
+        return Jwts.parserBuilder()
                 .setSigningKey(getSignKey())
                 .build()
                 .parseClaimsJws(token)
@@ -59,12 +57,8 @@ public class JwtService {
         return Keys.hmacShaKeyFor(keyBytes);
     }
 
-    public String generateAccessToken(
-            Map<String, Object> extraClaims,
-            UserDetails userDetails
-    ){
-        return Jwts
-                .builder()
+    public String generateAccessToken(Map<String, Object> extraClaims, UserDetails userDetails) {
+        return Jwts.builder()
                 .setClaims(extraClaims)
                 .setSubject(userDetails.getUsername())
                 .setIssuedAt(new Date(System.currentTimeMillis()))
@@ -73,7 +67,7 @@ public class JwtService {
                 .compact();
     }
 
-    public boolean isAccessTokenValid(String token){
+    public boolean isAccessTokenValid(String token) {
         try {
             Jwts.parserBuilder().setSigningKey(getSignKey()).build().parse(token);
             return true;
@@ -89,21 +83,21 @@ public class JwtService {
         return false;
     }
 
-    public Optional<RefreshToken> findByToken(String token){
+    public Optional<RefreshToken> findByToken(String token) {
         return this.refreshTokenRepository.findByToken(token);
     }
 
     public RefreshToken generateRefreshToken(UUID id, String usedToken) {
         RefreshToken refreshToken = new RefreshToken();
 
-        if(usedToken != null) {
+        if (usedToken != null) {
             Optional<RefreshToken> usedRefreshToken = this.refreshTokenRepository.findByToken(usedToken);
             this.refreshTokenRepository.deleteById(usedRefreshToken.get().getId());
         }
 
         refreshToken.setUser(this.userRepository.findById(id).get());
-        refreshToken.setExpiryAt(Instant.now().plus(jwtConfig.getRefreshTokenExpirationAfterMinutes(),
-                ChronoUnit.MINUTES));
+        refreshToken.setExpiryAt(
+                Instant.now().plus(jwtConfig.getRefreshTokenExpirationAfterMinutes(), ChronoUnit.MINUTES));
         refreshToken.setToken(UUID.randomUUID().toString());
 
         refreshToken = this.refreshTokenRepository.save(refreshToken);
@@ -113,22 +107,19 @@ public class JwtService {
     public RefreshToken verifyRefreshTokenExpiration(RefreshToken token) {
         if (token.getExpiryAt().compareTo(Instant.now()) < 0) {
             this.refreshTokenRepository.delete(token);
-            throw new ForbiddenException(Resource.REFRESH_TOKEN,
-                    ForbiddenType.EXPIRED_REFRESH_TOKEN,
-                    "refresh token was expired");
+            throw new ForbiddenException(
+                    Resource.REFRESH_TOKEN, ForbiddenType.EXPIRED_REFRESH_TOKEN, "refresh token was expired");
         }
 
         return token;
     }
 
-    public RefreshToken verifyRefreshTokenUsed(RefreshToken token){
-        if(token.getStatus().equals(RefreshTokenStatus.USED)){
-            throw new ForbiddenException(Resource.REFRESH_TOKEN,
-                    ForbiddenType.REFRESH_TOKEN_USED,
-                    "refresh token already used");
+    public RefreshToken verifyRefreshTokenUsed(RefreshToken token) {
+        if (token.getStatus().equals(RefreshTokenStatus.USED)) {
+            throw new ForbiddenException(
+                    Resource.REFRESH_TOKEN, ForbiddenType.REFRESH_TOKEN_USED, "refresh token already used");
         }
 
         return token;
     }
-
 }

@@ -23,19 +23,17 @@ public class CreateCourseEndpoint {
 
     @Operation(
             summary = "Create courses.",
-            description =
-                    "Register a new course on the database",
+            description = "Register a new course on the database",
             tags = {"Courses"})
     @ApiResponses({
-            @ApiResponse(
-                    responseCode = "201",
-                    content = {
-                            @Content(
-                                    array = @ArraySchema(schema = @Schema(implementation = CourseResponse.class)),
-                                    mediaType = "application/json")
-                    })
+        @ApiResponse(
+                responseCode = "201",
+                content = {
+                    @Content(
+                            array = @ArraySchema(schema = @Schema(implementation = CourseResponse.class)),
+                            mediaType = "application/json")
+                })
     })
-
     @PostMapping
     public ResponseEntity<CourseResponse> post(
             @PathVariable UUID professorId, @Valid @RequestBody CreateCourseCommand command) {

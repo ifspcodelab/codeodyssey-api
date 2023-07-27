@@ -1,8 +1,7 @@
 package app.codeodyssey.codeodysseyapi.common.exception;
 
-import lombok.Getter;
-
 import java.util.UUID;
+import lombok.Getter;
 
 @Getter
 public class UnauthorizedAccessException extends RuntimeException {
