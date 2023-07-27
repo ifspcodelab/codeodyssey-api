@@ -50,8 +50,8 @@ public class CreateInvitationServiceTest {
     }
 
     @Test
-    @DisplayName("createInvitationService given professor returns invite")
-    void createInvitationService_givenProfessor_returnsInvite() {
+    @DisplayName("createInvitationService given professor of a course returns invite")
+    void createInvitationService_givenCourseAndProfessor_returnsInvite() {
         var course = CourseFactory.sampleCourse();
         var professor = course.getProfessor();
         var command = new InvitationCreateCommand(LocalDate.now());
