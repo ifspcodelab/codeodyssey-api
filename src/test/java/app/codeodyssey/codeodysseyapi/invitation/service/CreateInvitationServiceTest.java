@@ -85,4 +85,24 @@ public class CreateInvitationServiceTest {
         UnauthorizedAccessException unauthorizedAccessException = (UnauthorizedAccessException) serviceThrowable;
         assertThat(unauthorizedAccessException.getId()).isEqualTo(user.getId());
     }
+
+    @Test
+    @DisplayName("createInvitationService given professor of a different course returns unauthorized")
+    void createInvitationService_givenNonProfessorOfACourse_returnsUnauthorized() {
+        var course = CourseFactory.sampleCourse();
+        var professor = course.getProfessor();
+        var professorB = UserFactory.sampleUserProfessorB();
+        var command = new InvitationCreateCommand(LocalDate.now());
+        userRepository.saveAll(List.of(professor, professorB));
+        courseRepository.save(course);
+
+        var serviceThrowable = (RuntimeException) catchThrowable(() ->
+                createInvitationService.execute(command, course.getId(), professorB.getEmail())
+        );
+
+        assertThat(serviceThrowable).isNotNull();
+        assertThat(serviceThrowable).isInstanceOf(UnauthorizedAccessException.class);
+        UnauthorizedAccessException unauthorizedAccessException = (UnauthorizedAccessException) serviceThrowable;
+        assertThat(unauthorizedAccessException.getId()).isEqualTo(professorB.getId());
+    }
 }
