@@ -1,12 +1,11 @@
 package app.codeodyssey.codeodysseyapi.enrollment.service;
 
-import static org.assertj.core.api.Assertions.*;
+import static org.assertj.core.api.Assertions.assertThat;
 import static org.junit.jupiter.api.Assertions.assertDoesNotThrow;
 
 import app.codeodyssey.codeodysseyapi.DatabaseContainerInitializer;
 import app.codeodyssey.codeodysseyapi.course.data.CourseRepository;
 import app.codeodyssey.codeodysseyapi.course.util.CourseFactory;
-import app.codeodyssey.codeodysseyapi.enrollment.data.Enrollment;
 import app.codeodyssey.codeodysseyapi.enrollment.data.EnrollmentRepository;
 import app.codeodyssey.codeodysseyapi.invitation.data.InvitationRepository;
 import app.codeodyssey.codeodysseyapi.invitation.util.InvitationFactory;
@@ -39,6 +38,9 @@ public class CreateEnrollmentServiceTest {
     @Autowired
     EnrollmentRepository enrollmentRepository;
 
+    @Autowired
+    CreateEnrollmentService createEnrollmentService;
+
     @AfterEach
     void afterEach() {
         enrollmentRepository.deleteAll();
@@ -58,12 +60,12 @@ public class CreateEnrollmentServiceTest {
         courseRepository.save(course);
         invitationRepository.save(invitation);
 
-        Enrollment enrollment =
+        var enrollment =
                 assertDoesNotThrow(() -> createEnrollmentService.execute(invitation.getId(), student.getEmail()));
 
         assertThat(enrollment).isNotNull();
-        assertThat(enrollment).isInstanceOf(Enrollment.class);
-        assertThat(enrollment.getInvitation()).isEqualTo(invitation);
-        assertThat(enrollment.getStudent()).isEqualTo(student);
+        assertThat(enrollment).isInstanceOf(EnrollmentResponse.class);
+        assertThat(enrollment.invitation().getId()).isEqualTo(invitation.getId());
+        assertThat(enrollment.student().getId()).isEqualTo(student.getId());
     }
 }
