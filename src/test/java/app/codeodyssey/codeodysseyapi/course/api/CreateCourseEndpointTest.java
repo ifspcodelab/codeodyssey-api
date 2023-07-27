@@ -1,15 +1,11 @@
 package app.codeodyssey.codeodysseyapi.course.api;
 
-import app.codeodyssey.codeodysseyapi.common.exception.Resource;
-import app.codeodyssey.codeodysseyapi.common.exception.ResourceNotFoundException;
 import app.codeodyssey.codeodysseyapi.course.data.Course;
 import app.codeodyssey.codeodysseyapi.course.data.CourseRepository;
 import app.codeodyssey.codeodysseyapi.course.service.CreateCourseCommand;
-import app.codeodyssey.codeodysseyapi.user.api.UserResponse;
 import app.codeodyssey.codeodysseyapi.user.data.User;
 import app.codeodyssey.codeodysseyapi.user.data.UserRepository;
-import app.codeodyssey.codeodysseyapi.user.service.CreateUserCommand;
-import app.codeodyssey.codeodysseyapi.user.service.CreateUserService;
+import app.codeodyssey.codeodysseyapi.user.util.UserFactory;
 import org.assertj.core.api.Assertions;
 import org.junit.jupiter.api.*;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -34,17 +30,12 @@ public class CreateCourseEndpointTest {
     private ObjectMapper objectMapper;
 
     @Autowired
-    private CreateUserService createUserService;
-
-    @Autowired
     private CourseRepository courseRepository;
 
     @Autowired
     private UserRepository userRepository;
 
-    CreateCourseCommand courseCommand;
-    CreateUserCommand userCommand;
-    UserResponse userResponse;
+    private CreateCourseCommand courseCommand;
 
     @BeforeEach
     public void setUp() {
@@ -52,8 +43,6 @@ public class CreateCourseEndpointTest {
         userRepository.deleteAll();
 
         courseCommand = new CreateCourseCommand("CourseName", "Slug",  LocalDate.now(), LocalDate.now());
-        userCommand = new CreateUserCommand("UserName", "Email",  "Password");
-        userResponse = createUserService.execute(userCommand);
     }
 
     @AfterEach
@@ -65,11 +54,12 @@ public class CreateCourseEndpointTest {
     @Test
     @DisplayName("register a new course when given a valid course request")
     void createCourse_givenValidCourseRequest_return201Created() throws Exception{
-        String professorId = String.valueOf(userResponse.id());
+        User professor = UserFactory.createValidProfessor();
+        userRepository.save(professor);
 
         mockMvc
                 .perform(MockMvcRequestBuilders
-                        .post("/api/v1/users/" + professorId + "/courses")
+                        .post("/api/v1/users/{professorId}/courses", professor.getId())
                                 .contentType(MediaType.APPLICATION_JSON)
                                 .content(objectMapper.writeValueAsString(courseCommand)))
                 .andExpect(MockMvcResultMatchers.status().isCreated())
@@ -84,14 +74,14 @@ public class CreateCourseEndpointTest {
     @Test
     @DisplayName("returns conflict when given a existing course")
     void createCourse_givenExistingCourse_return409Conflict() throws Exception{
-        User user = userRepository.findById(userResponse.id()).orElseThrow(() -> new ResourceNotFoundException(userResponse.id(), Resource.USER));
-        Course existingCourse = new Course("CourseName", "Slug",  LocalDate.now(), LocalDate.now(), user);
+        User professor = UserFactory.createValidProfessor();
+        userRepository.save(professor);
+        Course existingCourse = new Course("CourseName", "Slug",  LocalDate.now(), LocalDate.now(), professor);
         courseRepository.save(existingCourse);
-        String professorId = String.valueOf(userResponse.id());
 
         mockMvc
                 .perform(MockMvcRequestBuilders
-                        .post("/api/v1/users/" + professorId + "/courses")
+                        .post("/api/v1/users/{professorId}/courses", professor.getId())
                         .contentType(MediaType.APPLICATION_JSON)
                         .content(objectMapper.writeValueAsString(courseCommand)))
                 .andExpect(MockMvcResultMatchers.status().isConflict())
@@ -104,12 +94,13 @@ public class CreateCourseEndpointTest {
     @Test
     @DisplayName("returns conflict when the start date is before the current date")
     void createCourse_givenStartDateBeforeCurrentDate_return409Conflict() throws Exception{
+        User professor = UserFactory.createValidProfessor();
+        userRepository.save(professor);
         CreateCourseCommand courseCommand2 = new CreateCourseCommand("CourseName", "Slug",  LocalDate.of(1000, 01, 01), LocalDate.now());
-        String professorId = String.valueOf(userResponse.id());
 
         mockMvc
                 .perform(MockMvcRequestBuilders
-                        .post("/api/v1/users/" + professorId + "/courses")
+                        .post("/api/v1/users/{professorId}/courses", professor.getId())
                         .contentType(MediaType.APPLICATION_JSON)
                         .content(objectMapper.writeValueAsString(courseCommand2)))
                 .andExpect(MockMvcResultMatchers.status().isConflict())
@@ -122,12 +113,13 @@ public class CreateCourseEndpointTest {
     @Test
     @DisplayName("returns conflict when the end date is before the start date")
     void createCourse_givenEndDateBeforeStartDate_return409Conflict() throws Exception{
+        User professor = UserFactory.createValidProfessor();
+        userRepository.save(professor);
         CreateCourseCommand courseCommand2 = new CreateCourseCommand("CourseName", "Slug",  LocalDate.now(), LocalDate.of(1000, 01, 01));
-        String professorId = String.valueOf(userResponse.id());
 
         mockMvc
                 .perform(MockMvcRequestBuilders
-                        .post("/api/v1/users/" + professorId + "/courses")
+                        .post("/api/v1/users/{professorId}/courses", professor.getId())
                         .contentType(MediaType.APPLICATION_JSON)
                         .content(objectMapper.writeValueAsString(courseCommand2)))
                 .andExpect(MockMvcResultMatchers.status().isConflict())

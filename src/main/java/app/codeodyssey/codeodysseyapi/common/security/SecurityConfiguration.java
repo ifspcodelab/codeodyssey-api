@@ -27,8 +27,7 @@ public class SecurityConfiguration {
             "/v3/api-docs/**",
             "/api/v1/refreshtoken",
             "/api/v1/courses",
-            "/api/v1/users",
-            "/api/v1/users/{professorId}/courses"
+            "/api/v1/users"
     };
 
     private static final String[] STUDENTS_ALLOWED = {
