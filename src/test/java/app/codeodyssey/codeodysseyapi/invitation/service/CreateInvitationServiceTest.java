@@ -1,6 +1,8 @@
 package app.codeodyssey.codeodysseyapi.invitation.service;
 
 import app.codeodyssey.codeodysseyapi.DatabaseContainerInitializer;
+import app.codeodyssey.codeodysseyapi.common.exception.Resource;
+import app.codeodyssey.codeodysseyapi.common.exception.ResourceNotFoundException;
 import app.codeodyssey.codeodysseyapi.common.exception.UnauthorizedAccessException;
 import app.codeodyssey.codeodysseyapi.course.data.CourseRepository;
 import app.codeodyssey.codeodysseyapi.course.util.CourseFactory;
@@ -18,6 +20,7 @@ import org.springframework.test.context.ContextConfiguration;
 
 import java.time.LocalDate;
 import java.util.List;
+import java.util.UUID;
 
 import static org.assertj.core.api.Assertions.assertThat;
 import static org.assertj.core.api.Assertions.catchThrowable;
@@ -84,6 +87,25 @@ public class CreateInvitationServiceTest {
         assertThat(serviceThrowable).isInstanceOf(UnauthorizedAccessException.class);
         UnauthorizedAccessException unauthorizedAccessException = (UnauthorizedAccessException) serviceThrowable;
         assertThat(unauthorizedAccessException.getId()).isEqualTo(user.getId());
+    }
+
+    @Test
+    @DisplayName("createInvitationService given nonexistent course returns not found")
+    void createInvitationService_givenNonexistentCourse_returnsNotFound() {
+        var professor = UserFactory.sampleUserProfessor();
+        var command = new InvitationCreateCommand(LocalDate.now());
+        var courseId = UUID.randomUUID();
+        userRepository.save(professor);
+
+        var serviceThrowable = (RuntimeException) catchThrowable(() ->
+                createInvitationService.execute(command, courseId, professor.getEmail())
+        );
+
+        assertThat(serviceThrowable).isNotNull();
+        assertThat(serviceThrowable).isInstanceOf(ResourceNotFoundException.class);
+        ResourceNotFoundException resourceNotFoundException = (ResourceNotFoundException) serviceThrowable;
+        assertThat(resourceNotFoundException.getId()).isEqualTo(courseId);
+        assertThat(resourceNotFoundException.getResource()).isEqualTo(Resource.COURSE);
     }
 
     @Test
