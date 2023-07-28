@@ -24,27 +24,30 @@ public class CreateEnrollmentService {
     private final EnrollmentMapper enrollmentMapper;
 
     public EnrollmentResponse execute(UUID invitationId, String userEmail) {
-        Optional<User> student = userRepository.findByEmail(userEmail);
+        Optional<User> studentOpt = userRepository.findByEmail(userEmail);
 
-        if (student.isEmpty()) {
+        if (studentOpt.isEmpty()) {
             throw new EmailNotFoundException(userEmail);
         }
 
-        Optional<Invitation> invitation = invitationRepository.findById(invitationId);
+        User student = studentOpt.get();
 
-        if (invitation.isEmpty()) {
+        Optional<Invitation> invitationOpt = invitationRepository.findById(invitationId);
+
+        if (invitationOpt.isEmpty()) {
             throw new ResourceNotFoundException(invitationId, Resource.INVITATION);
         }
 
-        // TODO: StudentAlreadyEnrolledException by checking if user has an enrollment on invitation.getCourse
+        Invitation invitation = invitationOpt.get();
+
         boolean exists = enrollmentRepository.existsByStudentIdAndInvitation_Course_Id(
-                student.get().getId(), invitation.get().getCourse().getId());
+                student.getId(), invitation.getCourse().getId());
         if (exists) {
             throw new StudentAlreadyEnrolledException(
-                    student.get().getId(), invitation.get().getCourse().getId());
+                    student.getId(), invitation.getCourse().getId());
         }
 
-        Enrollment enrollment = new Enrollment(invitation.get(), student.get());
+        Enrollment enrollment = new Enrollment(invitation, student);
         enrollmentRepository.save(enrollment);
 
         return enrollmentMapper.to(enrollment);
