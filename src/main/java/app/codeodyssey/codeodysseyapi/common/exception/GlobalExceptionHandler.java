@@ -102,4 +102,20 @@ public class GlobalExceptionHandler {
         log.warn(detail);
         return new ResponseEntity<>(problem, status);
     }
+
+    @ExceptionHandler(StudentAlreadyEnrolledException.class)
+    public ResponseEntity<ProblemDetail> studentAlreadyEnrolled(StudentAlreadyEnrolledException ex) {
+        HttpStatus status = HttpStatus.CONFLICT;
+        UUID studentId = ex.getStudentId();
+        UUID courseId = ex.getCourseId();
+        String title = "Student already enrolled";
+        String detail = "Student with id=%s is already enrolled on course id=%s.".formatted(studentId, courseId);
+
+        ProblemDetail problem = ProblemDetail.forStatus(status);
+        problem.setTitle(title);
+        problem.setDetail(detail);
+
+        log.warn(detail);
+        return new ResponseEntity<>(problem, status);
+    }
 }
