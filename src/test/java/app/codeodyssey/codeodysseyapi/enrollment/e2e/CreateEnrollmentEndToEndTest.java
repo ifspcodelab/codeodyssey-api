@@ -6,6 +6,7 @@ import static org.junit.jupiter.api.Assertions.assertDoesNotThrow;
 import app.codeodyssey.codeodysseyapi.DatabaseContainerInitializer;
 import app.codeodyssey.codeodysseyapi.course.data.CourseRepository;
 import app.codeodyssey.codeodysseyapi.course.util.CourseFactory;
+import app.codeodyssey.codeodysseyapi.enrollment.data.EnrollmentRepository;
 import app.codeodyssey.codeodysseyapi.enrollment.service.EnrollmentResponse;
 import app.codeodyssey.codeodysseyapi.invitation.data.InvitationRepository;
 import app.codeodyssey.codeodysseyapi.invitation.util.InvitationFactory;
@@ -58,6 +59,9 @@ public class CreateEnrollmentEndToEndTest {
     @Autowired
     RefreshTokenRepository refreshTokenRepository;
 
+    @Autowired
+    EnrollmentRepository enrollmentRepository;
+
     @BeforeEach
     void beforeEach() {
         url = "http://localhost:%d/api/v1/invitations".formatted(port);
@@ -68,6 +72,7 @@ public class CreateEnrollmentEndToEndTest {
     @AfterEach
     void afterEach() {
         refreshTokenRepository.deleteAll();
+        enrollmentRepository.deleteAll();
         invitationRepository.deleteAll();
         courseRepository.deleteAll();
         userRepository.deleteAll();
@@ -87,7 +92,7 @@ public class CreateEnrollmentEndToEndTest {
         refreshTokenRepository.save(authTokenPair.getRefreshToken());
         httpHeaders.setBearerAuth(authTokenPair.getAccessToken());
         HttpEntity<?> request = new HttpEntity<>(null, httpHeaders);
-        url += "/%s/enrollments".formatted(student.getId());
+        url += "/%s/enrollments".formatted(invitation.getId());
 
         var response = assertDoesNotThrow(
                 () -> restTemplate.exchange(url, HttpMethod.POST, request, EnrollmentResponse.class));
