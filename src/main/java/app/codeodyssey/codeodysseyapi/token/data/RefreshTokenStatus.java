@@ -7,7 +7,8 @@ import lombok.Getter;
 @Getter
 public enum RefreshTokenStatus {
     UNUSED("UNUSED"),
-    USED("USED");
+    USED("USED"),
+    BLOCKED("BLOCKED");
 
     private final String name;
 }

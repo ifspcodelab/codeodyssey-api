@@ -26,24 +26,25 @@ public class LoginUserEndpoint {
             description = "Returns a JWT containing an access token and a refresh token",
             tags = {"Users"})
     @ApiResponses({
-            @ApiResponse(
-                    responseCode = "200",
-                    content = {
-                            @Content(
-                                    schema = @Schema(implementation = LoginResponse.class),
-                                    mediaType = "application/json")
-                    }),
-            @ApiResponse(
-                    responseCode = "403",
-                    content = {
-                            @Content(
-                                    schema = @Schema(implementation = ProblemDetail.class),
-                                    mediaType = "application/json")
-                    })
+        @ApiResponse(
+                responseCode = "200",
+                content = {
+                    @Content(schema = @Schema(implementation = LoginResponse.class), mediaType = "application/json")
+                }),
+        @ApiResponse(
+                responseCode = "403",
+                content = {
+                    @Content(schema = @Schema(implementation = ProblemDetail.class), mediaType = "application/json")
+                }),
+        @ApiResponse(
+                responseCode = "400",
+                content = {
+                    @Content(schema = @Schema(implementation = ProblemDetail.class), mediaType = "application/json")
+                })
     })
     @CrossOrigin(origins = "*")
     @PostMapping("/login")
-    public ResponseEntity<LoginResponse> login(@RequestBody LoginRequest loginRequest){
+    public ResponseEntity<LoginResponse> login(@RequestBody LoginRequest loginRequest) {
         return new ResponseEntity<>(getTokenService.execute(loginRequest), HttpStatus.OK);
     }
 }
