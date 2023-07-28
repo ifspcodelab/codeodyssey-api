@@ -11,8 +11,10 @@ import io.swagger.v3.oas.annotations.media.Schema;
 import io.swagger.v3.oas.annotations.responses.ApiResponse;
 import io.swagger.v3.oas.annotations.responses.ApiResponses;
 import io.swagger.v3.oas.annotations.tags.Tag;
-import java.util.HashMap;
+import jakarta.transaction.Transactional;
 import java.util.Map;
+import java.util.UUID;
+import java.util.concurrent.ConcurrentHashMap;
 import lombok.RequiredArgsConstructor;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ProblemDetail;
@@ -47,23 +49,27 @@ public class RefreshTokenEndpoint {
     })
     @CrossOrigin(origins = "*")
     @PostMapping("/refreshtoken")
+    @Transactional
     public ResponseEntity<RefreshTokenResponse> refreshToken(@RequestBody RefreshTokenRequest request) {
         String refreshToken = request.refreshToken();
-        Map<String, Object> claims = new HashMap<>();
+        Map<String, Object> claims = new ConcurrentHashMap<>();
 
         return jwtService
-                .findByToken(refreshToken)
+                .findRefreshTokenById(UUID.fromString(refreshToken))
                 .map(jwtService::verifyRefreshTokenUsed)
                 .map(jwtService::verifyRefreshTokenExpiration)
                 .map(RefreshToken::getUser)
                 .map(user -> {
+                    claims.put("name", user.getName());
+                    claims.put("email", user.getEmail());
                     claims.put("role", user.getRole());
                     String accessToken = jwtService.generateAccessToken(claims, user);
                     return new ResponseEntity<>(
                             new RefreshTokenResponse(
                                     this.jwtService
                                             .generateRefreshToken(user.getId(), refreshToken)
-                                            .getToken(),
+                                            .getId()
+                                            .toString(),
                                     accessToken),
                             HttpStatus.CREATED);
                 })

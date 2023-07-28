@@ -3,6 +3,7 @@ package app.codeodyssey.codeodysseyapi.course.api;
 import app.codeodyssey.codeodysseyapi.course.data.Course;
 import app.codeodyssey.codeodysseyapi.course.data.CourseRepository;
 import app.codeodyssey.codeodysseyapi.course.service.CreateCourseCommand;
+import app.codeodyssey.codeodysseyapi.token.util.AccessTokenFactory;
 import app.codeodyssey.codeodysseyapi.user.data.User;
 import app.codeodyssey.codeodysseyapi.user.data.UserRepository;
 import app.codeodyssey.codeodysseyapi.user.util.UserFactory;
@@ -55,8 +56,10 @@ public class CreateCourseEndpointTest {
     void createCourse_givenValidCourseRequest_return201Created() throws Exception {
         User professor = UserFactory.createValidProfessor();
         userRepository.save(professor);
+        var token = AccessTokenFactory.sampleAccessToken(professor);
 
         mockMvc.perform(MockMvcRequestBuilders.post("/api/v1/users/{professorId}/courses", professor.getId())
+                        .header("Authorization", "Bearer " + token)
                         .contentType(MediaType.APPLICATION_JSON)
                         .content(objectMapper.writeValueAsString(courseCommand)))
                 .andExpect(MockMvcResultMatchers.status().isCreated())
@@ -75,14 +78,16 @@ public class CreateCourseEndpointTest {
     void createCourse_givenExistingCourse_return409Conflict() throws Exception {
         User professor = UserFactory.createValidProfessor();
         userRepository.save(professor);
+        var token = AccessTokenFactory.sampleAccessToken(professor);
         Course existingCourse = new Course("CourseName", "Slug", LocalDate.now(), LocalDate.now(), professor);
         courseRepository.save(existingCourse);
 
         mockMvc.perform(MockMvcRequestBuilders.post("/api/v1/users/{professorId}/courses", professor.getId())
+                        .header("Authorization", "Bearer " + token)
                         .contentType(MediaType.APPLICATION_JSON)
                         .content(objectMapper.writeValueAsString(courseCommand)))
                 .andExpect(MockMvcResultMatchers.status().isConflict())
-                .andExpect(MockMvcResultMatchers.jsonPath("$.title").value("Course already exists"))
+                .andExpect(MockMvcResultMatchers.jsonPath("$.title").value("Course Already exists"))
                 .andExpect(MockMvcResultMatchers.jsonPath("$.detail").value(courseCommand.slug()));
 
         Assertions.assertThat(courseCommand).isNotNull();
@@ -93,10 +98,12 @@ public class CreateCourseEndpointTest {
     void createCourse_givenStartDateBeforeCurrentDate_return409Conflict() throws Exception {
         User professor = UserFactory.createValidProfessor();
         userRepository.save(professor);
+        var token = AccessTokenFactory.sampleAccessToken(professor);
         CreateCourseCommand courseCommand2 =
                 new CreateCourseCommand("CourseName", "Slug", LocalDate.of(1000, 01, 01), LocalDate.now());
 
         mockMvc.perform(MockMvcRequestBuilders.post("/api/v1/users/{professorId}/courses", professor.getId())
+                        .header("Authorization", "Bearer " + token)
                         .contentType(MediaType.APPLICATION_JSON)
                         .content(objectMapper.writeValueAsString(courseCommand2)))
                 .andExpect(MockMvcResultMatchers.status().isConflict())
@@ -112,10 +119,12 @@ public class CreateCourseEndpointTest {
     void createCourse_givenEndDateBeforeStartDate_return409Conflict() throws Exception {
         User professor = UserFactory.createValidProfessor();
         userRepository.save(professor);
+        var token = AccessTokenFactory.sampleAccessToken(professor);
         CreateCourseCommand courseCommand2 =
                 new CreateCourseCommand("CourseName", "Slug", LocalDate.now(), LocalDate.of(1000, 01, 01));
 
         mockMvc.perform(MockMvcRequestBuilders.post("/api/v1/users/{professorId}/courses", professor.getId())
+                        .header("Authorization", "Bearer " + token)
                         .contentType(MediaType.APPLICATION_JSON)
                         .content(objectMapper.writeValueAsString(courseCommand2)))
                 .andExpect(MockMvcResultMatchers.status().isConflict())

@@ -6,16 +6,19 @@ import jakarta.validation.Valid;
 import lombok.AllArgsConstructor;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
-import org.springframework.web.bind.annotation.*;
+import org.springframework.web.bind.annotation.PostMapping;
+import org.springframework.web.bind.annotation.RequestBody;
+import org.springframework.web.bind.annotation.RequestMapping;
+import org.springframework.web.bind.annotation.RestController;
 
 @RestController
-@RequestMapping("/api/v1/users")
+@RequestMapping("api/v1/users")
 @AllArgsConstructor
 public class CreateUserEndpoint {
     private final CreateUserService createUserService;
 
     @PostMapping
-    public ResponseEntity<UserResponse> post(@Valid @RequestBody CreateUserCommand command) {
+    public ResponseEntity<UserResponse> post(@RequestBody @Valid CreateUserCommand command) {
         return new ResponseEntity<>(createUserService.execute(command), HttpStatus.CREATED);
     }
 }

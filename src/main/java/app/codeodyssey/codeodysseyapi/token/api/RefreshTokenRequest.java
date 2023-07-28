@@ -1,3 +1,5 @@
 package app.codeodyssey.codeodysseyapi.token.api;
 
-public record RefreshTokenRequest(String refreshToken) {}
+import jakarta.validation.constraints.NotNull;
+
+public record RefreshTokenRequest(@NotNull String refreshToken) {}
