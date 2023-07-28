@@ -35,14 +35,34 @@ public class EnrollmentRepositoryTest {
         var professor = course.getProfessor();
         var invitation = InvitationFactory.sampleInvitation(LocalDate.now().plusMonths(1), course);
         var student = UserFactory.sampleUserStudent();
+        var studentB = UserFactory.sampleUserStudentB();
         var enrollment = EnrollmentFactory.sampleEnrollment(invitation, student);
-        persistAllAndFlush(professor, course, invitation, student, enrollment);
+        var enrollmentB = EnrollmentFactory.sampleEnrollment(invitation, studentB);
+        persistAllAndFlush(professor, course, invitation, student, studentB, enrollment, enrollmentB);
 
         var exists = assertDoesNotThrow(
                 () -> enrollmentRepository.existsByStudentIdAndInvitation_Course_Id(student.getId(), course.getId()));
 
         assertThat(exists).isNotNull();
         assertThat(exists).isTrue();
+    }
+
+    @Test
+    @DisplayName("existsByStudentIdAndCourseId returns false when an enrollment doesn't exist on given course")
+    void existsBy_givenStudentIdAndCourseId_returnsFalse() {
+        var course = CourseFactory.sampleCourse();
+        var professor = course.getProfessor();
+        var invitation = InvitationFactory.sampleInvitation(LocalDate.now().plusMonths(1), course);
+        var student = UserFactory.sampleUserStudent();
+        var studentB = UserFactory.sampleUserStudentB();
+        var enrollment = EnrollmentFactory.sampleEnrollment(invitation, student);
+        persistAllAndFlush(professor, course, invitation, student, studentB, enrollment);
+
+        var exists = assertDoesNotThrow(
+                () -> enrollmentRepository.existsByStudentIdAndInvitation_Course_Id(studentB.getId(), course.getId()));
+
+        assertThat(exists).isNotNull();
+        assertThat(exists).isFalse();
     }
 
     private void persistAllAndFlush(Object... entities) {
