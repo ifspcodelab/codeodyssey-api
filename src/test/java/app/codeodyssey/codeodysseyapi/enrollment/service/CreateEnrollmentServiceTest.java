@@ -1,12 +1,14 @@
 package app.codeodyssey.codeodysseyapi.enrollment.service;
 
 import static org.assertj.core.api.Assertions.assertThat;
+import static org.assertj.core.api.Assertions.catchThrowable;
 import static org.junit.jupiter.api.Assertions.assertDoesNotThrow;
 
 import app.codeodyssey.codeodysseyapi.DatabaseContainerInitializer;
 import app.codeodyssey.codeodysseyapi.course.data.CourseRepository;
 import app.codeodyssey.codeodysseyapi.course.util.CourseFactory;
 import app.codeodyssey.codeodysseyapi.enrollment.data.EnrollmentRepository;
+import app.codeodyssey.codeodysseyapi.enrollment.util.EnrollmentFactory;
 import app.codeodyssey.codeodysseyapi.invitation.data.InvitationRepository;
 import app.codeodyssey.codeodysseyapi.invitation.util.InvitationFactory;
 import app.codeodyssey.codeodysseyapi.user.data.UserRepository;
@@ -67,5 +69,25 @@ public class CreateEnrollmentServiceTest {
         assertThat(enrollment).isInstanceOf(EnrollmentResponse.class);
         assertThat(enrollment.invitation().getId()).isEqualTo(invitation.getId());
         assertThat(enrollment.student().getId()).isEqualTo(student.getId());
+    }
+
+    @Test
+    @DisplayName("createEnrollmentService given student and invitation returns StudentAlreadyEnrolled exception")
+    void createEnrollmentService_givenStudentAndInvitation_returnsAlreadyEnrolled() {
+        var student = UserFactory.sampleUserStudent();
+        var course = CourseFactory.sampleCourse();
+        var professor = course.getProfessor();
+        var invitation = InvitationFactory.sampleInvitation(LocalDate.now().plusMonths(1), course);
+        var enrollment = EnrollmentFactory.sampleEnrollment(invitation, student);
+        userRepository.saveAll(List.of(student, professor));
+        courseRepository.save(course);
+        invitationRepository.save(invitation);
+        enrollmentRepository.save(enrollment);
+
+        var exception = (RuntimeException)
+                catchThrowable(() -> createEnrollmentService.execute(invitation.getId(), student.getEmail()));
+
+        assertThat(exception).isNotNull();
+        assertThat(enrollment).isInstanceOf(StudentAlreadyEnrolledException.class);
     }
 }
