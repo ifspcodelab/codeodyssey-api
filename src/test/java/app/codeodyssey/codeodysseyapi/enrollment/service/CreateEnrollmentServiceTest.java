@@ -5,6 +5,7 @@ import static org.assertj.core.api.Assertions.catchThrowable;
 import static org.junit.jupiter.api.Assertions.assertDoesNotThrow;
 
 import app.codeodyssey.codeodysseyapi.DatabaseContainerInitializer;
+import app.codeodyssey.codeodysseyapi.common.exception.StudentAlreadyEnrolledException;
 import app.codeodyssey.codeodysseyapi.course.data.CourseRepository;
 import app.codeodyssey.codeodysseyapi.course.util.CourseFactory;
 import app.codeodyssey.codeodysseyapi.enrollment.data.EnrollmentRepository;
@@ -88,6 +89,9 @@ public class CreateEnrollmentServiceTest {
                 catchThrowable(() -> createEnrollmentService.execute(invitation.getId(), student.getEmail()));
 
         assertThat(exception).isNotNull();
-        assertThat(enrollment).isInstanceOf(StudentAlreadyEnrolledException.class);
+        assertThat(exception).isInstanceOf(StudentAlreadyEnrolledException.class);
+        StudentAlreadyEnrolledException alreadyEnrolledException = (StudentAlreadyEnrolledException) exception;
+        assertThat(alreadyEnrolledException.getStudentId()).isEqualTo(student.getId());
+        assertThat(alreadyEnrolledException.getCourseId()).isEqualTo(course.getId());
     }
 }
