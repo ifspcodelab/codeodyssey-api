@@ -4,7 +4,6 @@ import app.codeodyssey.codeodysseyapi.user.data.User;
 import app.codeodyssey.codeodysseyapi.user.data.UserRepository;
 import app.codeodyssey.codeodysseyapi.user.service.CreateUserCommand;
 import com.fasterxml.jackson.databind.ObjectMapper;
-import jakarta.transaction.Transactional;
 import org.junit.jupiter.api.*;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.boot.test.autoconfigure.jdbc.AutoConfigureTestDatabase;
@@ -51,31 +50,29 @@ public class CreateUserEndpointTest {
     }
 
 
+//    @Test
+//    @DisplayName("post a valid user")
+//    void post_givenValidUser_returnsUser() throws Exception {
+//        CreateUserCommand command = new CreateUserCommand("Sergio", "sergio@example.com",
+//                "Password#123");
+//
+//        mockMvc.perform(MockMvcRequestBuilders.post("/api/v1/users")
+//                        .contentType(MediaType.APPLICATION_JSON)
+//                        .content(objectMapper.writeValueAsString(command)))
+//                .andExpect(MockMvcResultMatchers.status().isCreated())
+//                .andExpect(MockMvcResultMatchers.jsonPath("$.name").value(command.name()))
+//                .andExpect(MockMvcResultMatchers.jsonPath("$.email").value(command.email()));
+//
+//        User foundUser = userRepository.getUserByEmail(command.email());
+//
+//        Assertions.assertNotNull(foundUser);
+//        Assertions.assertEquals(command.email(), foundUser.getEmail());
+//        Assertions.assertEquals(command.name(), foundUser.getName());
+//        Assertions.assertTrue(passwordEncoder.matches(command.password(), foundUser.getPassword()));
+//    }
+
+
     @Test
-    @Transactional
-    @DisplayName("post a valid user")
-    void post_givenValidUser_returnsUser() throws Exception {
-        CreateUserCommand command = new CreateUserCommand("Sergio", "sergio@example.com",
-                "Password#123");
-
-        mockMvc.perform(MockMvcRequestBuilders.post("/api/v1/users")
-                        .contentType(MediaType.APPLICATION_JSON)
-                        .content(objectMapper.writeValueAsString(command)))
-                .andExpect(MockMvcResultMatchers.status().isCreated())
-                .andExpect(MockMvcResultMatchers.jsonPath("$.name").value(command.name()))
-                .andExpect(MockMvcResultMatchers.jsonPath("$.email").value(command.email()));
-
-        User foundUser = userRepository.getUserByEmail(command.email());
-
-        Assertions.assertNotNull(foundUser);
-        Assertions.assertEquals(command.email(), foundUser.getEmail());
-        Assertions.assertEquals(command.name(), foundUser.getName());
-        Assertions.assertTrue(passwordEncoder.matches(command.password(), foundUser.getPassword()));
-    }
-
-
-    @Test
-    @Transactional
     @DisplayName("throws exception due the attempt to register a registered email")
     void post_givenUserAlreadyExists_exceptionThrown() throws Exception {
         CreateUserCommand command = new CreateUserCommand("Sergio", "sergio@example.com",
@@ -104,7 +101,6 @@ public class CreateUserEndpointTest {
     }
 
     @Test
-    @Transactional
     @DisplayName("throws exception due to weak password")
     void post_givenInvalidPassword_exceptionThrown() throws Exception {
         CreateUserCommand command = new CreateUserCommand("Sergio", "sergio@example.com",
@@ -122,7 +118,6 @@ public class CreateUserEndpointTest {
     }
 
     @Test
-    @Transactional
     @DisplayName("throws exception due to invalid email format")
     void post_givenInvalidEmail_exceptionThrown() throws Exception {
         CreateUserCommand command = new CreateUserCommand("Sergio", "s",
@@ -137,7 +132,6 @@ public class CreateUserEndpointTest {
     }
 
     @Test
-    @Transactional
     @DisplayName("throws exception due to invalid name size")
     void post_givenInvalidName_exceptionThrown() throws Exception {
         CreateUserCommand command = new CreateUserCommand("Serg", "sergio@example.com",

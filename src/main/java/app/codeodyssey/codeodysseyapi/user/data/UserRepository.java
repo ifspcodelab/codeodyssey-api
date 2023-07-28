@@ -13,5 +13,5 @@ public interface UserRepository extends JpaRepository<User, UUID> {
     User getUserByEmail(String email);
     Optional<User> getUserByToken(String token);
     List<User> findByIsValidated(boolean isValidated);
-
+    Optional<User> findByEmail(String email);
 }

@@ -5,10 +5,7 @@ import lombok.Getter;
 
 @AllArgsConstructor
 @Getter
-public enum Resource {
-    USER("User"),
-    REFRESH_TOKEN("RefreshToken"),
-    ACCESS_TOKEN("AccessToken");
-
-    private final String name;
+public class UserNotFoundException extends RuntimeException {
+    private String message;
+    private Resource resource;
 }

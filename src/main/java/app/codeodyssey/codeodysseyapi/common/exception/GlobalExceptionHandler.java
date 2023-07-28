@@ -8,6 +8,7 @@ import org.springframework.http.HttpStatus;
 import org.springframework.http.ProblemDetail;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.MethodArgumentNotValidException;
+import org.springframework.security.authentication.BadCredentialsException;
 import org.springframework.web.bind.annotation.ControllerAdvice;
 import org.springframework.web.bind.annotation.ExceptionHandler;
 
@@ -16,6 +17,20 @@ import org.springframework.web.bind.annotation.ExceptionHandler;
 @RequiredArgsConstructor
 public class GlobalExceptionHandler {
     private final MessageSource messageSource;
+    @ExceptionHandler(ResourceNotFoundException.class)
+    public ResponseEntity<ProblemDetail> notFound(ResourceNotFoundException ex) {
+        HttpStatus status = HttpStatus.NOT_FOUND;
+        String resource = ex.getResource().getName();
+        String title = "%s not found".formatted(resource);
+        String detail = "%s not found with id %s".formatted(resource, ex.getId());
+
+        ProblemDetail problem = ProblemDetail.forStatus(status);
+        problem.setTitle(title);
+        problem.setDetail(detail);
+
+        log.warn(detail);
+        return new ResponseEntity<>(problem, status);
+    }
 
     @ExceptionHandler(ViolationException.class)
     public ResponseEntity<ProblemDetail> violation(ViolationException ex) {
@@ -98,6 +113,49 @@ public class GlobalExceptionHandler {
 
         log.warn("{} - {}", title, detail);
 
+        return new ResponseEntity<>(problem, status);    }
+
+    @ExceptionHandler(BadCredentialsException.class)
+    public ResponseEntity<ProblemDetail> badCredentials(BadCredentialsException ex) {
+        HttpStatus status = HttpStatus.FORBIDDEN;
+        String className = ex.getClass().getName();
+        String message = ex.getMessage();
+
+        ProblemDetail problem = ProblemDetail.forStatus(status);
+        problem.setTitle(className);
+        problem.setDetail(message);
+
+        log.warn("{} ({})", className, message);
+        return new ResponseEntity<>(problem, status);
+    }
+
+    @ExceptionHandler(ForbiddenException.class)
+    public ResponseEntity<ProblemDetail> forbidden(ForbiddenException ex) {
+        HttpStatus status = HttpStatus.FORBIDDEN;
+        String resource = ex.getResource().getName();
+        String forbiddenType = ex.getType().getName();
+        String title = "%s %s".formatted(resource, forbiddenType);
+        String details = ex.getDetails();
+
+        ProblemDetail problem = ProblemDetail.forStatus(status);
+        problem.setTitle(title);
+        problem.setDetail(details);
+
+        log.warn("{} ({})", title, details);
+        return new ResponseEntity<>(problem, status);
+    }
+
+    @ExceptionHandler(UserNotFoundException.class)
+    public ResponseEntity<ProblemDetail> userNotFound(UserNotFoundException ex) {
+        HttpStatus status = HttpStatus.BAD_REQUEST;
+        String resource = ex.getResource().getName();
+        String message = ex.getMessage();
+
+        ProblemDetail problem = ProblemDetail.forStatus(status);
+        problem.setTitle(resource);
+        problem.setDetail(message);
+
+        log.warn("{} ({})", problem, status);
         return new ResponseEntity<>(problem, status);
     }
 }

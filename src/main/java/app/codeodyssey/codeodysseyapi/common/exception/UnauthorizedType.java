@@ -5,10 +5,8 @@ import lombok.Getter;
 
 @AllArgsConstructor
 @Getter
-public enum Resource {
-    USER("User"),
-    REFRESH_TOKEN("RefreshToken"),
-    ACCESS_TOKEN("AccessToken");
+public enum UnauthorizedType {
+    ACCESS_TOKEN_EXPIRED("access token expired");
 
     private final String name;
 }
