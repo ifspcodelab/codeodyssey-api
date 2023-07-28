@@ -68,8 +68,8 @@ public class CreateEnrollmentServiceTest {
 
         assertThat(enrollment).isNotNull();
         assertThat(enrollment).isInstanceOf(EnrollmentResponse.class);
-        assertThat(enrollment.invitation().getId()).isEqualTo(invitation.getId());
-        assertThat(enrollment.student().getId()).isEqualTo(student.getId());
+        assertThat(enrollment.invitation().id()).isEqualTo(invitation.getId());
+        assertThat(enrollment.student().id()).isEqualTo(student.getId());
     }
 
     @Test
