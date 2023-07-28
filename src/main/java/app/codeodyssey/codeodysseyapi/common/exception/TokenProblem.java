@@ -5,8 +5,9 @@ import lombok.Getter;
 
 @AllArgsConstructor
 @Getter
-public enum ViolationType {
-    ALREADY_EXISTS("Already exists");
+public enum TokenProblem {
+    EXPIRED("Token Expired"),
+    NONEXISTENT("No user associated with this token");
 
-    private final String name;
+    private final String message;
 }

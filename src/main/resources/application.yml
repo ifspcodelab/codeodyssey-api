@@ -6,11 +6,36 @@ spring:
         url: ${DATASOURCE_URL:jdbc:postgresql://localhost:5432/codeodyssey-api}
         username: ${DATASOURCE_USERNAME:postgres}
         password: ${DATASOURCE_PASSWORD:postgres}
+    mail:
+        host: ${MAIL_HOST:smtp.gmail.com}
+        port: ${MAIL_PORT:587}
+        test-connection: false
+        username: ${MAIL_USERNAME}
+        password: ${MAIL_PASSWORD}
+        properties:
+            mail:
+                smtp:
+                    auth: true
+                    starttls:
+                        enable: true
+                        required: true
+                    ssl:
+                        enabled: true
     jpa:
         open-in-view: false
+
 application:
     jwt:
         issuer: code-odyssey
         secret-key: ${JWT_SECRET:404E635266556A586E3272357538782F413F4428472B4B6250645367566B5970}
         access-token-expiration-after-minutes: ${ACCESS_TOKEN_EXPIRATION_AFTER_MINUTES:15}
         refresh-token-expiration-after-minutes: ${REFRESH_TOKEN_EXPIRATION_AFTER_MINUTES:1440}
+frontend:
+    url: ${FRONTEND_URL:http://localhost:5173}
+
+time:
+    register-expiration-time: 900
+
+scheduler:
+    registration:
+        interval: ${SCHEDULER_REGISTRATION_INTERVAL:60000}

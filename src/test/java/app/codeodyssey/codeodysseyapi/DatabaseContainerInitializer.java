@@ -15,9 +15,9 @@ public class DatabaseContainerInitializer implements ApplicationContextInitializ
     @Override
     public void initialize(ConfigurableApplicationContext applicationContext) {
         TestPropertyValues.of(
-                        "spring.datasource.url=" + postgreSQLContainer.getJdbcUrl(),
-                        "spring.datasource.username=" + postgreSQLContainer.getUsername(),
-                        "spring.datasource.password=" + postgreSQLContainer.getPassword())
-                .applyTo(applicationContext.getEnvironment());
+                "spring.datasource.url=" + postgreSQLContainer.getJdbcUrl(),
+                "spring.datasource.username=" + postgreSQLContainer.getUsername(),
+                "spring.datasource.password=" + postgreSQLContainer.getPassword()
+        ).applyTo(applicationContext.getEnvironment());
     }
 }

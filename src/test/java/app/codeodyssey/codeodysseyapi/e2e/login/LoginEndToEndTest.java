@@ -9,8 +9,6 @@ import app.codeodyssey.codeodysseyapi.user.data.UserRepository;
 import app.codeodyssey.codeodysseyapi.user.data.UserRole;
 import io.jsonwebtoken.Claims;
 import io.jsonwebtoken.Jwts;
-import java.time.Instant;
-import java.util.UUID;
 import org.junit.jupiter.api.Assertions;
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.DisplayName;
@@ -26,6 +24,9 @@ import org.springframework.test.context.ContextConfiguration;
 import org.springframework.web.client.HttpClientErrorException;
 import org.springframework.web.client.RestTemplate;
 import org.testcontainers.junit.jupiter.Testcontainers;
+
+import java.time.Instant;
+import java.util.UUID;
 
 @SpringBootTest(webEnvironment = SpringBootTest.WebEnvironment.RANDOM_PORT)
 @Testcontainers
@@ -70,6 +71,8 @@ public class LoginEndToEndTest {
                 .password(password)
                 .role(UserRole.STUDENT)
                 .createdAt(Instant.now())
+                .isValidated(true)
+                .token(UUID.randomUUID().toString())
                 .build());
 
         HttpEntity<LoginRequest> request = new HttpEntity<>(new LoginRequest("john@email.com", "123456"));
@@ -139,6 +142,8 @@ public class LoginEndToEndTest {
                 .password(password)
                 .role(UserRole.STUDENT)
                 .createdAt(Instant.now())
+                .isValidated(true)
+                .token(UUID.randomUUID().toString())
                 .build());
 
         HttpEntity<LoginRequest> request = new HttpEntity<>(new LoginRequest("john@email.com", "654321"));

@@ -39,14 +39,16 @@ dependencies {
 	runtimeOnly group: 'io.jsonwebtoken', name: 'jjwt-jackson', version: '0.11.5'
 	annotationProcessor 'org.projectlombok:lombok'
 	annotationProcessor "org.springframework.boot:spring-boot-configuration-processor"
-	testImplementation 'org.springframework.boot:spring-boot-starter-test'
 	implementation 'org.mapstruct:mapstruct:1.5.5.Final'
 	implementation 'org.projectlombok:lombok-mapstruct-binding:0.2.0'
 	annotationProcessor 'org.mapstruct:mapstruct-processor:1.5.5.Final'
 	implementation 'org.springdoc:springdoc-openapi-starter-webmvc-ui:2.1.0'
+	implementation 'org.springframework.security:spring-security-crypto:6.1.2'
+	implementation 'org.springframework:spring-context-support:6.0.11'
+	implementation 'org.springframework.boot:spring-boot-starter-mail'
+	testImplementation 'org.testcontainers:junit-jupiter:1.18.3'
 	testImplementation 'org.springframework.boot:spring-boot-starter-test'
 	testImplementation 'org.springframework.boot:spring-boot-testcontainers'
-	testImplementation 'org.testcontainers:junit-jupiter:1.18.3'
 	testImplementation 'org.testcontainers:postgresql:1.18.3'
 	testImplementation group: 'org.springframework.security', name: 'spring-security-test', version: '6.1.2'
 }

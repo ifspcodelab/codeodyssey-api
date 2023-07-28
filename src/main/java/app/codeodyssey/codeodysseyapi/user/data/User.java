@@ -1,17 +1,15 @@
 package app.codeodyssey.codeodysseyapi.user.data;
 
 import jakarta.persistence.*;
+import lombok.*;
+import org.springframework.security.core.GrantedAuthority;
+import org.springframework.security.core.authority.SimpleGrantedAuthority;
+import org.springframework.security.core.userdetails.UserDetails;
+
 import java.time.Instant;
 import java.util.Collection;
 import java.util.List;
 import java.util.UUID;
-import lombok.AllArgsConstructor;
-import lombok.Builder;
-import lombok.Getter;
-import lombok.Setter;
-import org.springframework.security.core.GrantedAuthority;
-import org.springframework.security.core.authority.SimpleGrantedAuthority;
-import org.springframework.security.core.userdetails.UserDetails;
 
 @Entity
 @Table(name = "users")
@@ -22,15 +20,25 @@ import org.springframework.security.core.userdetails.UserDetails;
 public class User implements UserDetails {
     @Id
     private UUID id;
-
-    private String name;
     private String email;
+    private String name;
     private String password;
-
     @Enumerated(EnumType.STRING)
     private UserRole role;
-
     private Instant createdAt;
+    private boolean isValidated;
+    private String token;
+
+    public User(String email, String name, String password) {
+        this.id = UUID.randomUUID();
+        this.email = email;
+        this.name = name;
+        this.password = password;
+        this.role = UserRole.STUDENT;
+        this.createdAt = Instant.now();
+        this.isValidated = false;
+        this.token = UUID.randomUUID().toString();
+    }
 
     public User(String name, String email) {
         this.id = UUID.randomUUID();
@@ -42,6 +50,18 @@ public class User implements UserDetails {
 
     public User() {
         this.id = UUID.randomUUID();
+    }
+
+
+    public User(UUID id, String email, String name, String password, UserRole role, Instant createdAt) {
+        this.id = id;
+        this.email = email;
+        this.name = name;
+        this.password = password;
+        this.role = role;
+        this.createdAt = createdAt;
+        this.isValidated = true;
+        this.token = UUID.randomUUID().toString();
     }
 
     @Override
@@ -74,3 +94,4 @@ public class User implements UserDetails {
         return true;
     }
 }
+
