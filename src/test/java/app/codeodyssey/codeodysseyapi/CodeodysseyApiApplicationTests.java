@@ -10,10 +10,9 @@ import org.testcontainers.junit.jupiter.Testcontainers;
 @Testcontainers
 @SpringBootTest
 class CodeodysseyApiApplicationTests {
-
     @Container
     @ServiceConnection
-    public static PostgreSQLContainer<?> container = new PostgreSQLContainer("postgres:15-alpine")
+    public static PostgreSQLContainer<?> postgreSQLContainer = new PostgreSQLContainer("postgres:15-alpine")
             .withUsername("postgres")
             .withPassword("postgres")
             .withDatabaseName("codeodyssey-api-test");

@@ -1,5 +1,8 @@
 package app.codeodyssey.codeodysseyapi;
 
+import static org.mockito.Mockito.any;
+import static org.mockito.Mockito.verify;
+
 import app.codeodyssey.codeodysseyapi.user.data.User;
 import app.codeodyssey.codeodysseyapi.user.data.UserRepository;
 import app.codeodyssey.codeodysseyapi.user.service.SendEmailService;
@@ -14,9 +17,6 @@ import org.springframework.mail.SimpleMailMessage;
 import org.springframework.mail.javamail.JavaMailSender;
 import org.springframework.test.context.ContextConfiguration;
 import org.testcontainers.junit.jupiter.Testcontainers;
-
-import static org.mockito.Mockito.any;
-import static org.mockito.Mockito.verify;
 
 @SpringBootTest
 @DisplayName("test for the SendEmailService")
@@ -33,10 +33,9 @@ public class SendEmailServiceTest {
     @MockBean
     private JavaMailSender mailSender;
 
-
     @Test
     @DisplayName("send email to the provided email")
-    void sendEmail_givenEmail_success(){
+    void sendEmail_givenEmail_success() {
         User user = new User("sergio@example.com", "Sergio", "password");
         userRepository.save(user);
 
@@ -54,5 +53,4 @@ public class SendEmailServiceTest {
         Assertions.assertEquals(user.getRole(), foundUser.getRole());
         Assertions.assertEquals(user.getName(), foundUser.getName());
     }
-
 }

@@ -1,8 +1,13 @@
 package app.codeodyssey.codeodysseyapi;
 
+import static org.assertj.core.api.Assertions.assertThat;
+import static org.junit.jupiter.api.Assertions.assertEquals;
+
 import app.codeodyssey.codeodysseyapi.user.data.User;
 import app.codeodyssey.codeodysseyapi.user.data.UserRepository;
 import app.codeodyssey.codeodysseyapi.user.service.UserCleanupService;
+import java.time.temporal.ChronoUnit;
+import java.util.List;
 import org.junit.jupiter.api.AfterEach;
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.DisplayName;
@@ -13,13 +18,6 @@ import org.springframework.boot.test.autoconfigure.jdbc.AutoConfigureTestDatabas
 import org.springframework.boot.test.context.SpringBootTest;
 import org.springframework.test.context.ContextConfiguration;
 import org.testcontainers.junit.jupiter.Testcontainers;
-
-import java.time.temporal.ChronoUnit;
-import java.util.List;
-
-import static org.assertj.core.api.Assertions.assertThat;
-import static org.junit.jupiter.api.Assertions.assertEquals;
-
 
 @SpringBootTest
 @DisplayName("test for the UserCleanupService")
@@ -56,7 +54,6 @@ public class UserCleanupServiceTest {
         userCleanupService.cleanupUser();
 
         assertThat(userRepository.getUserByEmail(user.getEmail())).isNull();
-
     }
 
     @Test
@@ -126,5 +123,4 @@ public class UserCleanupServiceTest {
         assertEquals(receivedUser3.getId(), user3.getId());
         assertEquals(receivedUser3.getToken(), user3.getToken());
     }
-
 }

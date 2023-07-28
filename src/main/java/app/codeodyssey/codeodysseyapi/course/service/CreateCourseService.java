@@ -25,7 +25,7 @@ public class CreateCourseService {
                 .orElseThrow(() -> new ResourceNotFoundException(professorId, Resource.USER));
 
         if (!professor.getRole().equals(UserRole.PROFESSOR)) {
-            throw new UnauthorizedAccessException(professorId);
+            throw new ForbiddenAccessException(professorId);
         }
 
         if (courseRepository.existsBySlugAndProfessor(command.slug(), professor)) {

@@ -13,6 +13,7 @@ import org.springframework.stereotype.Service;
 public class SendEmailService {
     @Value("${frontend.url}")
     private String url;
+
     private final JavaMailSender mailSender;
     private final UserRepository userRepository;
 
@@ -24,8 +25,8 @@ public class SendEmailService {
         message.setTo(email);
         message.setSubject("Email confirmation");
 
-        message.setText("Please click the link bellow to confirm your registration\n" + url +  "/confirmation/" + user.getToken());
+        message.setText("Please click the link bellow to confirm your registration\n" + url + "/confirmation/"
+                + user.getToken());
         mailSender.send(message);
-
     }
 }

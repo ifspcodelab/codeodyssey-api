@@ -1,15 +1,14 @@
 package app.codeodyssey.codeodysseyapi.user.data;
 
 import jakarta.persistence.*;
-import lombok.*;
-import org.springframework.security.core.GrantedAuthority;
-import org.springframework.security.core.authority.SimpleGrantedAuthority;
-import org.springframework.security.core.userdetails.UserDetails;
-
 import java.time.Instant;
 import java.util.Collection;
 import java.util.List;
 import java.util.UUID;
+import lombok.*;
+import org.springframework.security.core.GrantedAuthority;
+import org.springframework.security.core.authority.SimpleGrantedAuthority;
+import org.springframework.security.core.userdetails.UserDetails;
 
 @Entity
 @Table(name = "users")
@@ -20,11 +19,14 @@ import java.util.UUID;
 public class User implements UserDetails {
     @Id
     private UUID id;
+
     private String email;
     private String name;
     private String password;
+
     @Enumerated(EnumType.STRING)
     private UserRole role;
+
     private Instant createdAt;
     private boolean isValidated;
     private String token;
@@ -52,7 +54,6 @@ public class User implements UserDetails {
         this.id = UUID.randomUUID();
     }
 
-
     public User(UUID id, String email, String name, String password, UserRole role, Instant createdAt) {
         this.id = id;
         this.email = email;
@@ -71,7 +72,7 @@ public class User implements UserDetails {
 
     @Override
     public String getUsername() {
-        return id.toString();
+        return email;
     }
 
     @Override
@@ -94,4 +95,3 @@ public class User implements UserDetails {
         return true;
     }
 }
-

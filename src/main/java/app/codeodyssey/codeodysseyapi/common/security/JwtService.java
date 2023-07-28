@@ -61,7 +61,7 @@ public class JwtService {
         return Jwts.builder()
                 .setClaims(extraClaims)
                 .setSubject(this.userRepository
-                        .findById(UUID.fromString(userDetails.getUsername()))
+                        .findByEmail(userDetails.getUsername())
                         .get()
                         .getId()
                         .toString())

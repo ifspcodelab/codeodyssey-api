@@ -1,10 +1,14 @@
 package app.codeodyssey.codeodysseyapi;
 
+import static org.junit.jupiter.api.Assertions.*;
+
 import app.codeodyssey.codeodysseyapi.common.exception.TokenException;
 import app.codeodyssey.codeodysseyapi.common.exception.UserAlreadyValidatedException;
 import app.codeodyssey.codeodysseyapi.user.data.User;
 import app.codeodyssey.codeodysseyapi.user.data.UserRepository;
 import app.codeodyssey.codeodysseyapi.user.service.UserValidationService;
+import java.time.temporal.ChronoUnit;
+import java.util.UUID;
 import org.junit.jupiter.api.AfterEach;
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.DisplayName;
@@ -16,11 +20,6 @@ import org.springframework.boot.test.context.SpringBootTest;
 import org.springframework.test.context.ContextConfiguration;
 import org.testcontainers.junit.jupiter.Testcontainers;
 
-import java.time.temporal.ChronoUnit;
-import java.util.UUID;
-
-import static org.junit.jupiter.api.Assertions.*;
-
 @SpringBootTest
 @DisplayName("test for the UserValidationService")
 @AutoConfigureTestDatabase(replace = AutoConfigureTestDatabase.Replace.NONE)
@@ -30,7 +29,6 @@ public class UserValidationServiceTest {
 
     @Autowired
     private UserRepository userRepository;
-
 
     @Autowired
     private UserValidationService userValidationService;
@@ -47,7 +45,6 @@ public class UserValidationServiceTest {
     void tearDown() {
         userRepository.deleteAll();
     }
-
 
     @Test
     @DisplayName("validate user who has a valid token and return the user")
@@ -115,6 +112,8 @@ public class UserValidationServiceTest {
     @Test
     @DisplayName("try to validate a user with a non-existent token and throw an exception")
     void validateUser_givenNonExistentToken_exceptionThrown() {
-        assertThrows(TokenException.class, () -> userValidationService.validateUser(UUID.randomUUID().toString()));
+        assertThrows(
+                TokenException.class,
+                () -> userValidationService.validateUser(UUID.randomUUID().toString()));
     }
 }

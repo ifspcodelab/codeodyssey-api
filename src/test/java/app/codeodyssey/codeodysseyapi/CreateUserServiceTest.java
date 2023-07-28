@@ -1,5 +1,9 @@
 package app.codeodyssey.codeodysseyapi;
 
+import static org.assertj.core.api.Assertions.assertThat;
+import static org.junit.jupiter.api.Assertions.assertEquals;
+import static org.junit.jupiter.api.Assertions.assertThrows;
+
 import app.codeodyssey.codeodysseyapi.common.exception.ViolationException;
 import app.codeodyssey.codeodysseyapi.user.data.User;
 import app.codeodyssey.codeodysseyapi.user.data.UserRepository;
@@ -14,10 +18,6 @@ import org.springframework.boot.test.autoconfigure.jdbc.AutoConfigureTestDatabas
 import org.springframework.boot.test.context.SpringBootTest;
 import org.springframework.test.context.ContextConfiguration;
 import org.testcontainers.junit.jupiter.Testcontainers;
-
-import static org.assertj.core.api.Assertions.assertThat;
-import static org.junit.jupiter.api.Assertions.assertEquals;
-import static org.junit.jupiter.api.Assertions.assertThrows;
 
 @SpringBootTest
 @DisplayName("test for the CreateUserService")
@@ -41,22 +41,21 @@ public class CreateUserServiceTest {
         userRepository.deleteAll();
     }
 
-
-//    @Test
-//    @DisplayName("create and save a user")
-//    void execute_givenValidUser_returnsUserResponse() {
-//        CreateUserCommand userCommand = new CreateUserCommand("Sergio", "sergio@example.com",
-//                "password#123");
-//        UserResponse user = createUserService.execute(userCommand);
-//
-//        User foundUser = userRepository.getUserByEmail(user.email());
-//
-//        assertThat(user).isNotNull();
-//        assertEquals(user.id(), foundUser.getId());
-//        assertEquals(user.role(), foundUser.getRole());
-//        assertEquals(user.name(), foundUser.getName());
-//        assertEquals(user.email(), foundUser.getEmail());
-//    }
+    //    @Test
+    //    @DisplayName("create and save a user")
+    //    void execute_givenValidUser_returnsUserResponse() {
+    //        CreateUserCommand userCommand = new CreateUserCommand("Sergio", "sergio@example.com",
+    //                "password#123");
+    //        UserResponse user = createUserService.execute(userCommand);
+    //
+    //        User foundUser = userRepository.getUserByEmail(user.email());
+    //
+    //        assertThat(user).isNotNull();
+    //        assertEquals(user.id(), foundUser.getId());
+    //        assertEquals(user.role(), foundUser.getRole());
+    //        assertEquals(user.name(), foundUser.getName());
+    //        assertEquals(user.email(), foundUser.getEmail());
+    //    }
 
     @Test
     @DisplayName("throws exception due the attempt to create a duplicated user")
@@ -80,4 +79,3 @@ public class CreateUserServiceTest {
         assertEquals(existingUser.getRole(), foundUser.getRole());
     }
 }
-

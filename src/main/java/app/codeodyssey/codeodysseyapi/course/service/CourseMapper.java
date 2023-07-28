@@ -9,5 +9,5 @@ import org.mapstruct.Mapper;
 public interface CourseMapper {
     CourseResponse to(Course course);
 
-    List<CourseResponse> to(List<Course> course);
+    List<CourseResponse> to(List<Course> courses);
 }

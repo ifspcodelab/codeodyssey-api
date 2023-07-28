@@ -1,6 +1,5 @@
 package app.codeodyssey.codeodysseyapi.token.service;
 
-import app.codeodyssey.codeodysseyapi.common.exception.Resource;
 import app.codeodyssey.codeodysseyapi.common.exception.UserNotFoundException;
 import app.codeodyssey.codeodysseyapi.common.security.JwtService;
 import app.codeodyssey.codeodysseyapi.user.api.LoginRequest;
@@ -26,15 +25,12 @@ public class GetTokenService {
     private final UserRepository userRepository;
 
     public LoginResponse execute(LoginRequest request) {
+        var userEmail = this.userRepository
+                .findByEmail(request.email())
+                .orElseThrow(() -> new UserNotFoundException(request.email()));
 
-        Authentication authentication = authManager.authenticate(new UsernamePasswordAuthenticationToken(
-                this.userRepository
-                        .findByEmail(request.email())
-                        .orElseThrow(() -> new UserNotFoundException(
-                                "user with email " + request.email() + " not found", Resource.USER))
-                        .getId()
-                        .toString(),
-                request.password()));
+        Authentication authentication =
+                authManager.authenticate(new UsernamePasswordAuthenticationToken(userEmail, request.password()));
 
         List<String> roles = authentication.getAuthorities().stream()
                 .map(GrantedAuthority::getAuthority)

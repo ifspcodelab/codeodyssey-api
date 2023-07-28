@@ -9,7 +9,8 @@ public enum Resource {
     COURSE("Course"),
     USER("User"),
     REFRESH_TOKEN("RefreshToken"),
-    ACCESS_TOKEN("AccessToken");
+    ACCESS_TOKEN("AccessToken"),
+    INVITATION("Invitation");
 
     private final String name;
 }

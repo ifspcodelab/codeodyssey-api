@@ -16,8 +16,6 @@ import org.springframework.security.core.userdetails.UserDetailsService;
 import org.springframework.security.crypto.bcrypt.BCryptPasswordEncoder;
 import org.springframework.security.crypto.password.PasswordEncoder;
 
-import java.util.UUID;
-
 @Configuration
 @RequiredArgsConstructor
 @Slf4j
@@ -27,9 +25,9 @@ public class ApplicationConfig {
 
     @Bean
     public UserDetailsService userDetailsService() {
-        return id -> userRepository
-                .findById(UUID.fromString(id))
-                .orElseThrow(() -> new UserNotFoundException("user #" + id + " not found", Resource.USER));
+        return email -> userRepository
+                .findByEmail(email)
+                .orElseThrow(() -> new UserNotFoundException("user #" + email + " not found", Resource.USER));
     }
 
     @Bean

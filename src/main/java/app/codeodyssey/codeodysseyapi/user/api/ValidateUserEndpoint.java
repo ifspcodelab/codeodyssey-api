@@ -4,7 +4,6 @@ import app.codeodyssey.codeodysseyapi.user.service.UserMapper;
 import app.codeodyssey.codeodysseyapi.user.service.UserValidationService;
 import lombok.AllArgsConstructor;
 import org.springframework.http.ResponseEntity;
-
 import org.springframework.web.bind.annotation.*;
 
 @RestController
@@ -15,7 +14,7 @@ public class ValidateUserEndpoint {
     private UserMapper userMapper;
 
     @PatchMapping("confirmation/{token}")
-    public ResponseEntity<UserResponse> patch (@PathVariable String token) {
+    public ResponseEntity<UserResponse> patch(@PathVariable String token) {
         return ResponseEntity.ok(userMapper.to(userValidationService.validateUser(token)));
     }
 }

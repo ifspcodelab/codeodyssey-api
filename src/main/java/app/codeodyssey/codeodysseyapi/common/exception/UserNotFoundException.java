@@ -8,4 +8,9 @@ import lombok.Getter;
 public class UserNotFoundException extends RuntimeException {
     private String message;
     private Resource resource;
+
+    public UserNotFoundException(String email) {
+        this.message = "user with email " + email + " not found";
+        this.resource = Resource.USER;
+    }
 }

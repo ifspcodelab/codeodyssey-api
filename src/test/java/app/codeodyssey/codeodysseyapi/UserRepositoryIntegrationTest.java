@@ -1,7 +1,13 @@
 package app.codeodyssey.codeodysseyapi;
 
+import static org.assertj.core.api.Assertions.assertThat;
+import static org.junit.jupiter.api.Assertions.*;
+
 import app.codeodyssey.codeodysseyapi.user.data.User;
 import app.codeodyssey.codeodysseyapi.user.data.UserRepository;
+import java.util.List;
+import java.util.Optional;
+import java.util.UUID;
 import org.junit.jupiter.api.AfterEach;
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.DisplayName;
@@ -11,14 +17,6 @@ import org.springframework.boot.test.autoconfigure.jdbc.AutoConfigureTestDatabas
 import org.springframework.boot.test.context.SpringBootTest;
 import org.springframework.test.context.ContextConfiguration;
 import org.testcontainers.junit.jupiter.Testcontainers;
-
-import java.util.List;
-import java.util.Optional;
-import java.util.UUID;
-
-import static org.assertj.core.api.Assertions.assertThat;
-import static org.junit.jupiter.api.Assertions.*;
-
 
 @SpringBootTest
 @DisplayName("test for the UserRepository")
@@ -85,7 +83,7 @@ public class UserRepositoryIntegrationTest {
     }
 
     @Test
-    @DisplayName("get an existing token and return its associated user" )
+    @DisplayName("get an existing token and return its associated user")
     void getUserByToken_givenExistingToken_returnsUser() {
         User user = new User("sergio@example.com", "Sergio", "password");
         userRepository.save(user);
@@ -100,13 +98,13 @@ public class UserRepositoryIntegrationTest {
         assertEquals(user.getRole(), foundUser.getRole());
         assertEquals(user.getPassword(), foundUser.getPassword());
         assertEquals(user.isValidated(), foundUser.isValidated());
-
     }
 
     @Test
     @DisplayName("get a nonexistent token and return an optional empty")
     void getUserByToken_givenNonExistingToken_returnsEmptyOptional() {
-        Optional<User> foundUser = userRepository.getUserByToken(UUID.randomUUID().toString());
+        Optional<User> foundUser =
+                userRepository.getUserByToken(UUID.randomUUID().toString());
 
         assertTrue(foundUser.isEmpty());
     }
