@@ -22,12 +22,12 @@ public class SecurityConfiguration {
     private final AuthenticationProvider authenticationProvider;
 
     private static final String[] NO_AUTH_REQUIRED = {
-        "/api/v1/login", "/swagger-ui/**", "/v3/api-docs/**", "/api/v1/refreshtoken", "/api/v1/users", "/api/v1/users/{professorId}/courses"
+        "/api/v1/login", "/swagger-ui/**", "/v3/api-docs/**", "/api/v1/refreshtoken", "/api/v1/users"
     };
 
     private static final String[] STUDENTS_ALLOWED = {};
 
-    private static final String[] PROFESSORS_ALLOWED = {};
+    private static final String[] PROFESSORS_ALLOWED = {"/api/v1/users/*/courses"};
 
     @Bean
     public SecurityFilterChain securityFilterChain(HttpSecurity http) throws Exception {
