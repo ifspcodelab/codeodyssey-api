@@ -1,7 +1,7 @@
 CREATE TABLE courses(
     id UUID NOT NULL,
     name VARCHAR NOT NULL,
-    slug VARCHAR NOT NULL UNIQUE,
+    slug VARCHAR NOT NULL,
     start_date DATE NOT NULL,
     end_date DATE NOT NULL,
     created_at TIMESTAMP NOT NULL,
