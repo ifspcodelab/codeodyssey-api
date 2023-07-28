@@ -1,9 +1,9 @@
 package app.codeodyssey.codeodysseyapi.invitation.service;
 
 import app.codeodyssey.codeodysseyapi.common.exception.EmailNotFoundException;
+import app.codeodyssey.codeodysseyapi.common.exception.ForbiddenAccessException;
 import app.codeodyssey.codeodysseyapi.common.exception.Resource;
 import app.codeodyssey.codeodysseyapi.common.exception.ResourceNotFoundException;
-import app.codeodyssey.codeodysseyapi.common.exception.UnauthorizedAccessException;
 import app.codeodyssey.codeodysseyapi.course.data.Course;
 import app.codeodyssey.codeodysseyapi.course.data.CourseRepository;
 import app.codeodyssey.codeodysseyapi.invitation.api.InvitationResponse;
@@ -33,7 +33,7 @@ public class CreateInvitationService {
         }
 
         if (!user.get().getRole().equals(UserRole.PROFESSOR)) {
-            throw new UnauthorizedAccessException(user.get().getId());
+            throw new ForbiddenAccessException(user.get().getId());
         }
 
         Optional<Course> course = courseRepository.findById(courseId);
@@ -43,7 +43,7 @@ public class CreateInvitationService {
         }
 
         if (!course.get().getProfessor().getId().equals(user.get().getId())) {
-            throw new UnauthorizedAccessException(user.get().getId());
+            throw new ForbiddenAccessException(user.get().getId());
         }
 
         Invitation invitation = new Invitation(command.expirationDate(), course.get());

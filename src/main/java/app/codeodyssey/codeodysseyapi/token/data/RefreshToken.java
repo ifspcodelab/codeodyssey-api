@@ -10,7 +10,6 @@ import lombok.Setter;
 
 @Entity
 @Table(name = "refreshtokens")
-// @SQLDelete(sql = "UPDATE refreshtokens SET status = 'USED' where id = ?")
 @AllArgsConstructor
 @Getter
 @Setter
@@ -23,7 +22,6 @@ public class RefreshToken {
     @JoinColumn(name = "user_id", referencedColumnName = "id")
     private User user;
 
-    private String token;
     private Instant expiryAt;
 
     @Enumerated(EnumType.STRING)

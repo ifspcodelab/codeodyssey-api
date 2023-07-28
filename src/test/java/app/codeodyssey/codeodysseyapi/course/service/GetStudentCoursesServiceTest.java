@@ -4,7 +4,7 @@ import static org.assertj.core.api.Assertions.assertThat;
 import static org.assertj.core.api.Assertions.catchThrowable;
 
 import app.codeodyssey.codeodysseyapi.DatabaseContainerInitializer;
-import app.codeodyssey.codeodysseyapi.common.exception.UnauthorizedAccessException;
+import app.codeodyssey.codeodysseyapi.common.exception.ForbiddenAccessException;
 import app.codeodyssey.codeodysseyapi.user.data.UserRepository;
 import app.codeodyssey.codeodysseyapi.user.util.UserFactory;
 import org.junit.jupiter.api.AfterEach;
@@ -40,9 +40,9 @@ public class GetStudentCoursesServiceTest {
         RuntimeException exception = (RuntimeException)
                 catchThrowable(() -> getStudentCoursesService.execute(user.getId(), user.getEmail()));
 
-        assertThat(exception).isInstanceOf(UnauthorizedAccessException.class);
-        UnauthorizedAccessException unauthorizedAccessException = (UnauthorizedAccessException) exception;
-        assertThat(unauthorizedAccessException.getId()).isEqualTo(user.getId());
+        assertThat(exception).isInstanceOf(ForbiddenAccessException.class);
+        ForbiddenAccessException forbiddenAccessException = (ForbiddenAccessException) exception;
+        assertThat(forbiddenAccessException.getId()).isEqualTo(user.getId());
     }
 
     @Test

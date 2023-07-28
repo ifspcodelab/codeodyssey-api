@@ -6,10 +6,12 @@ import app.codeodyssey.codeodysseyapi.DatabaseContainerInitializer;
 import app.codeodyssey.codeodysseyapi.course.util.CourseFactory;
 import app.codeodyssey.codeodysseyapi.enrollment.util.EnrollmentFactory;
 import app.codeodyssey.codeodysseyapi.invitation.util.InvitationFactory;
+import app.codeodyssey.codeodysseyapi.user.data.User;
 import app.codeodyssey.codeodysseyapi.user.util.UserFactory;
 import java.time.LocalDate;
 import java.util.Comparator;
 import java.util.List;
+import org.junit.jupiter.api.Assertions;
 import org.junit.jupiter.api.DisplayName;
 import org.junit.jupiter.api.Test;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -488,6 +490,33 @@ public class CourseRepositoryTest {
         assertThat(courseList).containsExactly(courseA, courseB, courseC);
         assertThat(courseList)
                 .isSortedAccordingTo(Comparator.comparing(Course::getName).thenComparing(Course::getEndDate));
+    }
+
+    @Test
+    @DisplayName("returns true when given a existing slug and professor")
+    void existsBySlugAndProfessor_givenExistingSlugAndProfessor_returnTrue() {
+        var user = UserFactory.createValidProfessor();
+        var course = CourseFactory.createValidCourseWithProfessor(user);
+
+        testEntityManager.persist(user);
+        testEntityManager.persist(course);
+        testEntityManager.flush();
+        boolean exists = courseRepository.existsBySlugAndProfessor(course.getSlug(), user);
+        Assertions.assertTrue(exists);
+    }
+
+    @Test
+    @DisplayName("returns false when given a non existing slug and professor")
+    void existsBySlugAndProfessor_givenNonExistingSlugAndProfessor_returnFalse() {
+        var user = UserFactory.createValidProfessor();
+        var course = CourseFactory.createValidCourseWithProfessor(user);
+
+        testEntityManager.persist(user);
+        testEntityManager.persist(course);
+        testEntityManager.flush();
+        boolean exists = courseRepository.existsBySlugAndProfessor(
+                "non-existing-slug", new User("UserName", "non-existing-email", "Password"));
+        Assertions.assertFalse(exists);
     }
 
     private void persistAllAndFlush(Object... entities) {

@@ -32,7 +32,7 @@ import org.springframework.stereotype.Service;
 public class JwtService {
 
     private final JwtConfig jwtConfig;
-    private final RefreshTokenRepository refreshTokenRepository;
+    private final RefreshTokenRepository tokenRepository;
     private final UserRepository userRepository;
 
     public String extractUsername(String token) {
@@ -60,9 +60,14 @@ public class JwtService {
     public String generateAccessToken(Map<String, Object> extraClaims, UserDetails userDetails) {
         return Jwts.builder()
                 .setClaims(extraClaims)
-                .setSubject(userDetails.getUsername())
+                .setSubject(this.userRepository
+                        .findByEmail(userDetails.getUsername())
+                        .get()
+                        .getId()
+                        .toString())
+                .setIssuer(jwtConfig.getIssuer())
                 .setIssuedAt(new Date(System.currentTimeMillis()))
-                .setExpiration(DateUtils.addMinutes(new Date(), jwtConfig.getAccessTokenExpirationAfterMinutes()))
+                .setExpiration(DateUtils.addMinutes(new Date(), jwtConfig.getAccessTokenExp()))
                 .signWith(getSignKey(), SignatureAlgorithm.HS256)
                 .compact();
     }
@@ -83,30 +88,28 @@ public class JwtService {
         return false;
     }
 
-    public Optional<RefreshToken> findByToken(String token) {
-        return this.refreshTokenRepository.findByToken(token);
+    public Optional<RefreshToken> findRefreshTokenById(UUID id) {
+        return this.tokenRepository.findById(id);
     }
 
     public RefreshToken generateRefreshToken(UUID id, String usedToken) {
         RefreshToken refreshToken = new RefreshToken();
 
         if (usedToken != null) {
-            Optional<RefreshToken> usedRefreshToken = this.refreshTokenRepository.findByToken(usedToken);
-            this.refreshTokenRepository.deleteById(usedRefreshToken.get().getId());
+            Optional<RefreshToken> usedRefreshToken = this.tokenRepository.findById(UUID.fromString(usedToken));
+            this.tokenRepository.setUsedById(usedRefreshToken.get().getId());
         }
 
         refreshToken.setUser(this.userRepository.findById(id).get());
-        refreshToken.setExpiryAt(
-                Instant.now().plus(jwtConfig.getRefreshTokenExpirationAfterMinutes(), ChronoUnit.MINUTES));
-        refreshToken.setToken(UUID.randomUUID().toString());
+        refreshToken.setExpiryAt(Instant.now().plus(jwtConfig.getRefreshTokenExp(), ChronoUnit.MINUTES));
 
-        refreshToken = this.refreshTokenRepository.save(refreshToken);
+        refreshToken = this.tokenRepository.save(refreshToken);
         return refreshToken;
     }
 
     public RefreshToken verifyRefreshTokenExpiration(RefreshToken token) {
         if (token.getExpiryAt().compareTo(Instant.now()) < 0) {
-            this.refreshTokenRepository.delete(token);
+            this.tokenRepository.setUsedById(token.getId());
             throw new ForbiddenException(
                     Resource.REFRESH_TOKEN, ForbiddenType.EXPIRED_REFRESH_TOKEN, "refresh token was expired");
         }

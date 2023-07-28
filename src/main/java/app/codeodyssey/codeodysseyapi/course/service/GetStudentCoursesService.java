@@ -1,7 +1,7 @@
 package app.codeodyssey.codeodysseyapi.course.service;
 
 import app.codeodyssey.codeodysseyapi.common.exception.EmailNotFoundException;
-import app.codeodyssey.codeodysseyapi.common.exception.UnauthorizedAccessException;
+import app.codeodyssey.codeodysseyapi.common.exception.ForbiddenAccessException;
 import app.codeodyssey.codeodysseyapi.course.api.CourseResponse;
 import app.codeodyssey.codeodysseyapi.course.data.CourseRepository;
 import app.codeodyssey.codeodysseyapi.user.data.User;
@@ -28,11 +28,11 @@ public class GetStudentCoursesService {
         }
 
         if (!user.get().getRole().equals(UserRole.STUDENT)) {
-            throw new UnauthorizedAccessException(user.get().getId());
+            throw new ForbiddenAccessException(user.get().getId());
         }
 
         if (!user.get().getId().equals(id)) {
-            throw new UnauthorizedAccessException(user.get().getId());
+            throw new ForbiddenAccessException(user.get().getId());
         }
 
         return courseMapper.to(courseRepository.findAllByStudentIdOrderByNameAscEndDateAsc(id));

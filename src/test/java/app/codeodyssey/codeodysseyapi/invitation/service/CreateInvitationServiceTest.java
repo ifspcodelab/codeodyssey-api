@@ -5,9 +5,9 @@ import static org.assertj.core.api.Assertions.catchThrowable;
 import static org.junit.jupiter.api.Assertions.assertDoesNotThrow;
 
 import app.codeodyssey.codeodysseyapi.DatabaseContainerInitializer;
+import app.codeodyssey.codeodysseyapi.common.exception.ForbiddenAccessException;
 import app.codeodyssey.codeodysseyapi.common.exception.Resource;
 import app.codeodyssey.codeodysseyapi.common.exception.ResourceNotFoundException;
-import app.codeodyssey.codeodysseyapi.common.exception.UnauthorizedAccessException;
 import app.codeodyssey.codeodysseyapi.course.data.CourseRepository;
 import app.codeodyssey.codeodysseyapi.course.util.CourseFactory;
 import app.codeodyssey.codeodysseyapi.invitation.api.InvitationResponse;
@@ -81,9 +81,9 @@ public class CreateInvitationServiceTest {
                 catchThrowable(() -> createInvitationService.execute(command, course.getId(), user.getEmail()));
 
         assertThat(serviceThrowable).isNotNull();
-        assertThat(serviceThrowable).isInstanceOf(UnauthorizedAccessException.class);
-        UnauthorizedAccessException unauthorizedAccessException = (UnauthorizedAccessException) serviceThrowable;
-        assertThat(unauthorizedAccessException.getId()).isEqualTo(user.getId());
+        assertThat(serviceThrowable).isInstanceOf(ForbiddenAccessException.class);
+        ForbiddenAccessException forbiddenAccessException = (ForbiddenAccessException) serviceThrowable;
+        assertThat(forbiddenAccessException.getId()).isEqualTo(user.getId());
     }
 
     @Test
@@ -118,8 +118,8 @@ public class CreateInvitationServiceTest {
                 catchThrowable(() -> createInvitationService.execute(command, course.getId(), professorB.getEmail()));
 
         assertThat(serviceThrowable).isNotNull();
-        assertThat(serviceThrowable).isInstanceOf(UnauthorizedAccessException.class);
-        UnauthorizedAccessException unauthorizedAccessException = (UnauthorizedAccessException) serviceThrowable;
-        assertThat(unauthorizedAccessException.getId()).isEqualTo(professorB.getId());
+        assertThat(serviceThrowable).isInstanceOf(ForbiddenAccessException.class);
+        ForbiddenAccessException forbiddenAccessException = (ForbiddenAccessException) serviceThrowable;
+        assertThat(forbiddenAccessException.getId()).isEqualTo(professorB.getId());
     }
 }

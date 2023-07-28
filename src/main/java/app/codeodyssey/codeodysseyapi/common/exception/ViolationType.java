@@ -6,7 +6,7 @@ import lombok.Getter;
 @AllArgsConstructor
 @Getter
 public enum ViolationType {
-    ALREADY_EXISTS("already exists");
+    ALREADY_EXISTS("Already exists");
 
     private final String name;
 }

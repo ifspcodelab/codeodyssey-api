@@ -18,6 +18,16 @@ public final class UserFactory {
                 Instant.now());
     }
 
+    public static User createValidProfessor() {
+        return new User(
+                UUID.randomUUID(),
+                "name",
+                "email@email.com",
+                "$2a$10$Q8FZ0sHePMBw0fmUBG0xou/mfI3L.lzAKR3ErTIYihxRuj/wbigIm",
+                UserRole.PROFESSOR,
+                Instant.now());
+    }
+
     public static User sampleUserProfessor() {
         User user = new User(
                 "moriarty@email.com", "Moriarty", "$2a$12$PxQzW1GGd1bJ8zx.ZI7W3.hhNN./j57OMyuee/dP4W9h9g/G6LMaC");

@@ -102,7 +102,7 @@ public class GetCoursesEndToEndTest {
         assertThat(throwable).isNotNull();
         assertThat(throwable).isInstanceOf(HttpClientErrorException.class);
         HttpClientErrorException httpException = (HttpClientErrorException) throwable;
-        assertThat(httpException.getStatusCode()).isEqualTo(HttpStatus.UNAUTHORIZED);
+        assertThat(httpException.getStatusCode()).isEqualTo(HttpStatus.FORBIDDEN);
         assertThat(httpException.getResponseBodyAsString()).isNotNull();
     }
 }

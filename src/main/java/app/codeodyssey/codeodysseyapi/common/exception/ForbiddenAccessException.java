@@ -4,10 +4,10 @@ import java.util.UUID;
 import lombok.Getter;
 
 @Getter
-public class UnauthorizedAccessException extends RuntimeException {
+public class ForbiddenAccessException extends RuntimeException {
     private final UUID id;
 
-    public UnauthorizedAccessException(UUID id) {
+    public ForbiddenAccessException(UUID id) {
         super();
         this.id = id;
     }
