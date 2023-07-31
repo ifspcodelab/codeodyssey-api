@@ -107,7 +107,7 @@ public class CreateCourseEndpointTest {
                         .contentType(MediaType.APPLICATION_JSON)
                         .content(objectMapper.writeValueAsString(courseCommand2)))
                 .andExpect(MockMvcResultMatchers.status().isConflict())
-                .andExpect(MockMvcResultMatchers.jsonPath("$.title").value("Course start date is in the past"))
+                .andExpect(MockMvcResultMatchers.jsonPath("$.title").value("Course Start date is in the past"))
                 .andExpect(MockMvcResultMatchers.jsonPath("$.detail")
                         .value(courseCommand2.startDate().toString()));
 
@@ -129,7 +129,7 @@ public class CreateCourseEndpointTest {
                         .content(objectMapper.writeValueAsString(courseCommand2)))
                 .andExpect(MockMvcResultMatchers.status().isConflict())
                 .andExpect(MockMvcResultMatchers.jsonPath("$.title")
-                        .value("Course end date is earlier than its start date"))
+                        .value("Course End date is earlier than its start date"))
                 .andExpect(MockMvcResultMatchers.jsonPath("$.detail")
                         .value(courseCommand2.endDate().toString()));
 
