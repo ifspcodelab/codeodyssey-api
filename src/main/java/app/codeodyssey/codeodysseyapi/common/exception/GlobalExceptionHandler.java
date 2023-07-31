@@ -161,22 +161,6 @@ public class GlobalExceptionHandler {
         return new ResponseEntity<>(problem, status);
     }
 
-    @ExceptionHandler(BusinessRuleException.class)
-    public ResponseEntity<ProblemDetail> businessRule(BusinessRuleException ex) {
-        HttpStatus status = HttpStatus.CONFLICT;
-        String resource = ex.getResource().getName();
-        String businessRuleType = ex.getBusinessRuleType().getName();
-        String title = "%s %s".formatted(resource, businessRuleType);
-        String details = ex.getDetails();
-
-        ProblemDetail problem = ProblemDetail.forStatus(status);
-        problem.setTitle(title);
-        problem.setDetail(details);
-
-        log.warn("{} ({})", title, details);
-        return new ResponseEntity<>(problem, status);
-    }
-
     @ExceptionHandler(ForbiddenAccessException.class)
     public ResponseEntity<ProblemDetail> forbiddendAccess(ForbiddenAccessException ex) {
         HttpStatus status = HttpStatus.FORBIDDEN;
