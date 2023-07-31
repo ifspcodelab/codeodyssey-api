@@ -7,7 +7,6 @@ import app.codeodyssey.codeodysseyapi.common.exception.TokenException;
 import app.codeodyssey.codeodysseyapi.common.exception.UserAlreadyValidatedException;
 import app.codeodyssey.codeodysseyapi.user.data.User;
 import app.codeodyssey.codeodysseyapi.user.data.UserRepository;
-import app.codeodyssey.codeodysseyapi.user.service.UserValidationService;
 import java.time.temporal.ChronoUnit;
 import java.util.UUID;
 import org.junit.jupiter.api.AfterEach;
