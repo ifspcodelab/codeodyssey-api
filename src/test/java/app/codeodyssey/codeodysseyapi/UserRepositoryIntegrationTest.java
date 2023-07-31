@@ -15,6 +15,7 @@ import org.junit.jupiter.api.Test;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.boot.test.autoconfigure.jdbc.AutoConfigureTestDatabase;
 import org.springframework.boot.test.context.SpringBootTest;
+import org.springframework.security.crypto.password.PasswordEncoder;
 import org.springframework.test.context.ContextConfiguration;
 import org.testcontainers.junit.jupiter.Testcontainers;
 
@@ -26,6 +27,9 @@ import org.testcontainers.junit.jupiter.Testcontainers;
 public class UserRepositoryIntegrationTest {
     @Autowired
     private UserRepository userRepository;
+
+    @Autowired
+    private PasswordEncoder passwordEncoder;
 
     @BeforeEach
     void setUp() {
@@ -59,7 +63,7 @@ public class UserRepositoryIntegrationTest {
     @Test
     @DisplayName("get an existing email and return its associated user")
     void getUserByEmail_givenExistingEmail_returnsUser() {
-        User user = new User("sergio@example.com", "Sergio", "password");
+        User user = new User("sergio@example.com", "Sergio", passwordEncoder.encode("password#123"));
         userRepository.save(user);
 
         User foundUser = userRepository.getUserByEmail("sergio@example.com");
@@ -85,7 +89,7 @@ public class UserRepositoryIntegrationTest {
     @Test
     @DisplayName("get an existing token and return its associated user")
     void getUserByToken_givenExistingToken_returnsUser() {
-        User user = new User("sergio@example.com", "Sergio", "password");
+        User user = new User("sergio@example.com", "Sergio", passwordEncoder.encode("password#123"));
         userRepository.save(user);
 
         User foundUser = userRepository.getUserByToken(user.getToken()).orElse(null);

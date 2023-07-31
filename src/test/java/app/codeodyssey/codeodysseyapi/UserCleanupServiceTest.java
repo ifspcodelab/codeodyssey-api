@@ -16,6 +16,7 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.beans.factory.annotation.Value;
 import org.springframework.boot.test.autoconfigure.jdbc.AutoConfigureTestDatabase;
 import org.springframework.boot.test.context.SpringBootTest;
+import org.springframework.security.crypto.password.PasswordEncoder;
 import org.springframework.test.context.ContextConfiguration;
 import org.testcontainers.junit.jupiter.Testcontainers;
 
@@ -30,6 +31,9 @@ public class UserCleanupServiceTest {
 
     @Autowired
     private UserRepository userRepository;
+
+    @Autowired
+    private PasswordEncoder passwordEncoder;
 
     @Value("${time.register-expiration-time}")
     private int expirationTime;
@@ -78,7 +82,7 @@ public class UserCleanupServiceTest {
     @Test
     @DisplayName("do not clean user who is within the expiration time")
     void cleanup_givenUserWithinExpirationTime_returnsValidUser() {
-        User user = new User("Sergio", "sergio@example.com", "password");
+        User user = new User("sergio@example.com", "Sergio", passwordEncoder.encode("password#123"));
         userRepository.save(user);
 
         userCleanupService.cleanupUser();
