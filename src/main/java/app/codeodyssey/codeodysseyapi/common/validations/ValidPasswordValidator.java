@@ -1,4 +1,4 @@
-package app.codeodyssey.codeodysseyapi.validations;
+package app.codeodyssey.codeodysseyapi.common.validations;
 
 import app.codeodyssey.codeodysseyapi.common.exception.InvalidPasswordException;
 import jakarta.validation.ConstraintValidator;

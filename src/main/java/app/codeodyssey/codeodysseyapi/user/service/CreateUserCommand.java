@@ -1,6 +1,6 @@
 package app.codeodyssey.codeodysseyapi.user.service;
 
-import app.codeodyssey.codeodysseyapi.validations.ValidPassword;
+import app.codeodyssey.codeodysseyapi.common.validations.ValidPassword;
 import jakarta.validation.constraints.Email;
 import jakarta.validation.constraints.NotBlank;
 import jakarta.validation.constraints.NotNull;

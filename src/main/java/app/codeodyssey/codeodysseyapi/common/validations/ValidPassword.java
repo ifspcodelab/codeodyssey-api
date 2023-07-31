@@ -1,4 +1,4 @@
-package app.codeodyssey.codeodysseyapi.validations;
+package app.codeodyssey.codeodysseyapi.common.validations;
 
 import jakarta.validation.Constraint;
 import jakarta.validation.Payload;
