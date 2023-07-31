@@ -10,22 +10,19 @@ public final class UserFactory {
 
     public static User createValidUser() {
         return new User(
-                UUID.randomUUID(),
                 "name",
                 "email@email.com",
-                "$2a$10$Q8FZ0sHePMBw0fmUBG0xou/mfI3L.lzAKR3ErTIYihxRuj/wbigIm",
-                UserRole.STUDENT,
-                Instant.now());
+                "$2a$10$Q8FZ0sHePMBw0fmUBG0xou/mfI3L.lzAKR3ErTIYihxRuj/wbigIm");
     }
 
     public static User createValidProfessor() {
-        return new User(
-                UUID.randomUUID(),
+        var user = new User(
                 "name",
                 "email@email.com",
-                "$2a$10$Q8FZ0sHePMBw0fmUBG0xou/mfI3L.lzAKR3ErTIYihxRuj/wbigIm",
-                UserRole.PROFESSOR,
-                Instant.now());
+                "$2a$10$Q8FZ0sHePMBw0fmUBG0xou/mfI3L.lzAKR3ErTIYihxRuj/wbigIm");
+        user.setRole(UserRole.PROFESSOR);
+
+        return user;
     }
 
     public static User sampleUserProfessor() {
