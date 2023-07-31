@@ -31,12 +31,12 @@ public class LoginUserEndpoint {
                     @Content(schema = @Schema(implementation = LoginResponse.class), mediaType = "application/json")
                 }),
         @ApiResponse(
-                responseCode = "403",
+                responseCode = "400",
                 content = {
                     @Content(schema = @Schema(implementation = ProblemDetail.class), mediaType = "application/json")
                 }),
         @ApiResponse(
-                responseCode = "400",
+                responseCode = "403",
                 content = {
                     @Content(schema = @Schema(implementation = ProblemDetail.class), mediaType = "application/json")
                 })
