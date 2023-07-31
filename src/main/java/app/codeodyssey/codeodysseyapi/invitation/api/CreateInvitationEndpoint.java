@@ -13,6 +13,7 @@ import jakarta.validation.Valid;
 import java.util.UUID;
 import lombok.AllArgsConstructor;
 import org.springframework.http.HttpStatus;
+import org.springframework.http.ProblemDetail;
 import org.springframework.http.ResponseEntity;
 import org.springframework.security.core.Authentication;
 import org.springframework.security.core.userdetails.UserDetails;
@@ -36,6 +37,21 @@ public class CreateInvitationEndpoint {
                     @Content(
                             array = @ArraySchema(schema = @Schema(implementation = InvitationResponse.class)),
                             mediaType = "application/json")
+                }),
+        @ApiResponse(
+                responseCode = "400",
+                content = {
+                        @Content(schema = @Schema(implementation = ProblemDetail.class), mediaType = "application/json")
+                }),
+        @ApiResponse(
+                responseCode = "403",
+                content = {
+                        @Content(schema = @Schema(implementation = ProblemDetail.class), mediaType = "application/json")
+                }),
+        @ApiResponse(
+                responseCode = "404",
+                content = {
+                        @Content(schema = @Schema(implementation = ProblemDetail.class), mediaType = "application/json")
                 })
     })
     @PostMapping("{courseId}/invitations")
