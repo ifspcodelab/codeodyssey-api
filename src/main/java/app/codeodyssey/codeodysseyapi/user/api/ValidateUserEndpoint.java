@@ -32,6 +32,11 @@ public class ValidateUserEndpoint {
                             @Content(schema = @Schema(implementation = UserResponse.class), mediaType = "application/json")
                     }),
             @ApiResponse(
+                    responseCode = "401",
+                    content = {
+                            @Content(schema = @Schema(implementation = ProblemDetail.class), mediaType = "application/json")
+                    }),
+            @ApiResponse(
                     responseCode = "409",
                     content = {
                             @Content(schema = @Schema(implementation = ProblemDetail.class), mediaType = "application/json")
