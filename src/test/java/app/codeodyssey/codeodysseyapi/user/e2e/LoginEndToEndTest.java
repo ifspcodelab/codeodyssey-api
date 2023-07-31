@@ -1,4 +1,4 @@
-package app.codeodyssey.codeodysseyapi.e2e.login;
+package app.codeodyssey.codeodysseyapi.user.e2e;
 
 import app.codeodyssey.codeodysseyapi.DatabaseContainerInitializer;
 import app.codeodyssey.codeodysseyapi.token.data.RefreshTokenRepository;
