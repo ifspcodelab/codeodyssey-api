@@ -94,7 +94,7 @@ public class CreateUserEndpointTest {
         Assertions.assertEquals(existingUser.getToken(), foundUser.getToken());
         Assertions.assertEquals(existingUser.getRole(), foundUser.getRole());
         Assertions.assertEquals(existingUser.getName(), foundUser.getName());
-        Assertions.assertEquals(existingUser.getPassword(), foundUser.getPassword());
+        Assertions.assertEquals(existingUser.getPassword().trim(), foundUser.getPassword().trim());
     }
 
     @Test

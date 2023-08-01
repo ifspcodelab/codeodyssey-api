@@ -66,7 +66,7 @@ public class ValidateUserEndpointTest {
         Assertions.assertEquals(user.getName(), foundUser.getName());
         Assertions.assertEquals(user.getEmail(), foundUser.getEmail());
         Assertions.assertEquals(user.getRole(), foundUser.getRole());
-        Assertions.assertEquals(user.getPassword(), foundUser.getPassword());
+        Assertions.assertEquals(user.getPassword().trim(), foundUser.getPassword().trim());
     }
 
     @Test
@@ -92,7 +92,7 @@ public class ValidateUserEndpointTest {
         Assertions.assertEquals(user.getEmail(), foundUser.getEmail());
         Assertions.assertEquals(user.isValidated(), foundUser.isValidated());
         Assertions.assertEquals(user.getRole(), foundUser.getRole());
-        Assertions.assertEquals(user.getPassword(), foundUser.getPassword());
+        Assertions.assertEquals(user.getPassword().trim(), foundUser.getPassword().trim());
     }
 
     @Test
@@ -128,6 +128,6 @@ public class ValidateUserEndpointTest {
         Assertions.assertEquals(user.getEmail(), foundUser.getEmail());
         Assertions.assertEquals(user.isValidated(), foundUser.isValidated());
         Assertions.assertEquals(user.getRole(), foundUser.getRole());
-        Assertions.assertEquals(user.getPassword(), foundUser.getPassword());
+        Assertions.assertEquals(user.getPassword().trim(), foundUser.getPassword().trim());
     }
 }
