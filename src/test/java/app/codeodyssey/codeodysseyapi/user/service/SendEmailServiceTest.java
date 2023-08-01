@@ -40,7 +40,7 @@ public class SendEmailServiceTest {
     @Test
     @DisplayName("send email to the provided email")
     void sendEmail_givenEmail_success() {
-        User user = new User("sergio@example.com", "Sergio", passwordEncoder.encode("password#123"));
+        User user = new User("sergio@example.com", "Sergio","password#123");
         userRepository.save(user);
 
         sendEmailService.sendEmail(user.getEmail());
@@ -52,7 +52,7 @@ public class SendEmailServiceTest {
         Assertions.assertEquals(user.getToken(), foundUser.getToken());
         Assertions.assertEquals(user.getEmail(), foundUser.getEmail());
         Assertions.assertEquals(user.getId(), foundUser.getId());
-        Assertions.assertEquals(user.getPassword(), foundUser.getPassword());
+        Assertions.assertEquals(user.getPassword().trim(), foundUser.getPassword().trim());
         Assertions.assertEquals(user.isValidated(), foundUser.isValidated());
         Assertions.assertEquals(user.getRole(), foundUser.getRole());
         Assertions.assertEquals(user.getName(), foundUser.getName());

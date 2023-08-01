@@ -49,26 +49,26 @@ public class CreateUserEndpointTest {
         userRepository.deleteAll();
     }
 
-    //    @Test
-    //    @DisplayName("post a valid user")
-    //    void post_givenValidUser_returnsUser() throws Exception {
-    //        CreateUserCommand command = new CreateUserCommand("Sergio", "sergio@example.com",
-    //                "Password#123");
-    //
-    //        mockMvc.perform(MockMvcRequestBuilders.post("/api/v1/users")
-    //                        .contentType(MediaType.APPLICATION_JSON)
-    //                        .content(objectMapper.writeValueAsString(command)))
-    //                .andExpect(MockMvcResultMatchers.status().isCreated())
-    //                .andExpect(MockMvcResultMatchers.jsonPath("$.name").value(command.name()))
-    //                .andExpect(MockMvcResultMatchers.jsonPath("$.email").value(command.email()));
-    //
-    //        User foundUser = userRepository.getUserByEmail(command.email());
-    //
-    //        Assertions.assertNotNull(foundUser);
-    //        Assertions.assertEquals(command.email(), foundUser.getEmail());
-    //        Assertions.assertEquals(command.name(), foundUser.getName());
-    //        Assertions.assertTrue(passwordEncoder.matches(command.password(), foundUser.getPassword()));
-    //    }
+//        @Test
+//        @DisplayName("post a valid user")
+//        void post_givenValidUser_returnsUser() throws Exception {
+//            CreateUserCommand command = new CreateUserCommand("Sergio", "sergio@example.com",
+//                    "Password#123");
+//
+//            mockMvc.perform(MockMvcRequestBuilders.post("/api/v1/users")
+//                            .contentType(MediaType.APPLICATION_JSON)
+//                            .content(objectMapper.writeValueAsString(command)))
+//                    .andExpect(MockMvcResultMatchers.status().isCreated())
+//                    .andExpect(MockMvcResultMatchers.jsonPath("$.name").value(command.name()))
+//                    .andExpect(MockMvcResultMatchers.jsonPath("$.email").value(command.email()));
+//
+//            User foundUser = userRepository.getUserByEmail(command.email());
+//
+//            Assertions.assertNotNull(foundUser);
+//            Assertions.assertEquals(command.email(), foundUser.getEmail());
+//            Assertions.assertEquals(command.name(), foundUser.getName());
+//            Assertions.assertTrue(passwordEncoder.matches(command.password(), foundUser.getPassword()));
+//        }
 
     @Test
     @DisplayName("throws exception due the attempt to register a registered email")

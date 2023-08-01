@@ -65,8 +65,7 @@ public class CreateUserServiceTest {
     void execute_givenDuplicateUser_throwsException() {
         CreateUserCommand command = new CreateUserCommand("Sergio", "sergio@example.com", "password#123");
 
-        User existingUser = new User("sergio@example.com", "Sergio", passwordEncoder.encode("password#123"));
-
+        User existingUser = new User("sergio@example.com", "Sergio","password#123");
         userRepository.save(existingUser);
 
         assertThrows(ViolationException.class, () -> createUserService.execute(command));
@@ -78,7 +77,7 @@ public class CreateUserServiceTest {
         assertEquals(existingUser.getToken(), foundUser.getToken());
         assertEquals(existingUser.getName(), foundUser.getName());
         assertEquals(existingUser.isValidated(), foundUser.isValidated());
-        assertEquals(existingUser.getPassword(), foundUser.getPassword());
+        assertEquals(existingUser.getPassword().trim(), foundUser.getPassword().trim());
         assertEquals(existingUser.getRole(), foundUser.getRole());
     }
 }

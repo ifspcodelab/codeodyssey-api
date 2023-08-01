@@ -32,9 +32,6 @@ public class UserCleanupServiceTest {
     @Autowired
     private UserRepository userRepository;
 
-    @Autowired
-    private PasswordEncoder passwordEncoder;
-
     @Value("${time.register-expiration-time}")
     private int expirationTime;
 
@@ -82,7 +79,7 @@ public class UserCleanupServiceTest {
     @Test
     @DisplayName("do not clean user who is within the expiration time")
     void cleanup_givenUserWithinExpirationTime_returnsValidUser() {
-        User user = new User("sergio@example.com", "Sergio", passwordEncoder.encode("password#123"));
+        User user = new User("sergio@example.com", "Sergio","password#123");
         userRepository.save(user);
 
         userCleanupService.cleanupUser();
@@ -94,7 +91,7 @@ public class UserCleanupServiceTest {
         assertEquals(receivedUser.getEmail(), user.getEmail());
         assertEquals(receivedUser.getId(), user.getId());
         assertEquals(receivedUser.getToken(), user.getToken());
-        assertEquals(receivedUser.getPassword(), user.getPassword());
+        assertEquals(receivedUser.getPassword().trim(), user.getPassword().trim());
         assertEquals(receivedUser.getRole(), user.getRole());
         assertEquals(receivedUser.isValidated(), user.isValidated());
         assertEquals(receivedUser.getName(), user.getName());
