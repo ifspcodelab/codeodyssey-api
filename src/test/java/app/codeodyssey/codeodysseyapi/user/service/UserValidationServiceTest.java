@@ -1,12 +1,12 @@
-package app.codeodyssey.codeodysseyapi;
+package app.codeodyssey.codeodysseyapi.user.service;
 
 import static org.junit.jupiter.api.Assertions.*;
 
+import app.codeodyssey.codeodysseyapi.DatabaseContainerInitializer;
 import app.codeodyssey.codeodysseyapi.common.exception.TokenException;
 import app.codeodyssey.codeodysseyapi.common.exception.UserAlreadyValidatedException;
 import app.codeodyssey.codeodysseyapi.user.data.User;
 import app.codeodyssey.codeodysseyapi.user.data.UserRepository;
-import app.codeodyssey.codeodysseyapi.user.service.UserValidationService;
 import java.time.temporal.ChronoUnit;
 import java.util.UUID;
 import org.junit.jupiter.api.AfterEach;
@@ -17,6 +17,7 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.beans.factory.annotation.Value;
 import org.springframework.boot.test.autoconfigure.jdbc.AutoConfigureTestDatabase;
 import org.springframework.boot.test.context.SpringBootTest;
+import org.springframework.security.crypto.password.PasswordEncoder;
 import org.springframework.test.context.ContextConfiguration;
 import org.testcontainers.junit.jupiter.Testcontainers;
 
@@ -32,6 +33,9 @@ public class UserValidationServiceTest {
 
     @Autowired
     private UserValidationService userValidationService;
+
+    @Autowired
+    private PasswordEncoder passwordEncoder;
 
     @Value("${time.register-expiration-time}")
     private int expirationTime;
@@ -49,7 +53,7 @@ public class UserValidationServiceTest {
     @Test
     @DisplayName("validate user who has a valid token and return the user")
     void validateUser_givenValidToken_UserNotValidated_returnUser() {
-        User user = new User("sergio@example.com", "Sergio", "password");
+        User user = new User("sergio@example.com", "Sergio", passwordEncoder.encode("password#123"));
 
         userRepository.save(user);
 
@@ -68,7 +72,7 @@ public class UserValidationServiceTest {
     @Test
     @DisplayName("try to validate user who is already validated and throw an exception")
     void validateUser_givenValidToken_UserAlreadyValidated_exceptionThrown() {
-        User user = new User("sergio@example.com", "Sergio", "password");
+        User user = new User("sergio@example.com", "Sergio", passwordEncoder.encode("password"));
         user.setValidated(true);
         userRepository.save(user);
 
@@ -90,7 +94,7 @@ public class UserValidationServiceTest {
     @Test
     @DisplayName("try to validate user with an expired token and throw an exception")
     void validateUser_givenExpiredToken_exceptionThrown() {
-        User user = new User("sergio@example.com", "Sergio", "password");
+        User user = new User("sergio@example.com", "Sergio", passwordEncoder.encode("password"));
         user.setCreatedAt(user.getCreatedAt().minus(expirationTime + 1, ChronoUnit.SECONDS));
         userRepository.save(user);
 

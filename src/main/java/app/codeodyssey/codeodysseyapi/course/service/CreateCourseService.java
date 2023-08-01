@@ -33,16 +33,16 @@ public class CreateCourseService {
         }
 
         if (command.startDate().isBefore(LocalDate.now())) {
-            throw new BusinessRuleException(
+            throw new ViolationException(
                     Resource.COURSE,
-                    BusinessRuleType.COURSE_START_DATE_BEFORE_TODAY,
+                    ViolationType.COURSE_START_DATE_BEFORE_TODAY,
                     command.startDate().toString());
         }
 
         if (command.endDate().isBefore(command.startDate())) {
-            throw new BusinessRuleException(
+            throw new ViolationException(
                     Resource.COURSE,
-                    BusinessRuleType.COURSE_END_DATE_BEFORE_START_DATE,
+                    ViolationType.COURSE_END_DATE_BEFORE_START_DATE,
                     command.endDate().toString());
         }
 

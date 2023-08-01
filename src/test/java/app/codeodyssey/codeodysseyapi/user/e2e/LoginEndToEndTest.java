@@ -1,4 +1,4 @@
-package app.codeodyssey.codeodysseyapi.e2e.login;
+package app.codeodyssey.codeodysseyapi.user.e2e;
 
 import app.codeodyssey.codeodysseyapi.DatabaseContainerInitializer;
 import app.codeodyssey.codeodysseyapi.token.data.RefreshTokenRepository;
@@ -99,15 +99,16 @@ public class LoginEndToEndTest {
     @DisplayName("should throw data integrity exception when tries to save an already saved user")
     void save_givenAnAlreadySavedUser_returnsException() {
 
-        User user = new User(
-                UUID.randomUUID(),
-                "John Doe",
-                "john@email.com",
-                "$2a$10$oe40I38YdnKGq/QiH99kfOaJUY4QwMCSBDwpUR60iOXhD48/y/dDe",
-                UserRole.STUDENT,
-                Instant.now());
-
-        userRepository.save(user);
+        User user = userRepository.save(User.builder()
+                .id(UUID.randomUUID())
+                .name("John Doe")
+                .email("john@email.com")
+                .password("$2a$10$oe40I38YdnKGq/QiH99kfOaJUY4QwMCSBDwpUR60iOXhD48/y/dDe")
+                .role(UserRole.STUDENT)
+                .createdAt(Instant.now())
+                .isValidated(true)
+                .token(UUID.randomUUID().toString())
+                .build());
 
         user.setId(UUID.randomUUID());
 

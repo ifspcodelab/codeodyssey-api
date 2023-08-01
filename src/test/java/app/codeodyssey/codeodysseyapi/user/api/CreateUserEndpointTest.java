@@ -1,4 +1,4 @@
-package app.codeodyssey.codeodysseyapi;
+package app.codeodyssey.codeodysseyapi.user.api;
 
 import app.codeodyssey.codeodysseyapi.user.data.User;
 import app.codeodyssey.codeodysseyapi.user.data.UserRepository;

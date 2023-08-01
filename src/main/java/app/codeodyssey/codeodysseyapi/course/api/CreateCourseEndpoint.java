@@ -12,6 +12,7 @@ import jakarta.validation.Valid;
 import java.util.UUID;
 import lombok.AllArgsConstructor;
 import org.springframework.http.HttpStatus;
+import org.springframework.http.ProblemDetail;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
 
@@ -32,6 +33,21 @@ public class CreateCourseEndpoint {
                     @Content(
                             array = @ArraySchema(schema = @Schema(implementation = CourseResponse.class)),
                             mediaType = "application/json")
+                }),
+        @ApiResponse(
+                responseCode = "400",
+                content = {
+                    @Content(schema = @Schema(implementation = ProblemDetail.class), mediaType = "application/json")
+                }),
+        @ApiResponse(
+                responseCode = "403",
+                content = {
+                    @Content(schema = @Schema(implementation = ProblemDetail.class), mediaType = "application/json")
+                }),
+        @ApiResponse(
+                responseCode = "409",
+                content = {
+                    @Content(schema = @Schema(implementation = ProblemDetail.class), mediaType = "application/json")
                 })
     })
     @PostMapping

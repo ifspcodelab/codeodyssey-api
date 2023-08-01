@@ -1,11 +1,11 @@
-package app.codeodyssey.codeodysseyapi;
+package app.codeodyssey.codeodysseyapi.user.service;
 
 import static org.mockito.Mockito.any;
 import static org.mockito.Mockito.verify;
 
+import app.codeodyssey.codeodysseyapi.DatabaseContainerInitializer;
 import app.codeodyssey.codeodysseyapi.user.data.User;
 import app.codeodyssey.codeodysseyapi.user.data.UserRepository;
-import app.codeodyssey.codeodysseyapi.user.service.SendEmailService;
 import org.junit.jupiter.api.Assertions;
 import org.junit.jupiter.api.DisplayName;
 import org.junit.jupiter.api.Test;
@@ -15,6 +15,7 @@ import org.springframework.boot.test.context.SpringBootTest;
 import org.springframework.boot.test.mock.mockito.MockBean;
 import org.springframework.mail.SimpleMailMessage;
 import org.springframework.mail.javamail.JavaMailSender;
+import org.springframework.security.crypto.password.PasswordEncoder;
 import org.springframework.test.context.ContextConfiguration;
 import org.testcontainers.junit.jupiter.Testcontainers;
 
@@ -30,13 +31,16 @@ public class SendEmailServiceTest {
     @Autowired
     private SendEmailService sendEmailService;
 
+    @Autowired
+    private PasswordEncoder passwordEncoder;
+
     @MockBean
     private JavaMailSender mailSender;
 
     @Test
     @DisplayName("send email to the provided email")
     void sendEmail_givenEmail_success() {
-        User user = new User("sergio@example.com", "Sergio", "password");
+        User user = new User("sergio@example.com", "Sergio", passwordEncoder.encode("password#123"));
         userRepository.save(user);
 
         sendEmailService.sendEmail(user.getEmail());

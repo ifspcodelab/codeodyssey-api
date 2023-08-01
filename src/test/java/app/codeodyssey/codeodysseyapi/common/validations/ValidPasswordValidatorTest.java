@@ -1,10 +1,9 @@
-package app.codeodyssey.codeodysseyapi;
+package app.codeodyssey.codeodysseyapi.common.validations;
 
 import static org.junit.jupiter.api.Assertions.assertDoesNotThrow;
 import static org.junit.jupiter.api.Assertions.assertThrows;
 
 import app.codeodyssey.codeodysseyapi.common.exception.InvalidPasswordException;
-import app.codeodyssey.codeodysseyapi.validations.ValidPasswordValidator;
 import org.junit.jupiter.api.DisplayName;
 import org.junit.jupiter.api.Test;
 import org.springframework.boot.test.context.SpringBootTest;

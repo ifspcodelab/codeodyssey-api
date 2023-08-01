@@ -31,8 +31,7 @@ public class RefreshTokenEndpoint {
 
     @Operation(
             summary = "Use refresh token to generate a new access token",
-            description = "Returns the refresh token and the new access token",
-            tags = {"Users"})
+            description = "Returns the refresh token and the new access token")
     @ApiResponses({
         @ApiResponse(
                 responseCode = "201",

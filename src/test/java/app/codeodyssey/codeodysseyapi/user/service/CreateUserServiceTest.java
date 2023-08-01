@@ -1,14 +1,13 @@
-package app.codeodyssey.codeodysseyapi;
+package app.codeodyssey.codeodysseyapi.user.service;
 
 import static org.assertj.core.api.Assertions.assertThat;
 import static org.junit.jupiter.api.Assertions.assertEquals;
 import static org.junit.jupiter.api.Assertions.assertThrows;
 
+import app.codeodyssey.codeodysseyapi.DatabaseContainerInitializer;
 import app.codeodyssey.codeodysseyapi.common.exception.ViolationException;
 import app.codeodyssey.codeodysseyapi.user.data.User;
 import app.codeodyssey.codeodysseyapi.user.data.UserRepository;
-import app.codeodyssey.codeodysseyapi.user.service.CreateUserCommand;
-import app.codeodyssey.codeodysseyapi.user.service.CreateUserService;
 import org.junit.jupiter.api.AfterEach;
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.DisplayName;
@@ -16,6 +15,7 @@ import org.junit.jupiter.api.Test;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.boot.test.autoconfigure.jdbc.AutoConfigureTestDatabase;
 import org.springframework.boot.test.context.SpringBootTest;
+import org.springframework.security.crypto.password.PasswordEncoder;
 import org.springframework.test.context.ContextConfiguration;
 import org.testcontainers.junit.jupiter.Testcontainers;
 
@@ -30,6 +30,9 @@ public class CreateUserServiceTest {
 
     @Autowired
     private CreateUserService createUserService;
+
+    @Autowired
+    private PasswordEncoder passwordEncoder;
 
     @BeforeEach
     void setUp() {
@@ -62,7 +65,7 @@ public class CreateUserServiceTest {
     void execute_givenDuplicateUser_throwsException() {
         CreateUserCommand command = new CreateUserCommand("Sergio", "sergio@example.com", "password#123");
 
-        User existingUser = new User("sergio@example.com", "Sergio", "password");
+        User existingUser = new User("sergio@example.com", "Sergio", passwordEncoder.encode("password#123"));
 
         userRepository.save(existingUser);
 
