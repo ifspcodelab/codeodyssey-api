@@ -2,9 +2,12 @@ package app.codeodyssey.codeodysseyapi.user.service;
 
 import static org.assertj.core.api.Assertions.assertThat;
 import static org.junit.jupiter.api.Assertions.*;
+import static org.mockito.ArgumentMatchers.any;
+import static org.mockito.Mockito.verify;
 
 import app.codeodyssey.codeodysseyapi.DatabaseContainerInitializer;
 import app.codeodyssey.codeodysseyapi.common.exception.ViolationException;
+import app.codeodyssey.codeodysseyapi.user.api.UserResponse;
 import app.codeodyssey.codeodysseyapi.user.data.User;
 import app.codeodyssey.codeodysseyapi.user.data.UserRepository;
 import org.junit.jupiter.api.AfterEach;
@@ -14,6 +17,9 @@ import org.junit.jupiter.api.Test;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.boot.test.autoconfigure.jdbc.AutoConfigureTestDatabase;
 import org.springframework.boot.test.context.SpringBootTest;
+import org.springframework.boot.test.mock.mockito.MockBean;
+import org.springframework.mail.SimpleMailMessage;
+import org.springframework.mail.javamail.JavaMailSender;
 import org.springframework.security.crypto.password.PasswordEncoder;
 import org.springframework.test.context.ContextConfiguration;
 import org.testcontainers.junit.jupiter.Testcontainers;
@@ -32,9 +38,8 @@ public class CreateUserServiceTest {
     @Autowired
     private CreateUserService createUserService;
 
-    @Autowired
-    private PasswordEncoder passwordEncoder;
-
+    @MockBean
+    private JavaMailSender mailSender;
     @BeforeEach
     void setUp() {
         userRepository.deleteAll();
@@ -45,21 +50,25 @@ public class CreateUserServiceTest {
         userRepository.deleteAll();
     }
 
-    //    @Test
-    //    @DisplayName("create and save a user")
-    //    void execute_givenValidUser_returnsUserResponse() {
-    //        CreateUserCommand userCommand = new CreateUserCommand("Sergio", "sergio@example.com",
-    //                "password#123");
-    //        UserResponse user = createUserService.execute(userCommand);
-    //
-    //        User foundUser = userRepository.getUserByEmail(user.email());
-    //
-    //        assertThat(user).isNotNull();
-    //        assertEquals(user.id(), foundUser.getId());
-    //        assertEquals(user.role(), foundUser.getRole());
-    //        assertEquals(user.name(), foundUser.getName());
-    //        assertEquals(user.email(), foundUser.getEmail());
-    //    }
+        @Test
+        @DisplayName("create and save a user")
+        void execute_givenValidUser_returnsUserResponse() {
+            CreateUserCommand userCommand = new CreateUserCommand("Sergio", "sergio@example.com",
+                    "password#123");
+            UserResponse user = createUserService.execute(userCommand);
+
+            Optional<User> foundUserOptional = userRepository.findByEmail(user.email());
+
+            assertTrue(foundUserOptional.isPresent());
+
+            User foundUser = foundUserOptional.get();
+
+            verify(mailSender).send(any(SimpleMailMessage.class));
+            assertEquals(user.id(), foundUser.getId());
+            assertEquals(user.role(), foundUser.getRole());
+            assertEquals(user.name(), foundUser.getName());
+            assertEquals(user.email(), foundUser.getEmail());
+        }
 
     @Test
     @DisplayName("throws exception due the attempt to create a duplicated user")

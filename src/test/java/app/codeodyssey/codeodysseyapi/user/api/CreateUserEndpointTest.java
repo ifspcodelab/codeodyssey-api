@@ -9,9 +9,12 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.boot.test.autoconfigure.jdbc.AutoConfigureTestDatabase;
 import org.springframework.boot.test.autoconfigure.web.servlet.AutoConfigureMockMvc;
 import org.springframework.boot.test.context.SpringBootTest;
+import org.springframework.boot.test.mock.mockito.MockBean;
 import org.springframework.context.MessageSource;
 import org.springframework.context.i18n.LocaleContextHolder;
 import org.springframework.http.MediaType;
+import org.springframework.mail.SimpleMailMessage;
+import org.springframework.mail.javamail.JavaMailSender;
 import org.springframework.security.crypto.password.PasswordEncoder;
 import org.springframework.test.web.servlet.MockMvc;
 import org.springframework.test.web.servlet.request.MockMvcRequestBuilders;
@@ -20,8 +23,11 @@ import org.testcontainers.junit.jupiter.Testcontainers;
 
 import java.util.Optional;
 
+import static org.mockito.ArgumentMatchers.any;
+import static org.mockito.Mockito.verify;
+
 @SpringBootTest
-@DisplayName("test for the CreateUserEndpointService")
+@DisplayName("test for the CreateUserEndpoint")
 @AutoConfigureMockMvc
 @AutoConfigureTestDatabase(replace = AutoConfigureTestDatabase.Replace.NONE)
 @Testcontainers
@@ -41,6 +47,9 @@ public class CreateUserEndpointTest {
     @Autowired
     private MessageSource messageSource;
 
+    @MockBean
+    private JavaMailSender mailSender;
+
     @BeforeEach
     void setUp() {
         userRepository.deleteAll();
@@ -51,26 +60,30 @@ public class CreateUserEndpointTest {
         userRepository.deleteAll();
     }
 
-//        @Test
-//        @DisplayName("post a valid user")
-//        void post_givenValidUser_returnsUser() throws Exception {
-//            CreateUserCommand command = new CreateUserCommand("Sergio", "sergio@example.com",
-//                    "Password#123");
-//
-//            mockMvc.perform(MockMvcRequestBuilders.post("/api/v1/users")
-//                            .contentType(MediaType.APPLICATION_JSON)
-//                            .content(objectMapper.writeValueAsString(command)))
-//                    .andExpect(MockMvcResultMatchers.status().isCreated())
-//                    .andExpect(MockMvcResultMatchers.jsonPath("$.name").value(command.name()))
-//                    .andExpect(MockMvcResultMatchers.jsonPath("$.email").value(command.email()));
-//
-//            User foundUser = userRepository.getUserByEmail(command.email());
-//
-//            Assertions.assertNotNull(foundUser);
-//            Assertions.assertEquals(command.email(), foundUser.getEmail());
-//            Assertions.assertEquals(command.name(), foundUser.getName());
-//            Assertions.assertTrue(passwordEncoder.matches(command.password(), foundUser.getPassword()));
-//        }
+        @Test
+        @DisplayName("post a valid user")
+        void post_givenValidUser_returnsUser() throws Exception {
+            CreateUserCommand command = new CreateUserCommand("Sergio", "sergio@example.com",
+                    "Password#123");
+
+            mockMvc.perform(MockMvcRequestBuilders.post("/api/v1/users")
+                            .contentType(MediaType.APPLICATION_JSON)
+                            .content(objectMapper.writeValueAsString(command)))
+                    .andExpect(MockMvcResultMatchers.status().isCreated())
+                    .andExpect(MockMvcResultMatchers.jsonPath("$.name").value(command.name()))
+                    .andExpect(MockMvcResultMatchers.jsonPath("$.email").value(command.email()));
+
+            Optional<User> foundUserOptional = userRepository.findByEmail(command.email());
+
+            Assertions.assertTrue(foundUserOptional.isPresent());
+
+            User foundUser = foundUserOptional.get();
+
+            verify(mailSender).send(any(SimpleMailMessage.class));
+            Assertions.assertEquals(command.email(), foundUser.getEmail());
+            Assertions.assertEquals(command.name(), foundUser.getName());
+            Assertions.assertTrue(passwordEncoder.matches(command.password(), foundUser.getPassword()));
+        }
 
     @Test
     @DisplayName("throws exception due the attempt to register a registered email")
@@ -89,7 +102,7 @@ public class CreateUserEndpointTest {
 
         Optional<User> foundUserOptional = userRepository.findByEmail(existingUser.getEmail());
 
-        Assertions.assertNotNull(foundUserOptional);
+        Assertions.assertTrue(foundUserOptional.isPresent());
 
         User foundUser = foundUserOptional.get();
 
