@@ -15,18 +15,14 @@ public class SendEmailService {
     private String url;
 
     private final JavaMailSender mailSender;
-    private final UserRepository userRepository;
 
-    public void sendEmail(String email) {
+    public void sendEmail(String email, String token) {
         SimpleMailMessage message = new SimpleMailMessage();
-
-        User user = userRepository.getUserByEmail(email);
-
         message.setTo(email);
         message.setSubject("Email confirmation");
 
         message.setText("Please click the link bellow to confirm your registration\n" + url + "/confirmation/"
-                + user.getToken());
+                + token);
         mailSender.send(message);
     }
 }

@@ -43,7 +43,7 @@ public class SendEmailServiceTest {
         User user = new User("sergio@example.com", "Sergio","password#123");
         userRepository.save(user);
 
-        sendEmailService.sendEmail(user.getEmail());
+        sendEmailService.sendEmail(user.getEmail(), user.getToken());
 
         User foundUser = userRepository.getUserByEmail(user.getEmail());
 
