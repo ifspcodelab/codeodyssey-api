@@ -7,6 +7,7 @@ import app.codeodyssey.codeodysseyapi.common.exception.TokenProblem;
 import app.codeodyssey.codeodysseyapi.user.data.User;
 import app.codeodyssey.codeodysseyapi.user.data.UserRepository;
 import java.time.temporal.ChronoUnit;
+import java.util.Optional;
 import java.util.UUID;
 import org.junit.jupiter.api.*;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -57,9 +58,12 @@ public class ValidateUserEndpointTest {
                 .andExpect(jsonPath("$.name").value(user.getName()))
                 .andExpect(jsonPath("$.email").value(user.getEmail()));
 
-        User foundUser = userRepository.getUserByEmail(user.getEmail());
+        Optional<User> foundUserOptional = userRepository.findByEmail(user.getEmail());
 
-        Assertions.assertNotNull(foundUser);
+        Assertions.assertTrue(foundUserOptional.isPresent());
+
+        User foundUser = foundUserOptional.get();
+
         Assertions.assertTrue(foundUser.isValidated());
         Assertions.assertEquals(user.getId(), foundUser.getId());
         Assertions.assertEquals(user.getToken(), foundUser.getToken());
@@ -82,9 +86,12 @@ public class ValidateUserEndpointTest {
                 .andExpect(jsonPath("$.title").value("Token problem"))
                 .andExpect(jsonPath("$.detail").value(TokenProblem.EXPIRED.getMessage()));
 
-        User foundUser = userRepository.getUserByEmail(user.getEmail());
+        Optional<User> foundUserOptional = userRepository.findByEmail(user.getEmail());
 
-        Assertions.assertNotNull(foundUser);
+        Assertions.assertTrue(foundUserOptional.isPresent());
+
+        User foundUser = foundUserOptional.get();
+
         Assertions.assertFalse(foundUser.isValidated());
         Assertions.assertEquals(user.getId(), foundUser.getId());
         Assertions.assertEquals(user.getToken(), foundUser.getToken());
@@ -118,10 +125,13 @@ public class ValidateUserEndpointTest {
                 .andExpect(jsonPath("$.title").value("Validation"))
                 .andExpect(jsonPath("$.detail").value("User is already validated"));
 
-        User foundUser = userRepository.getUserByEmail(user.getEmail());
+        Optional<User> foundUserOptional = userRepository.findByEmail(user.getEmail());
+
+        Assertions.assertTrue(foundUserOptional.isPresent());
+
+        User foundUser = foundUserOptional.get();
 
         Assertions.assertTrue(foundUser.isValidated());
-        Assertions.assertNotNull(foundUser);
         Assertions.assertEquals(user.getId(), foundUser.getId());
         Assertions.assertEquals(user.getToken(), foundUser.getToken());
         Assertions.assertEquals(user.getName(), foundUser.getName());

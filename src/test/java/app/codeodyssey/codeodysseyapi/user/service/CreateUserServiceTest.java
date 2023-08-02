@@ -1,8 +1,7 @@
 package app.codeodyssey.codeodysseyapi.user.service;
 
 import static org.assertj.core.api.Assertions.assertThat;
-import static org.junit.jupiter.api.Assertions.assertEquals;
-import static org.junit.jupiter.api.Assertions.assertThrows;
+import static org.junit.jupiter.api.Assertions.*;
 
 import app.codeodyssey.codeodysseyapi.DatabaseContainerInitializer;
 import app.codeodyssey.codeodysseyapi.common.exception.ViolationException;
@@ -18,6 +17,8 @@ import org.springframework.boot.test.context.SpringBootTest;
 import org.springframework.security.crypto.password.PasswordEncoder;
 import org.springframework.test.context.ContextConfiguration;
 import org.testcontainers.junit.jupiter.Testcontainers;
+
+import java.util.Optional;
 
 @SpringBootTest
 @DisplayName("test for the CreateUserService")
@@ -70,9 +71,12 @@ public class CreateUserServiceTest {
 
         assertThrows(ViolationException.class, () -> createUserService.execute(command));
 
-        User foundUser = userRepository.getUserByEmail(existingUser.getEmail());
+        Optional<User> foundUserOptional = userRepository.findByEmail(existingUser.getEmail());
 
-        assertThat(foundUser).isNotNull();
+        assertTrue(foundUserOptional.isPresent());
+
+        User foundUser = foundUserOptional.get();
+
         assertEquals(existingUser.getId(), foundUser.getId());
         assertEquals(existingUser.getToken(), foundUser.getToken());
         assertEquals(existingUser.getName(), foundUser.getName());

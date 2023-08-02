@@ -18,6 +18,8 @@ import org.springframework.test.web.servlet.request.MockMvcRequestBuilders;
 import org.springframework.test.web.servlet.result.MockMvcResultMatchers;
 import org.testcontainers.junit.jupiter.Testcontainers;
 
+import java.util.Optional;
+
 @SpringBootTest
 @DisplayName("test for the CreateUserEndpointService")
 @AutoConfigureMockMvc
@@ -85,9 +87,12 @@ public class CreateUserEndpointTest {
                 .andExpect(MockMvcResultMatchers.jsonPath("$.title").value("User Already exists"))
                 .andExpect(MockMvcResultMatchers.jsonPath("$.detail").value("Email already exists"));
 
-        User foundUser = userRepository.getUserByEmail(existingUser.getEmail());
+        Optional<User> foundUserOptional = userRepository.findByEmail(existingUser.getEmail());
 
-        Assertions.assertNotNull(foundUser);
+        Assertions.assertNotNull(foundUserOptional);
+
+        User foundUser = foundUserOptional.get();
+
         Assertions.assertEquals(existingUser.getId(), foundUser.getId());
         Assertions.assertEquals(existingUser.getEmail(), foundUser.getEmail());
         Assertions.assertEquals(existingUser.isValidated(), foundUser.isValidated());

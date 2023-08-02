@@ -19,6 +19,8 @@ import org.springframework.security.crypto.password.PasswordEncoder;
 import org.springframework.test.context.ContextConfiguration;
 import org.testcontainers.junit.jupiter.Testcontainers;
 
+import java.util.Optional;
+
 @SpringBootTest
 @DisplayName("test for the SendEmailService")
 @AutoConfigureTestDatabase(replace = AutoConfigureTestDatabase.Replace.NONE)
@@ -45,10 +47,13 @@ public class SendEmailServiceTest {
 
         sendEmailService.sendEmail(user.getEmail(), user.getToken());
 
-        User foundUser = userRepository.getUserByEmail(user.getEmail());
+        Optional<User> foundUserOptional = userRepository.findByEmail(user.getEmail());
+
+        Assertions.assertTrue(foundUserOptional.isPresent());
+
+        User foundUser = foundUserOptional.get();
 
         verify(mailSender).send(any(SimpleMailMessage.class));
-        Assertions.assertNotNull(foundUser);
         Assertions.assertEquals(user.getToken(), foundUser.getToken());
         Assertions.assertEquals(user.getEmail(), foundUser.getEmail());
         Assertions.assertEquals(user.getId(), foundUser.getId());

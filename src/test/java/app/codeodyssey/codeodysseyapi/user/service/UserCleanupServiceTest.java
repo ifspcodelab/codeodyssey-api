@@ -2,16 +2,16 @@ package app.codeodyssey.codeodysseyapi.user.service;
 
 import static org.assertj.core.api.Assertions.assertThat;
 import static org.junit.jupiter.api.Assertions.assertEquals;
+import static org.junit.jupiter.api.Assertions.assertTrue;
 
 import app.codeodyssey.codeodysseyapi.DatabaseContainerInitializer;
 import app.codeodyssey.codeodysseyapi.user.data.User;
 import app.codeodyssey.codeodysseyapi.user.data.UserRepository;
 import java.time.temporal.ChronoUnit;
 import java.util.List;
-import org.junit.jupiter.api.AfterEach;
-import org.junit.jupiter.api.BeforeEach;
-import org.junit.jupiter.api.DisplayName;
-import org.junit.jupiter.api.Test;
+import java.util.Optional;
+
+import org.junit.jupiter.api.*;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.beans.factory.annotation.Value;
 import org.springframework.boot.test.autoconfigure.jdbc.AutoConfigureTestDatabase;
@@ -54,7 +54,7 @@ public class UserCleanupServiceTest {
 
         userCleanupService.cleanupUser();
 
-        assertThat(userRepository.getUserByEmail(user.getEmail())).isNull();
+        assertThat(userRepository.findByEmail(user.getEmail())).isEmpty();
     }
 
     @Test
@@ -84,9 +84,11 @@ public class UserCleanupServiceTest {
 
         userCleanupService.cleanupUser();
 
-        assertThat(userRepository.getUserByEmail(user.getEmail())).isNotNull();
+        Optional<User> foundUserOptional = userRepository.findByEmail(user.getEmail());
 
-        User receivedUser = userRepository.getUserByEmail(user.getEmail());
+        Assertions.assertTrue(foundUserOptional.isPresent());
+
+        User receivedUser = foundUserOptional.get();
 
         assertEquals(receivedUser.getEmail(), user.getEmail());
         assertEquals(receivedUser.getId(), user.getId());
@@ -108,9 +110,18 @@ public class UserCleanupServiceTest {
 
         userCleanupService.cleanupUser();
 
-        User receivedUser1 = userRepository.getUserByEmail(user1.getEmail());
-        User receivedUser2 = userRepository.getUserByEmail(user2.getEmail());
-        User receivedUser3 = userRepository.getUserByEmail(user3.getEmail());
+        Optional<User> foundUserOptional1 = userRepository.findByEmail(user1.getEmail());
+        Optional<User> foundUserOptional2 = userRepository.findByEmail(user2.getEmail());
+        Optional<User> foundUserOptional3 = userRepository.findByEmail(user3.getEmail());
+
+        assertTrue(foundUserOptional1.isPresent());
+        assertTrue(foundUserOptional2.isPresent());
+        assertTrue(foundUserOptional3.isPresent());
+
+        User receivedUser1 = foundUserOptional1.get();
+        User receivedUser2 = foundUserOptional2.get();
+        User receivedUser3 = foundUserOptional3.get();
+
 
         assertEquals(receivedUser1.getEmail(), user1.getEmail());
         assertEquals(receivedUser1.getId(), user1.getId());

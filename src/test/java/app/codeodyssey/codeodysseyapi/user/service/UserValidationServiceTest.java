@@ -8,16 +8,14 @@ import app.codeodyssey.codeodysseyapi.common.exception.UserAlreadyValidatedExcep
 import app.codeodyssey.codeodysseyapi.user.data.User;
 import app.codeodyssey.codeodysseyapi.user.data.UserRepository;
 import java.time.temporal.ChronoUnit;
+import java.util.Optional;
 import java.util.UUID;
-import org.junit.jupiter.api.AfterEach;
-import org.junit.jupiter.api.BeforeEach;
-import org.junit.jupiter.api.DisplayName;
-import org.junit.jupiter.api.Test;
+
+import org.junit.jupiter.api.*;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.beans.factory.annotation.Value;
 import org.springframework.boot.test.autoconfigure.jdbc.AutoConfigureTestDatabase;
 import org.springframework.boot.test.context.SpringBootTest;
-import org.springframework.security.crypto.password.PasswordEncoder;
 import org.springframework.test.context.ContextConfiguration;
 import org.testcontainers.junit.jupiter.Testcontainers;
 
@@ -76,9 +74,12 @@ public class UserValidationServiceTest {
         assertThrows(UserAlreadyValidatedException.class, () -> userValidationService.validateUser(user.getToken()));
         assertTrue(user.isValidated());
 
-        User foundUser = userRepository.getUserByEmail(user.getEmail());
+        Optional <User> foundUserOptional = userRepository.findByEmail(user.getEmail());
 
-        assertNotNull(foundUser);
+        assertTrue(foundUserOptional.isPresent());
+
+        User foundUser = foundUserOptional.get();
+
         assertTrue(foundUser.isValidated());
         assertEquals(user.getId(), foundUser.getId());
         assertEquals(user.getToken(), foundUser.getToken());
@@ -98,9 +99,12 @@ public class UserValidationServiceTest {
         assertThrows(TokenException.class, () -> userValidationService.validateUser(user.getToken()));
         assertFalse(user.isValidated());
 
-        User foundUser = userRepository.getUserByEmail(user.getEmail());
+        Optional <User> foundUserOptional = userRepository.findByEmail(user.getEmail());
 
-        assertNotNull(foundUser);
+        assertTrue(foundUserOptional.isPresent());
+
+        User foundUser = foundUserOptional.get();
+
         assertFalse(foundUser.isValidated());
         assertEquals(user.getId(), foundUser.getId());
         assertEquals(user.getToken(), foundUser.getToken());
