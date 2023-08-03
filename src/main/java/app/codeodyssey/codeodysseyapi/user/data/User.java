@@ -34,7 +34,7 @@ public class User implements UserDetails {
     private boolean isValidated;
     private String token;
 
-    @OneToMany(mappedBy = "user", cascade = CascadeType.ALL)
+    @OneToMany(mappedBy = "user")
     private List<RefreshToken> refreshTokens;
 
     public User(String email, String name, String password) {
