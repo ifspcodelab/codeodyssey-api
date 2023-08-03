@@ -2,11 +2,12 @@ package app.codeodyssey.codeodysseyapi.token.data;
 
 import app.codeodyssey.codeodysseyapi.user.data.User;
 import jakarta.persistence.*;
-import java.time.Instant;
-import java.util.UUID;
 import lombok.AllArgsConstructor;
 import lombok.Getter;
 import lombok.Setter;
+
+import java.time.Instant;
+import java.util.UUID;
 
 @Entity
 @Table(name = "refreshtokens")
@@ -18,8 +19,7 @@ public class RefreshToken {
     @Id
     private UUID id;
 
-    @OneToOne
-    @JoinColumn(name = "user_id", referencedColumnName = "id")
+    @ManyToOne
     private User user;
 
     private Instant expiryAt;
