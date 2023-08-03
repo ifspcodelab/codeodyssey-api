@@ -1,12 +1,21 @@
 package app.codeodyssey.codeodysseyapi.user.data;
 
 import static org.assertj.core.api.Assertions.assertThat;
+import static org.assertj.core.api.Assertions.in;
 import static org.junit.jupiter.api.Assertions.*;
 
 import app.codeodyssey.codeodysseyapi.DatabaseContainerInitializer;
 import java.util.List;
 import java.util.Optional;
 import java.util.UUID;
+
+import app.codeodyssey.codeodysseyapi.course.data.CourseRepository;
+import app.codeodyssey.codeodysseyapi.course.util.CourseFactory;
+import app.codeodyssey.codeodysseyapi.enrollment.data.EnrollmentRepository;
+import app.codeodyssey.codeodysseyapi.enrollment.util.EnrollmentFactory;
+import app.codeodyssey.codeodysseyapi.invitation.data.InvitationRepository;
+import app.codeodyssey.codeodysseyapi.invitation.util.InvitationFactory;
+import app.codeodyssey.codeodysseyapi.user.util.UserFactory;
 import org.junit.jupiter.api.AfterEach;
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.DisplayName;
@@ -28,15 +37,30 @@ public class UserRepositoryIntegrationTest {
     private UserRepository userRepository;
 
     @Autowired
+    private CourseRepository courseRepository;
+
+    @Autowired
+    private InvitationRepository invitationRepository;
+
+    @Autowired
+    private EnrollmentRepository enrollmentRepository;
+
+    @Autowired
     private PasswordEncoder passwordEncoder;
 
     @BeforeEach
     void setUp() {
+        enrollmentRepository.deleteAll();
+        invitationRepository.deleteAll();
+        courseRepository.deleteAll();
         userRepository.deleteAll();
     }
 
     @AfterEach
     void tearDown() {
+        enrollmentRepository.deleteAll();
+        invitationRepository.deleteAll();
+        courseRepository.deleteAll();
         userRepository.deleteAll();
     }
 
@@ -137,5 +161,59 @@ public class UserRepositoryIntegrationTest {
         List<User> validatedUsers = userRepository.findByIsValidated(true);
 
         assertThat(validatedUsers).isEmpty();
+    }
+
+    @Test
+    @DisplayName("returns an empty list when a course doesn't have any students")
+    void findUsersByCourseIdOrderByName_givenCourseWithNoStudents_returnEmpty() {
+        var professor = UserFactory.createValidProfessor();
+        var course = CourseFactory.createValidCourseWithProfessor(professor);
+        userRepository.save(professor);
+        courseRepository.save(course);
+
+        List<User> userList = userRepository.findUsersByCourseIdOrderByName(course.getId());
+        assertThat(userList).isEmpty();
+    }
+
+    @Test
+    @DisplayName("returns a list when a course have one student")
+    void findUsersByCourseIdOrderByName_givenCourseWithOneStudent_returnList() {
+        var professor = UserFactory.createValidProfessor();
+        var course = CourseFactory.createValidCourseWithProfessor(professor);
+        var invitation = InvitationFactory.sampleInvitationWithCourse(course);
+        var student = UserFactory.createValidUser();
+        var enrollment = EnrollmentFactory.sampleEnrollment(invitation, student);
+        userRepository.save(professor);
+        userRepository.save(student);
+        courseRepository.save(course);
+        invitationRepository.save(invitation);
+        enrollmentRepository.save(enrollment);
+
+        List<User> userList = userRepository.findUsersByCourseIdOrderByName(course.getId());
+        assertThat(userList).isNotEmpty();
+    }
+
+    @Test
+    @DisplayName("returns a list when a course have many students")
+    void findUsersByCourseIdOrderByName_givenCourseWithManyStudents_returnList() {
+        var professor = UserFactory.createValidProfessor();
+        var course = CourseFactory.createValidCourseWithProfessor(professor);
+        var invitation = InvitationFactory.sampleInvitationWithCourse(course);
+        var invitationB = InvitationFactory.sampleInvitationWithCourse(course);
+        var student = UserFactory.createValidUser();
+        var studentB = UserFactory.sampleUserStudentB();
+        var enrollment = EnrollmentFactory.sampleEnrollment(invitation, student);
+        var enrollmentB = EnrollmentFactory.sampleEnrollment(invitationB, studentB);
+        userRepository.save(professor);
+        userRepository.save(student);
+        userRepository.save(studentB);
+        courseRepository.save(course);
+        invitationRepository.save(invitation);
+        invitationRepository.save(invitationB);
+        enrollmentRepository.save(enrollment);
+        enrollmentRepository.save(enrollmentB);
+
+        List<User> userList = userRepository.findUsersByCourseIdOrderByName(course.getId());
+        assertThat(userList).isNotEmpty();
     }
 }
