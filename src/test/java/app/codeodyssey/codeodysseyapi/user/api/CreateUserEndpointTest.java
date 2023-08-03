@@ -116,7 +116,7 @@ public class CreateUserEndpointTest {
     }
 
     @Test
-    @DisplayName("throws exception due to weak password")
+    @DisplayName("throws exception due to password pattern")
     void post_givenInvalidPassword_exceptionThrown() throws Exception {
         CreateUserCommand command = new CreateUserCommand("Sergio", "sergio@example.com", "Password123");
 
@@ -126,10 +126,8 @@ public class CreateUserEndpointTest {
                 .andExpect(MockMvcResultMatchers.status().isBadRequest())
                 .andExpect(MockMvcResultMatchers.jsonPath("$.title").value("Password problem"))
                 .andExpect(MockMvcResultMatchers.jsonPath("$.detail")
-                        .value("The password must "
-                                + "contain at least one uppercase letter, one lowercase letter, one number, "
-                                + "one special character, "
-                                + "and be between 8 and 64 characters."));
+                        .value("The password must have at least one uppercase letter, one lowercase letter," +
+                                " one number and one special character"));
     }
 
     @Test
