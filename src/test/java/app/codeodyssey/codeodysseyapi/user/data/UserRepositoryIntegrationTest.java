@@ -1,7 +1,6 @@
 package app.codeodyssey.codeodysseyapi.user.data;
 
 import static org.assertj.core.api.Assertions.assertThat;
-import static org.assertj.core.api.Assertions.in;
 import static org.junit.jupiter.api.Assertions.*;
 
 import app.codeodyssey.codeodysseyapi.DatabaseContainerInitializer;
