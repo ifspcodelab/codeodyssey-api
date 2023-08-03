@@ -112,7 +112,7 @@ public class GlobalExceptionHandler {
         problem.setTitle(title);
         problem.setDetail(details.get(0));
 
-        log.warn("{} - {}", title, details);
+        log.warn("{} - {}", title, details.get(0));
 
         return new ResponseEntity<>(problem, status);
     }
