@@ -26,6 +26,6 @@ public class GetCourseStudentsService {
             throw new ForbiddenAccessException(professorId);
         }
 
-        return userMapper.to(userRepository.findUsersByCourseId(courseId));
+        return userMapper.to(userRepository.findUsersByCourseIdOrderByName(courseId));
     }
 }

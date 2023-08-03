@@ -27,6 +27,7 @@ public interface UserRepository extends JpaRepository<User, UUID> {
             JOIN enrollment.invitation invitation
             JOIN invitation.course course
             WHERE course.id = :courseId
+            ORDER BY student.name
     """)
-    List<User> findUsersByCourseId(UUID courseId);
+    List<User> findUsersByCourseIdOrderByName(UUID courseId);
 }
