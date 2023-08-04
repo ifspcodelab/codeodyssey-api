@@ -18,8 +18,8 @@ import java.util.UUID;
 public class GetCourseStudentsEndpoint {
     private final GetCourseStudentsService getCourseStudentsService;
 
-    @GetMapping("{professorId}/courses/{courseId}/students")
-    public ResponseEntity<List<UserResponse>> get(@PathVariable @Valid UUID professorId, @PathVariable @Valid UUID courseId) {
-        return ResponseEntity.ok(getCourseStudentsService.execute(professorId, courseId));
+    @GetMapping("{professorId}/courses/{courseSlug}/students")
+    public ResponseEntity<List<UserResponse>> get(@PathVariable @Valid UUID professorId, @PathVariable @Valid String courseSlug) {
+        return ResponseEntity.ok(getCourseStudentsService.execute(professorId, courseSlug));
     }
 }

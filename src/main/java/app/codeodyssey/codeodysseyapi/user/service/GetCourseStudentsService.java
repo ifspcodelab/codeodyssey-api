@@ -1,6 +1,8 @@
 package app.codeodyssey.codeodysseyapi.user.service;
 
 import app.codeodyssey.codeodysseyapi.common.exception.*;
+import app.codeodyssey.codeodysseyapi.course.data.Course;
+import app.codeodyssey.codeodysseyapi.course.data.CourseRepository;
 import app.codeodyssey.codeodysseyapi.user.api.UserResponse;
 import app.codeodyssey.codeodysseyapi.user.data.User;
 import app.codeodyssey.codeodysseyapi.user.data.UserRepository;
@@ -15,9 +17,10 @@ import java.util.UUID;
 @AllArgsConstructor
 public class GetCourseStudentsService {
     private final UserRepository userRepository;
+    private final CourseRepository courseRepository;
     private final UserMapper userMapper;
 
-    public List<UserResponse> execute(UUID professorId, UUID courseId) {
+    public List<UserResponse> execute(UUID professorId, String courseSlug) {
         User professor = userRepository
                 .findById(professorId)
                 .orElseThrow(() -> new ResourceNotFoundException(professorId, Resource.USER));
@@ -26,6 +29,12 @@ public class GetCourseStudentsService {
             throw new ForbiddenAccessException(professorId);
         }
 
-        return userMapper.to(userRepository.findUsersByCourseIdOrderByName(courseId));
+        Course course = courseRepository.findByProfessorIdAndCourseSlug(professorId, courseSlug);
+
+        if (!courseRepository.existsBySlugAndProfessor(courseSlug, professor)) {
+            throw new ViolationException(Resource.COURSE, ViolationType.COURSE_SLUG_NOT_FOUND, courseSlug);
+        }
+
+        return userMapper.to(userRepository.findUsersByCourseIdOrderByName(course.getId()));
     }
 }
