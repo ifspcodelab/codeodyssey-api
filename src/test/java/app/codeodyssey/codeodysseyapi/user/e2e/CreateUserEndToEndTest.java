@@ -1,7 +1,5 @@
 package app.codeodyssey.codeodysseyapi.user.e2e;
 
-import app.codeodyssey.codeodysseyapi.common.exception.ViolationException;
-import app.codeodyssey.codeodysseyapi.common.exception.ViolationType;
 import app.codeodyssey.codeodysseyapi.user.api.UserResponse;
 import app.codeodyssey.codeodysseyapi.user.data.User;
 import app.codeodyssey.codeodysseyapi.user.data.UserRepository;
@@ -13,7 +11,6 @@ import org.springframework.boot.test.context.SpringBootTest;
 import org.springframework.boot.test.mock.mockito.MockBean;
 import org.springframework.boot.test.web.server.LocalServerPort;
 import org.springframework.http.HttpEntity;
-import org.springframework.http.HttpMethod;
 import org.springframework.mail.SimpleMailMessage;
 import org.springframework.mail.javamail.JavaMailSender;
 import org.springframework.security.crypto.password.PasswordEncoder;
@@ -23,7 +20,6 @@ import org.testcontainers.junit.jupiter.Testcontainers;
 
 import java.util.Optional;
 
-import static org.assertj.core.api.Assertions.catchThrowable;
 import static org.mockito.ArgumentMatchers.any;
 import static org.mockito.Mockito.verify;
 

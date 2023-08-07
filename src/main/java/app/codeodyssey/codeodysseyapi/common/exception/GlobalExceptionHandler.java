@@ -71,7 +71,7 @@ public class GlobalExceptionHandler {
     public ResponseEntity<ProblemDetail> tokenException(TokenException ex) {
         log.warn("Token problem: {}", ex.getMessage());
 
-        HttpStatus status = HttpStatus.UNAUTHORIZED;
+        HttpStatus status = HttpStatus.NOT_FOUND;
         String title = "Token problem";
         String detail = ex.getMessage();
 

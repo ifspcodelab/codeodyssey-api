@@ -51,7 +51,7 @@ dependencies {
 	testImplementation 'org.springframework.boot:spring-boot-testcontainers'
 	testImplementation 'org.testcontainers:postgresql:1.18.3'
 	testImplementation group: 'org.springframework.security', name: 'spring-security-test', version: '6.1.2'
-	implementation group: 'org.apache.httpcomponents', name: 'httpclient', version: '4.5.14'
+	implementation group: 'org.apache.httpcomponents.client5', name: 'httpclient5', version: '5.2.1'
 }
 
 tasks.named('test') {

@@ -81,7 +81,7 @@ public class ValidateUserEndpointTest {
         userRepository.save(user);
 
         mockMvc.perform(MockMvcRequestBuilders.patch("/api/v1/users/confirmation/" + user.getToken()))
-                .andExpect(MockMvcResultMatchers.status().isUnauthorized())
+                .andExpect(MockMvcResultMatchers.status().isNotFound())
                 .andExpect(content().contentType(MediaType.APPLICATION_PROBLEM_JSON))
                 .andExpect(jsonPath("$.title").value("Token problem"))
                 .andExpect(jsonPath("$.detail").value(TokenProblem.EXPIRED.getMessage()));
@@ -106,7 +106,7 @@ public class ValidateUserEndpointTest {
     @DisplayName("try to patch a user with a non-existent token and throw an exception")
     void patch_givenNonexistentToken_exceptionThrown() throws Exception {
         mockMvc.perform(MockMvcRequestBuilders.patch("/api/v1/users/confirmation/" + UUID.randomUUID()))
-                .andExpect(MockMvcResultMatchers.status().isUnauthorized())
+                .andExpect(MockMvcResultMatchers.status().isNotFound())
                 .andExpect(content().contentType(MediaType.APPLICATION_PROBLEM_JSON))
                 .andExpect(jsonPath("$.title").value("Token problem"))
                 .andExpect(jsonPath("$.detail").value(TokenProblem.NONEXISTENT.getMessage()));
