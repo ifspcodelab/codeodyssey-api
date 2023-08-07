@@ -1,6 +1,7 @@
 package app.codeodyssey.codeodysseyapi.user.data;
 
 import app.codeodyssey.codeodysseyapi.token.data.RefreshToken;
+import com.fasterxml.jackson.annotation.JsonIgnore;
 import jakarta.persistence.*;
 import lombok.*;
 import org.springframework.security.core.GrantedAuthority;
@@ -34,6 +35,7 @@ public class User implements UserDetails {
     private boolean isValidated;
     private String token;
 
+    @JsonIgnore
     @OneToMany(mappedBy = "user")
     private List<RefreshToken> refreshTokens;
 
