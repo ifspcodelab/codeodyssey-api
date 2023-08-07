@@ -81,20 +81,20 @@ public class GetCourseStudentsServiceTest {
 
     @Test
     @DisplayName("returns a user list when given a valid professor id and course slug")
-    void getCourseStudentsService_givenProfessorIdAndSlug_returnsList() {
+    void getCourseStudentsService_givenValidProfessorIdAndSlug_returnsList() {
         List<User> userList = userRepository.findUsersByCourseIdOrderByName(course.getId());
         assertThat(userList).isNotEmpty();
     }
 
     @Test
-    @DisplayName("returns exception when given a an invalid user id")
+    @DisplayName("returns an exception when given a an invalid user id")
     void getCourseStudentsService_givenInvalidUserId_returns404NotFound() {
         Assertions.assertThatExceptionOfType(ResourceNotFoundException.class)
                 .isThrownBy(() -> getCourseStudentsService.execute(UUID.randomUUID(), course.getSlug()));
     }
 
     @Test
-    @DisplayName("returns exception when given a an invalid professor role")
+    @DisplayName("returns an exception when given a an invalid professor role")
     void getCourseStudentsService_givenInvalidProfessorRole_returns403Forbidden() {
         var user = UserFactory.createValidUser();
         userRepository.save(user);
@@ -104,7 +104,7 @@ public class GetCourseStudentsServiceTest {
     }
 
     @Test
-    @DisplayName("returns exception when given a an invalid professor id and course slug")
+    @DisplayName("returns an exception when given a an invalid professor id and course slug")
     void getCourseStudentsService_givenInvalidSlugAndProfessorId_returns401Conflict() {
         var professorB = UserFactory.sampleUserProfessorB();
         userRepository.save(professorB);
