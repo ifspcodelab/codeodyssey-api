@@ -7,11 +7,11 @@ public final class UserFactory {
     private UserFactory() {}
 
     public static User createValidUser() {
-        return new User("name", "email@email.com", "$2a$10$Q8FZ0sHePMBw0fmUBG0xou/mfI3L.lzAKR3ErTIYihxRuj/wbigIm");
+        return new User("nameA", "emailA@email.com", "$2a$10$Q8FZ0sHePMBw0fmUBG0xou/mfI3L.lzAKR3ErTIYihxRuj/wbigIm");
     }
 
     public static User createValidProfessor() {
-        var user = new User("name", "email@email.com", "$2a$10$Q8FZ0sHePMBw0fmUBG0xou/mfI3L.lzAKR3ErTIYihxRuj/wbigIm");
+        var user = new User("nameB", "emailB@email.com", "$2a$10$Q8FZ0sHePMBw0fmUBG0xou/mfI3L.lzAKR3ErTIYihxRuj/wbigIm");
         user.setRole(UserRole.PROFESSOR);
 
         return user;
