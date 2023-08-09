@@ -4,10 +4,6 @@ import static org.assertj.core.api.Assertions.assertThat;
 import static org.junit.jupiter.api.Assertions.*;
 
 import app.codeodyssey.codeodysseyapi.DatabaseContainerInitializer;
-import java.util.List;
-import java.util.Optional;
-import java.util.UUID;
-
 import app.codeodyssey.codeodysseyapi.course.data.CourseRepository;
 import app.codeodyssey.codeodysseyapi.course.util.CourseFactory;
 import app.codeodyssey.codeodysseyapi.enrollment.data.EnrollmentRepository;
@@ -15,6 +11,9 @@ import app.codeodyssey.codeodysseyapi.enrollment.util.EnrollmentFactory;
 import app.codeodyssey.codeodysseyapi.invitation.data.InvitationRepository;
 import app.codeodyssey.codeodysseyapi.invitation.util.InvitationFactory;
 import app.codeodyssey.codeodysseyapi.user.util.UserFactory;
+import java.util.List;
+import java.util.Optional;
+import java.util.UUID;
 import org.junit.jupiter.api.AfterEach;
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.DisplayName;

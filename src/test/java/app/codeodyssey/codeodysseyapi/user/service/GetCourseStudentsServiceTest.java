@@ -1,5 +1,7 @@
 package app.codeodyssey.codeodysseyapi.user.service;
 
+import static org.assertj.core.api.Assertions.assertThat;
+
 import app.codeodyssey.codeodysseyapi.DatabaseContainerInitializer;
 import app.codeodyssey.codeodysseyapi.common.exception.ForbiddenAccessException;
 import app.codeodyssey.codeodysseyapi.common.exception.ResourceNotFoundException;
@@ -16,6 +18,8 @@ import app.codeodyssey.codeodysseyapi.invitation.util.InvitationFactory;
 import app.codeodyssey.codeodysseyapi.user.data.User;
 import app.codeodyssey.codeodysseyapi.user.data.UserRepository;
 import app.codeodyssey.codeodysseyapi.user.util.UserFactory;
+import java.util.List;
+import java.util.UUID;
 import org.assertj.core.api.Assertions;
 import org.junit.jupiter.api.AfterEach;
 import org.junit.jupiter.api.BeforeEach;
@@ -25,11 +29,6 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.boot.test.autoconfigure.jdbc.AutoConfigureTestDatabase;
 import org.springframework.boot.test.context.SpringBootTest;
 import org.springframework.test.context.ContextConfiguration;
-
-import java.util.List;
-import java.util.UUID;
-
-import static org.assertj.core.api.Assertions.assertThat;
 
 @SpringBootTest
 @DisplayName("Tests for Get Course Students Service")

@@ -1,5 +1,8 @@
 package app.codeodyssey.codeodysseyapi.user.e2e;
 
+import static org.assertj.core.api.Assertions.assertThat;
+import static org.assertj.core.api.Assertions.catchThrowable;
+
 import app.codeodyssey.codeodysseyapi.DatabaseContainerInitializer;
 import app.codeodyssey.codeodysseyapi.course.data.Course;
 import app.codeodyssey.codeodysseyapi.course.data.CourseRepository;
@@ -14,6 +17,8 @@ import app.codeodyssey.codeodysseyapi.token.util.AccessTokenFactory;
 import app.codeodyssey.codeodysseyapi.user.data.User;
 import app.codeodyssey.codeodysseyapi.user.data.UserRepository;
 import app.codeodyssey.codeodysseyapi.user.util.UserFactory;
+import java.util.List;
+import java.util.UUID;
 import org.junit.jupiter.api.AfterEach;
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.DisplayName;
@@ -31,12 +36,6 @@ import org.springframework.web.client.HttpClientErrorException;
 import org.springframework.web.client.RestTemplate;
 import org.testcontainers.junit.jupiter.Testcontainers;
 
-import java.util.List;
-import java.util.UUID;
-
-import static org.assertj.core.api.Assertions.assertThat;
-import static org.assertj.core.api.Assertions.catchThrowable;
-
 @SpringBootTest(webEnvironment = SpringBootTest.WebEnvironment.RANDOM_PORT)
 @DisplayName("Tests for Get Course Students Endpoint")
 @AutoConfigureTestDatabase(replace = AutoConfigureTestDatabase.Replace.NONE)
@@ -45,6 +44,7 @@ import static org.assertj.core.api.Assertions.catchThrowable;
 public class GetCourseStudentsEndToEndTest {
     @LocalServerPort
     Integer port;
+
     String url;
     RestTemplate restTemplate;
     HttpHeaders httpHeaders;
@@ -92,7 +92,8 @@ public class GetCourseStudentsEndToEndTest {
     @Test
     @DisplayName("returns a user list when given a valid professor id and course slug")
     void getCourseStudentsEndpoint_givenValidProfessorIdAndSlug_returnsList() {
-        url = "http://localhost:%d/api/v1/users/%s/courses/%s/students".formatted(port, professor.getId(), course.getSlug());
+        url = "http://localhost:%d/api/v1/users/%s/courses/%s/students"
+                .formatted(port, professor.getId(), course.getSlug());
         restTemplate = new RestTemplate();
         httpHeaders = new HttpHeaders();
 
@@ -109,7 +110,8 @@ public class GetCourseStudentsEndToEndTest {
     @Test
     @DisplayName("returns not found when given an invalid user id")
     void getCourseStudentsEndpoint_givenInvalidUserId_returns404NotFound() {
-        url = "http://localhost:%d/api/v1/users/%s/courses/%s/students".formatted(port, UUID.randomUUID(), course.getSlug());
+        url = "http://localhost:%d/api/v1/users/%s/courses/%s/students"
+                .formatted(port, UUID.randomUUID(), course.getSlug());
         restTemplate = new RestTemplate();
         httpHeaders = new HttpHeaders();
 
@@ -151,7 +153,8 @@ public class GetCourseStudentsEndToEndTest {
         var professorB = UserFactory.sampleUserProfessorB();
         userRepository.save(professorB);
 
-        url = "http://localhost:%d/api/v1/users/%s/courses/%s/students".formatted(port, professorB.getId(), course.getSlug());
+        url = "http://localhost:%d/api/v1/users/%s/courses/%s/students"
+                .formatted(port, professorB.getId(), course.getSlug());
         restTemplate = new RestTemplate();
         httpHeaders = new HttpHeaders();
 

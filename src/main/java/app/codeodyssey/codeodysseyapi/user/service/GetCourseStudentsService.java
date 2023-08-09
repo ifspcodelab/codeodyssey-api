@@ -7,11 +7,10 @@ import app.codeodyssey.codeodysseyapi.user.api.UserResponse;
 import app.codeodyssey.codeodysseyapi.user.data.User;
 import app.codeodyssey.codeodysseyapi.user.data.UserRepository;
 import app.codeodyssey.codeodysseyapi.user.data.UserRole;
-import lombok.AllArgsConstructor;
-import org.springframework.stereotype.Service;
-
 import java.util.List;
 import java.util.UUID;
+import lombok.AllArgsConstructor;
+import org.springframework.stereotype.Service;
 
 @Service
 @AllArgsConstructor
