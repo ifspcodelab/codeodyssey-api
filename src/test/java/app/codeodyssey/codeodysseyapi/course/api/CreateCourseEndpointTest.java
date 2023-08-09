@@ -3,6 +3,9 @@ package app.codeodyssey.codeodysseyapi.course.api;
 import app.codeodyssey.codeodysseyapi.course.data.Course;
 import app.codeodyssey.codeodysseyapi.course.data.CourseRepository;
 import app.codeodyssey.codeodysseyapi.course.service.CreateCourseCommand;
+import app.codeodyssey.codeodysseyapi.enrollment.data.EnrollmentRepository;
+import app.codeodyssey.codeodysseyapi.invitation.data.InvitationRepository;
+import app.codeodyssey.codeodysseyapi.token.data.RefreshTokenRepository;
 import app.codeodyssey.codeodysseyapi.token.util.AccessTokenFactory;
 import app.codeodyssey.codeodysseyapi.user.data.User;
 import app.codeodyssey.codeodysseyapi.user.data.UserRepository;
@@ -30,7 +33,16 @@ public class CreateCourseEndpointTest {
     private ObjectMapper objectMapper;
 
     @Autowired
+    private EnrollmentRepository enrollmentRepository;
+
+    @Autowired
+    private InvitationRepository invitationRepository;
+
+    @Autowired
     private CourseRepository courseRepository;
+
+    @Autowired
+    private RefreshTokenRepository refreshTokenRepository;
 
     @Autowired
     private UserRepository userRepository;
@@ -39,7 +51,10 @@ public class CreateCourseEndpointTest {
 
     @BeforeEach
     public void setUp() {
+        enrollmentRepository.deleteAll();
+        invitationRepository.deleteAll();
         courseRepository.deleteAll();
+        refreshTokenRepository.deleteAll();
         userRepository.deleteAll();
 
         courseCommand = new CreateCourseCommand("CourseName", "Slug", LocalDate.now(), LocalDate.now());
@@ -47,7 +62,10 @@ public class CreateCourseEndpointTest {
 
     @AfterEach
     public void tearDown() {
+        enrollmentRepository.deleteAll();
+        invitationRepository.deleteAll();
         courseRepository.deleteAll();
+        refreshTokenRepository.deleteAll();
         userRepository.deleteAll();
     }
 
