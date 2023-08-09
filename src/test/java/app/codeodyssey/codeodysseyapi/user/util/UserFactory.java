@@ -11,7 +11,8 @@ public final class UserFactory {
     }
 
     public static User createValidProfessor() {
-        var user = new User("nameB", "emailB@email.com", "$2a$10$Q8FZ0sHePMBw0fmUBG0xou/mfI3L.lzAKR3ErTIYihxRuj/wbigIm");
+        var user =
+                new User("nameB", "emailB@email.com", "$2a$10$Q8FZ0sHePMBw0fmUBG0xou/mfI3L.lzAKR3ErTIYihxRuj/wbigIm");
         user.setRole(UserRole.PROFESSOR);
 
         return user;
