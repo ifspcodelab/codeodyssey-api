@@ -190,6 +190,7 @@ public class UserRepositoryIntegrationTest {
 
         List<User> userList = userRepository.findUsersByCourseIdOrderByName(course.getId());
         assertThat(userList).isNotEmpty();
+        assertThat(userList).hasSize(1);
     }
 
     @Test
@@ -214,5 +215,6 @@ public class UserRepositoryIntegrationTest {
 
         List<User> userList = userRepository.findUsersByCourseIdOrderByName(course.getId());
         assertThat(userList).isNotEmpty();
+        assertThat(userList).hasSize(2);
     }
 }
