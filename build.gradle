@@ -52,6 +52,8 @@ dependencies {
 	testImplementation 'org.testcontainers:postgresql:1.18.3'
 	testImplementation group: 'org.springframework.security', name: 'spring-security-test', version: '6.1.2'
 	implementation group: 'org.apache.httpcomponents.client5', name: 'httpclient5', version: '5.2.1'
+	testImplementation 'com.icegreen:greenmail-junit5:1.6.11'
+	testImplementation 'org.awaitility:awaitility:4.2.0'
 }
 
 tasks.named('test') {

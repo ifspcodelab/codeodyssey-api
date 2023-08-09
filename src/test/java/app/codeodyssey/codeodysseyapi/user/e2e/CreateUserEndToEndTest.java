@@ -213,4 +213,82 @@ public class CreateUserEndToEndTest {
                 "should throw MethodArgumentNotValidException"
         );
     }
+
+    @Test
+    @DisplayName("throws exception due to null name")
+    void post_givenNullName_exceptionThrown() {
+        HttpEntity<CreateUserCommand> request = new HttpEntity<>(new CreateUserCommand(null, "sergio@example.com",
+                "Password#123"));
+
+        Assertions.assertThrows(
+                HttpClientErrorException.BadRequest.class,
+                () -> restTemplate.postForObject(url, request, UserResponse.class),
+                "should throw MethodArgumentNotValidException"
+        );
+    }
+
+    @Test
+    @DisplayName("throws exception due to empty name")
+    void post_givenEmptyName_exceptionThrown() {
+        HttpEntity<CreateUserCommand> request = new HttpEntity<>(new CreateUserCommand("", "sergio@example.com",
+                "Password#123"));
+
+        Assertions.assertThrows(
+                HttpClientErrorException.BadRequest.class,
+                () -> restTemplate.postForObject(url, request, UserResponse.class),
+                "should throw MethodArgumentNotValidException"
+        );
+    }
+
+    @Test
+    @DisplayName("throws exception due to blank name")
+    void post_givenBlankName_exceptionThrown() {
+        HttpEntity<CreateUserCommand> request = new HttpEntity<>(new CreateUserCommand(" ", "sergio@example.com",
+                "Password#123"));
+
+        Assertions.assertThrows(
+                HttpClientErrorException.BadRequest.class,
+                () -> restTemplate.postForObject(url, request, UserResponse.class),
+                "should throw MethodArgumentNotValidException"
+        );
+    }
+
+    @Test
+    @DisplayName("throws exception due to null email")
+    void post_givenNullEmail_exceptionThrown() {
+        HttpEntity<CreateUserCommand> request = new HttpEntity<>(new CreateUserCommand("Sergio Gabriel de Lima Aquino", null,
+                "Password#123"));
+
+        Assertions.assertThrows(
+                HttpClientErrorException.BadRequest.class,
+                () -> restTemplate.postForObject(url, request, UserResponse.class),
+                "should throw MethodArgumentNotValidException"
+        );
+    }
+
+    @Test
+    @DisplayName("throws exception due to empty email")
+    void post_givenEmptyEmail_exceptionThrown() {
+        HttpEntity<CreateUserCommand> request = new HttpEntity<>(new CreateUserCommand("Sergio Gabriel de Lima Aquino", "",
+                "Password#123"));
+
+        Assertions.assertThrows(
+                HttpClientErrorException.BadRequest.class,
+                () -> restTemplate.postForObject(url, request, UserResponse.class),
+                "should throw MethodArgumentNotValidException"
+        );
+    }
+
+    @Test
+    @DisplayName("throws exception due to blank email")
+    void post_givenBlankEmail_exceptionThrown() {
+        HttpEntity<CreateUserCommand> request = new HttpEntity<>(new CreateUserCommand("Sergio Gabriel de Lima Aquino", " ",
+                "Password#123"));
+
+        Assertions.assertThrows(
+                HttpClientErrorException.BadRequest.class,
+                () -> restTemplate.postForObject(url, request, UserResponse.class),
+                "should throw MethodArgumentNotValidException"
+        );
+    }
 }
