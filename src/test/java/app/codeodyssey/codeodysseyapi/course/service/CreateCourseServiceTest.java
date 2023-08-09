@@ -88,4 +88,13 @@ public class CreateCourseServiceTest {
         assertThatExceptionOfType(ViolationException.class)
                 .isThrownBy(() -> createCourseService.execute(professor.getId(), courseCommand));
     }
+
+    @Test
+    @DisplayName("returns conflict when the start date is before the current date")
+    void execute_givenStartDateBeforeCurrentDate_return409Conflict() {
+        courseCommand = new CreateCourseCommand("CourseName", "Slug", LocalDate.of(1000, 01, 01), LocalDate.now());
+
+        assertThatExceptionOfType(ViolationException.class)
+                .isThrownBy(() -> createCourseService.execute(professor.getId(), courseCommand));
+    }
 }
