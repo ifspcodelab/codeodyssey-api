@@ -25,7 +25,7 @@ import static org.assertj.core.api.Assertions.assertThatExceptionOfType;
 import static org.junit.jupiter.api.Assertions.assertDoesNotThrow;
 
 @SpringBootTest
-@DisplayName("Tests for Course Service")
+@DisplayName("Tests for Create Course Service")
 @AutoConfigureTestDatabase(replace = AutoConfigureTestDatabase.Replace.NONE)
 @ContextConfiguration(initializers = {DatabaseContainerInitializer.class})
 public class CreateCourseServiceTest {
@@ -56,8 +56,8 @@ public class CreateCourseServiceTest {
     }
 
     @Test
-    @DisplayName("returns CourseResponse when given a professorId and CourseCommand")
-    void execute_givenProfessorIdAndCourseCommand_returnCourseResponse() {
+    @DisplayName("returns CourseResponse when given a valid professorId and CourseCommand")
+    void execute_givenValidProfessorIdAndCourseCommand_returnCourseResponse() {
         var course = assertDoesNotThrow(() -> createCourseService.execute(professor.getId(), courseCommand));
 
         assertThat(course).isNotNull();
@@ -65,14 +65,14 @@ public class CreateCourseServiceTest {
     }
 
     @Test
-    @DisplayName("returns conflict when given an invalid user id")
+    @DisplayName("returns not found when given an invalid user id")
     void execute_givenInvalidUserId_return404NotFound() {
         assertThatExceptionOfType(ResourceNotFoundException.class)
                 .isThrownBy(() -> createCourseService.execute(UUID.randomUUID(), courseCommand));
     }
 
     @Test
-    @DisplayName("returns an exception when given an invalid professor role")
+    @DisplayName("returns forbidden when given a role that is not professor")
     void execute_givenInvalidProfessorRole_returns403Forbidden() {
         var user = UserFactory.createValidUser();
         userRepository.save(user);
@@ -82,8 +82,8 @@ public class CreateCourseServiceTest {
     }
 
     @Test
-    @DisplayName("returns ViolationException when given a existing professorId and CourseCommand")
-    void execute_givenExistingProfessorIdAndCourseCommand_returnException() {
+    @DisplayName("returns conflict when given an existing CourseCommand")
+    void execute_givenExistingCourseCommand_return409Conflict() {
         var existingCourse = new Course("CourseName", "Slug", LocalDate.now(), LocalDate.now(), professor);
         courseRepository.save(existingCourse);
 
@@ -92,7 +92,7 @@ public class CreateCourseServiceTest {
     }
 
     @Test
-    @DisplayName("returns conflict when the start date is before the current date")
+    @DisplayName("returns conflict when the course start date is before the current date")
     void execute_givenStartDateBeforeCurrentDate_return409Conflict() {
         courseCommand = new CreateCourseCommand("CourseName", "Slug", LocalDate.of(1000, 01, 01), LocalDate.now());
 
@@ -101,7 +101,7 @@ public class CreateCourseServiceTest {
     }
 
     @Test
-    @DisplayName("returns conflict when the end date is before the start date")
+    @DisplayName("returns conflict when the course end date is before the start date")
     void execute_givenEndDateBeforeStartDate_return409Conflict() {
         courseCommand = new CreateCourseCommand("CourseName", "Slug", LocalDate.now(), LocalDate.of(1000, 01, 01));
 
