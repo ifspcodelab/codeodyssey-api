@@ -84,7 +84,7 @@ public class CreateCourseEndToEndTest {
     }
 
     @Test
-    @DisplayName("returns conflict when given an invalid user id")
+    @DisplayName("returns not found when given an invalid user id")
     void createCourse_givenInvalidUserId_return404NotFound() {
         url = "http://localhost:%d/api/v1/users/%s/courses".formatted(port, UUID.randomUUID());
         restTemplate = new RestTemplate();
@@ -102,7 +102,7 @@ public class CreateCourseEndToEndTest {
     }
 
     @Test
-    @DisplayName("returns an exception when given an invalid professor role")
+    @DisplayName("returns forbidden when given a role that is not professor")
     void createCourse_givenInvalidProfessorRole_returns403Forbidden() {
         var user = UserFactory.createValidUser();
         userRepository.save(user);
@@ -123,7 +123,7 @@ public class CreateCourseEndToEndTest {
     }
 
     @Test
-    @DisplayName("returns conflict when given a existing course")
+    @DisplayName("returns conflict when given an existing course")
     void createCourse_givenExistingCourse_return409Conflict() {
         courseRepository.save(course);
 
@@ -140,7 +140,7 @@ public class CreateCourseEndToEndTest {
     }
 
     @Test
-    @DisplayName("returns conflict when the start date is before the current date")
+    @DisplayName("returns conflict when the course start date is before the current date")
     void createCourse_givenStartDateBeforeCurrentDate_return409Conflict() {
         var course = new Course("CourseName", "Slug", LocalDate.of(1000, 01, 01), LocalDate.now(), professor);
 
@@ -156,7 +156,7 @@ public class CreateCourseEndToEndTest {
     }
 
     @Test
-    @DisplayName("returns conflict when the end date is before the start date")
+    @DisplayName("returns conflict when the course end date is before the start date")
     void createCourse_givenEndDateBeforeStartDate_return409Conflict() {
         var course = new Course("CourseName", "Slug", LocalDate.now(), LocalDate.of(1000, 01, 01), professor);
 
