@@ -22,6 +22,7 @@ import org.springframework.boot.test.context.SpringBootTest;
 import org.springframework.test.context.ContextConfiguration;
 import static org.assertj.core.api.Assertions.assertThat;
 import static org.assertj.core.api.Assertions.assertThatExceptionOfType;
+import static org.junit.jupiter.api.Assertions.assertDoesNotThrow;
 
 @SpringBootTest
 @DisplayName("Tests for Course Service")
@@ -57,9 +58,10 @@ public class CreateCourseServiceTest {
     @Test
     @DisplayName("returns CourseResponse when given a professorId and CourseCommand")
     void execute_givenProfessorIdAndCourseCommand_returnCourseResponse() {
-        CourseResponse course = createCourseService.execute(professor.getId(), courseCommand);
+        var course = assertDoesNotThrow(() -> createCourseService.execute(professor.getId(), courseCommand));
 
         assertThat(course).isNotNull();
+        assertThat(course).isInstanceOf(CourseResponse.class);
     }
 
     @Test
@@ -82,7 +84,7 @@ public class CreateCourseServiceTest {
     @Test
     @DisplayName("returns ViolationException when given a existing professorId and CourseCommand")
     void execute_givenExistingProfessorIdAndCourseCommand_returnException() {
-        Course existingCourse = new Course("CourseName", "Slug", LocalDate.now(), LocalDate.now(), professor);
+        var existingCourse = new Course("CourseName", "Slug", LocalDate.now(), LocalDate.now(), professor);
         courseRepository.save(existingCourse);
 
         assertThatExceptionOfType(ViolationException.class)
