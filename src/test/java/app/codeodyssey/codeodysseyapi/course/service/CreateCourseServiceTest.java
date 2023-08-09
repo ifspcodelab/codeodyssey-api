@@ -97,4 +97,13 @@ public class CreateCourseServiceTest {
         assertThatExceptionOfType(ViolationException.class)
                 .isThrownBy(() -> createCourseService.execute(professor.getId(), courseCommand));
     }
+
+    @Test
+    @DisplayName("returns conflict when the end date is before the start date")
+    void execute_givenEndDateBeforeStartDate_return409Conflict() {
+        courseCommand = new CreateCourseCommand("CourseName", "Slug", LocalDate.now(), LocalDate.of(1000, 01, 01));
+
+        assertThatExceptionOfType(ViolationException.class)
+                .isThrownBy(() -> createCourseService.execute(professor.getId(), courseCommand));
+    }
 }
