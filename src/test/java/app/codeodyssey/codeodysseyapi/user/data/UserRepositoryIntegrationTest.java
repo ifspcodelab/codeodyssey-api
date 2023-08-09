@@ -163,7 +163,7 @@ public class UserRepositoryIntegrationTest {
     }
 
     @Test
-    @DisplayName("returns an empty list when a course doesn't have any students")
+    @DisplayName("returns an empty list when the course doesn't have any students")
     void findUsersByCourseIdOrderByName_givenCourseWithNoStudents_returnEmpty() {
         var professor = UserFactory.createValidProfessor();
         var course = CourseFactory.createValidCourseWithProfessor(professor);
@@ -175,7 +175,7 @@ public class UserRepositoryIntegrationTest {
     }
 
     @Test
-    @DisplayName("returns a list when a course have one student")
+    @DisplayName("returns a list when the course have one student")
     void findUsersByCourseIdOrderByName_givenCourseWithOneStudent_returnList() {
         var professor = UserFactory.createValidProfessor();
         var course = CourseFactory.createValidCourseWithProfessor(professor);
@@ -194,7 +194,7 @@ public class UserRepositoryIntegrationTest {
     }
 
     @Test
-    @DisplayName("returns a list when a course have many students")
+    @DisplayName("returns a list when the course have many students")
     void findUsersByCourseIdOrderByName_givenCourseWithManyStudents_returnList() {
         var professor = UserFactory.createValidProfessor();
         var course = CourseFactory.createValidCourseWithProfessor(professor);
