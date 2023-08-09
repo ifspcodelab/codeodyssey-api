@@ -1,6 +1,7 @@
 package app.codeodyssey.codeodysseyapi.course.service;
 
 import app.codeodyssey.codeodysseyapi.DatabaseContainerInitializer;
+import app.codeodyssey.codeodysseyapi.common.exception.ResourceNotFoundException;
 import app.codeodyssey.codeodysseyapi.common.exception.ViolationException;
 import app.codeodyssey.codeodysseyapi.course.api.CourseResponse;
 import app.codeodyssey.codeodysseyapi.course.data.Course;
@@ -9,7 +10,7 @@ import app.codeodyssey.codeodysseyapi.user.data.User;
 import app.codeodyssey.codeodysseyapi.user.data.UserRepository;
 import app.codeodyssey.codeodysseyapi.user.util.UserFactory;
 import java.time.LocalDate;
-import org.assertj.core.api.Assertions;
+import java.util.UUID;
 import org.junit.jupiter.api.AfterEach;
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.DisplayName;
@@ -18,6 +19,8 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.boot.test.autoconfigure.jdbc.AutoConfigureTestDatabase;
 import org.springframework.boot.test.context.SpringBootTest;
 import org.springframework.test.context.ContextConfiguration;
+import static org.assertj.core.api.Assertions.assertThat;
+import static org.assertj.core.api.Assertions.assertThatExceptionOfType;
 
 @SpringBootTest
 @DisplayName("Tests for Course Service")
@@ -34,7 +37,7 @@ public class CreateCourseServiceTest {
     private CourseRepository courseRepository;
 
     User professor;
-    private CreateCourseCommand courseCommand;
+    CreateCourseCommand courseCommand;
 
     @BeforeEach
     public void setup() {
@@ -55,7 +58,14 @@ public class CreateCourseServiceTest {
     void execute_givenProfessorIdAndCourseCommand_returnCourseResponse() {
         CourseResponse course = createCourseService.execute(professor.getId(), courseCommand);
 
-        Assertions.assertThat(course).isNotNull();
+        assertThat(course).isNotNull();
+    }
+
+    @Test
+    @DisplayName("returns conflict when given an invalid user id")
+    void execute_givenInvalidUserId_return404NotFound() {
+        assertThatExceptionOfType(ResourceNotFoundException.class)
+                .isThrownBy(() -> createCourseService.execute(UUID.randomUUID(), courseCommand));
     }
 
     @Test
@@ -64,7 +74,7 @@ public class CreateCourseServiceTest {
         Course existingCourse = new Course("CourseName", "Slug", LocalDate.now(), LocalDate.now(), professor);
         courseRepository.save(existingCourse);
 
-        Assertions.assertThatExceptionOfType(ViolationException.class)
+        assertThatExceptionOfType(ViolationException.class)
                 .isThrownBy(() -> createCourseService.execute(professor.getId(), courseCommand));
     }
 }
