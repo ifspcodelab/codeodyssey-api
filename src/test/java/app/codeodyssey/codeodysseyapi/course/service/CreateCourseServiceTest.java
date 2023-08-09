@@ -33,12 +33,13 @@ public class CreateCourseServiceTest {
     @Autowired
     private CourseRepository courseRepository;
 
+    User professor;
     private CreateCourseCommand courseCommand;
 
     @BeforeEach
     public void setup() {
-        courseRepository.deleteAll();
-        userRepository.deleteAll();
+        professor = UserFactory.createValidProfessor();
+        userRepository.save(professor);
 
         courseCommand = new CreateCourseCommand("CourseName", "Slug", LocalDate.now(), LocalDate.now());
     }
@@ -52,9 +53,6 @@ public class CreateCourseServiceTest {
     @Test
     @DisplayName("returns CourseResponse when given a professorId and CourseCommand")
     void execute_givenProfessorIdAndCourseCommand_returnCourseResponse() {
-        User professor = UserFactory.createValidProfessor();
-        userRepository.save(professor);
-
         CourseResponse course = createCourseService.execute(professor.getId(), courseCommand);
 
         Assertions.assertThat(course).isNotNull();
@@ -63,9 +61,6 @@ public class CreateCourseServiceTest {
     @Test
     @DisplayName("returns ViolationException when given a existing professorId and CourseCommand")
     void execute_givenExistingProfessorIdAndCourseCommand_returnException() {
-        User professor = UserFactory.createValidProfessor();
-        userRepository.save(professor);
-
         Course existingCourse = new Course("CourseName", "Slug", LocalDate.now(), LocalDate.now(), professor);
         courseRepository.save(existingCourse);
 
