@@ -38,7 +38,7 @@ import static org.assertj.core.api.Assertions.assertThat;
 import static org.assertj.core.api.Assertions.catchThrowable;
 
 @SpringBootTest(webEnvironment = SpringBootTest.WebEnvironment.RANDOM_PORT)
-@DisplayName("Tests for Course Students Endpoint")
+@DisplayName("Tests for Get Course Students Endpoint")
 @AutoConfigureTestDatabase(replace = AutoConfigureTestDatabase.Replace.NONE)
 @ContextConfiguration(initializers = {DatabaseContainerInitializer.class})
 @Testcontainers
@@ -107,7 +107,7 @@ public class GetCourseStudentsEndToEndTest {
     }
 
     @Test
-    @DisplayName("returns an exception when given a an invalid user id")
+    @DisplayName("returns not found when given an invalid user id")
     void getCourseStudentsEndpoint_givenInvalidUserId_returns404NotFound() {
         url = "http://localhost:%d/api/v1/users/%s/courses/%s/students".formatted(port, UUID.randomUUID(), course.getSlug());
         restTemplate = new RestTemplate();
@@ -125,7 +125,7 @@ public class GetCourseStudentsEndToEndTest {
     }
 
     @Test
-    @DisplayName("returns an exception when given a an invalid professor role")
+    @DisplayName("returns forbidden when given a role that is not professor")
     void getCourseStudentsEndpoint_givenInvalidProfessorRole_returns403Forbidden() {
         var user = UserFactory.createValidUser();
         userRepository.save(user);
@@ -146,8 +146,8 @@ public class GetCourseStudentsEndToEndTest {
     }
 
     @Test
-    @DisplayName("returns an exception when given a an invalid professor id and course slug")
-    void getCourseStudentsEndpoint_givenInvalidProfessorRole_returns401Conflict() {
+    @DisplayName("returns conflict when given an invalid professor id and course slug")
+    void getCourseStudentsEndpoint_givenInvalidSlugAndProfessorId_returns401Conflict() {
         var professorB = UserFactory.sampleUserProfessorB();
         userRepository.save(professorB);
 
