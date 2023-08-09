@@ -1,6 +1,7 @@
 package app.codeodyssey.codeodysseyapi.course.service;
 
 import app.codeodyssey.codeodysseyapi.DatabaseContainerInitializer;
+import app.codeodyssey.codeodysseyapi.common.exception.ForbiddenAccessException;
 import app.codeodyssey.codeodysseyapi.common.exception.ResourceNotFoundException;
 import app.codeodyssey.codeodysseyapi.common.exception.ViolationException;
 import app.codeodyssey.codeodysseyapi.course.api.CourseResponse;
@@ -66,6 +67,16 @@ public class CreateCourseServiceTest {
     void execute_givenInvalidUserId_return404NotFound() {
         assertThatExceptionOfType(ResourceNotFoundException.class)
                 .isThrownBy(() -> createCourseService.execute(UUID.randomUUID(), courseCommand));
+    }
+
+    @Test
+    @DisplayName("returns an exception when given an invalid professor role")
+    void execute_givenInvalidProfessorRole_returns403Forbidden() {
+        var user = UserFactory.createValidUser();
+        userRepository.save(user);
+
+        assertThatExceptionOfType(ForbiddenAccessException.class)
+                .isThrownBy(() -> createCourseService.execute(user.getId(), courseCommand));
     }
 
     @Test
