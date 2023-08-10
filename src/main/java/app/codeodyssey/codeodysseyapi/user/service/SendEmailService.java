@@ -1,7 +1,5 @@
 package app.codeodyssey.codeodysseyapi.user.service;
 
-import app.codeodyssey.codeodysseyapi.user.data.User;
-import app.codeodyssey.codeodysseyapi.user.data.UserRepository;
 import lombok.RequiredArgsConstructor;
 import org.springframework.beans.factory.annotation.Value;
 import org.springframework.mail.SimpleMailMessage;
