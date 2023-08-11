@@ -1,5 +1,6 @@
 package app.codeodyssey.codeodysseyapi.user.e2e;
 
+import app.codeodyssey.codeodysseyapi.DatabaseContainerInitializer;
 import app.codeodyssey.codeodysseyapi.user.api.UserResponse;
 import app.codeodyssey.codeodysseyapi.user.data.User;
 import app.codeodyssey.codeodysseyapi.user.data.UserRepository;
@@ -14,9 +15,16 @@ import org.springframework.http.HttpEntity;
 import org.springframework.mail.SimpleMailMessage;
 import org.springframework.mail.javamail.JavaMailSender;
 import org.springframework.security.crypto.password.PasswordEncoder;
+import org.springframework.test.context.ContextConfiguration;
+import org.springframework.test.context.DynamicPropertyRegistry;
+import org.springframework.test.context.DynamicPropertySource;
 import org.springframework.web.client.HttpClientErrorException;
 import org.springframework.web.client.RestTemplate;
+import org.testcontainers.containers.GenericContainer;
+import org.testcontainers.containers.wait.strategy.Wait;
+import org.testcontainers.junit.jupiter.Container;
 import org.testcontainers.junit.jupiter.Testcontainers;
+import org.testcontainers.utility.DockerImageName;
 
 import java.util.Optional;
 
@@ -25,7 +33,9 @@ import static org.mockito.Mockito.verify;
 
 @SpringBootTest(webEnvironment = SpringBootTest.WebEnvironment.RANDOM_PORT)
 @DisplayName("test for the CreateUserEndpoint")
+@DisplayNameGeneration(DisplayNameGenerator.ReplaceUnderscores.class)
 @AutoConfigureTestDatabase(replace = AutoConfigureTestDatabase.Replace.NONE)
+@ContextConfiguration(initializers = {DatabaseContainerInitializer.class})
 @Testcontainers
 public class CreateUserEndToEndTest {
     private RestTemplate restTemplate;
@@ -54,6 +64,18 @@ public class CreateUserEndToEndTest {
     @AfterEach
     void tearDown() {
         userRepository.deleteAll();
+    }
+
+    @Container
+    static GenericContainer greenMailGenericContainer = new GenericContainer<>(DockerImageName.parse("greenmail/standalone:latest"))
+            .waitingFor(Wait.forLogMessage(".*Starting GreenMail standalone.*", 1))
+            .withEnv("GREENMAIL_OPTS", "-Dgreenmail.setup.test.smtp -Dgreenmail.hostname=0.0.0.0 -Dgreenmail.users=user:admin")
+            .withExposedPorts(3025);
+
+    @DynamicPropertySource
+    static void configureMailHost(DynamicPropertyRegistry registry) {
+        registry.add("spring.mail.host", greenMailGenericContainer::getHost);
+        registry.add("spring.mail.port", greenMailGenericContainer::getFirstMappedPort);
     }
 
 
