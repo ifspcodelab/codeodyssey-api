@@ -21,7 +21,7 @@ import org.testcontainers.junit.jupiter.Testcontainers;
 @AutoConfigureTestDatabase(replace = AutoConfigureTestDatabase.Replace.NONE)
 @ContextConfiguration(initializers = {DatabaseContainerInitializer.class})
 @Testcontainers
-public class UserRepositoryIntegrationTest {
+public class UserRepositoryTest {
     @Autowired
     private UserRepository userRepository;
 
