@@ -122,17 +122,22 @@ public class UserCleanupServiceTest {
         User receivedUser2 = foundUserOptional2.get();
         User receivedUser3 = foundUserOptional3.get();
 
-
         assertEquals(receivedUser1.getEmail(), user1.getEmail());
         assertEquals(receivedUser1.getId(), user1.getId());
         assertEquals(receivedUser1.getToken(), user1.getToken());
+        assertEquals(receivedUser1.getName(), user1.getName());
+        assertEquals(receivedUser1.getPassword().trim(), user1.getPassword().trim());
 
         assertEquals(receivedUser2.getEmail(), user2.getEmail());
         assertEquals(receivedUser2.getId(), user2.getId());
         assertEquals(receivedUser2.getToken(), user2.getToken());
+        assertEquals(receivedUser2.getName(), user2.getName());
+        assertEquals(receivedUser2.getPassword().trim(), user2.getPassword().trim());
 
         assertEquals(receivedUser3.getEmail(), user3.getEmail());
         assertEquals(receivedUser3.getId(), user3.getId());
         assertEquals(receivedUser3.getToken(), user3.getToken());
+        assertEquals(receivedUser3.getName(), user3.getName());
+        assertEquals(receivedUser3.getPassword().trim(), user3.getPassword().trim());
     }
 }
