@@ -16,6 +16,7 @@ public class SendEmailService {
 
     public void sendEmail(String email, String token) {
         SimpleMailMessage message = new SimpleMailMessage();
+        message.setFrom("nao.responda425@gmail.com");
         message.setTo(email);
         message.setSubject("Email confirmation");
 
