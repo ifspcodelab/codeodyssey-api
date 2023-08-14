@@ -35,7 +35,6 @@ public class User implements UserDetails {
     private boolean isValidated;
     private String token;
 
-    @JsonIgnore
     @OneToMany(mappedBy = "user")
     private List<RefreshToken> refreshTokens;
 
