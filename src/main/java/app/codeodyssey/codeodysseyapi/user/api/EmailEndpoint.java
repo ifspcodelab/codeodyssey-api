@@ -15,7 +15,7 @@ import org.springframework.web.bind.annotation.RestController;
 public class EmailEndpoint {
     private final SendEmailService sendEmailService;
 
-    @PostMapping("/user")
+    @PostMapping()
     public void createEmailNotification(@Valid @RequestBody EmailRequest request) {
         sendEmailService.sendEmail(request.email(), request.token());
     }
