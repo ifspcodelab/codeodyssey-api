@@ -27,7 +27,8 @@ public class SecurityConfig {
         "/v3/api-docs/**",
         "/api/v1/refreshtoken",
         "api/v1/users",
-        "api/v1/users/confirmation/*"
+        "api/v1/users/confirmation/*",
+            "notify/user"
     };
 
     private static final String[] STUDENTS_ALLOWED = {};

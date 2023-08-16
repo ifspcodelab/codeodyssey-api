@@ -12,7 +12,9 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.boot.test.autoconfigure.jdbc.AutoConfigureTestDatabase;
 import org.springframework.boot.test.context.SpringBootTest;
 import org.springframework.boot.test.mock.mockito.MockBean;
+import org.springframework.boot.test.web.client.TestRestTemplate;
 import org.springframework.boot.test.web.server.LocalServerPort;
+import org.springframework.http.*;
 import org.springframework.mail.SimpleMailMessage;
 import org.springframework.mail.javamail.JavaMailSender;
 import org.springframework.test.context.ContextConfiguration;
@@ -25,9 +27,14 @@ import org.testcontainers.junit.jupiter.Container;
 import org.testcontainers.junit.jupiter.Testcontainers;
 import org.testcontainers.utility.DockerImageName;
 
+import javax.mail.internet.MimeMessage;
 import java.util.Optional;
+import java.util.UUID;
+import java.util.concurrent.TimeUnit;
+
 import static org.mockito.ArgumentMatchers.any;
 import static org.mockito.Mockito.verify;
+import static org.testcontainers.shaded.org.awaitility.Awaitility.await;
 
 @SpringBootTest(webEnvironment=SpringBootTest.WebEnvironment.RANDOM_PORT)
 @DisplayNameGeneration(DisplayNameGenerator.ReplaceUnderscores.class)
@@ -37,6 +44,8 @@ import static org.mockito.Mockito.verify;
 public class SendEmailServiceTest {
 
     private RestTemplate restTemplate;
+
+    private TestRestTemplate testRestTemplate;
 
     @Autowired
     private UserRepository userRepository;
@@ -65,13 +74,14 @@ public class SendEmailServiceTest {
     @RegisterExtension
     static GreenMailExtension greenMail = new GreenMailExtension(ServerSetupTest.SMTP)
             .withConfiguration(GreenMailConfiguration.aConfig().withUser("user", "admin"))
-            .withPerMethodLifecycle(true);
+            .withPerMethodLifecycle(false);
 
 
     @BeforeEach
     void setUp() {
         userRepository.deleteAll();
         restTemplate = new RestTemplate();
+        testRestTemplate = new TestRestTemplate();
     }
 
     @AfterEach
@@ -80,25 +90,16 @@ public class SendEmailServiceTest {
     }
 
 //    @Test
-//    void should_send_email_to_user_with_green_mail_extension() throws JSONException, MessagingException {
-//        JSONObject emailJsonObject = new JSONObject();
-//        emailJsonObject.put("name", "Sergio");
-//        emailJsonObject.put("email", "sergio@example.com");
-//        emailJsonObject.put("password", "Senha@01");
+//    void should_send_email_to_user_with_green_mail_extension() {
+//        HttpEntity<EmailRequest> emailRequest = new HttpEntity<>(new EmailRequest("tester@spring.com", UUID.randomUUID().toString()));
 //
-//        HttpHeaders headers = new HttpHeaders();
-//        headers.setContentType(MediaType.APPLICATION_JSON);
-//        HttpEntity<String> emailRequest = new HttpEntity<>(emailJsonObject.toString(), headers);
+//        ResponseEntity<Void> response = testRestTemplate.postForEntity("http://localhost:%d/notify/user".formatted(port), emailRequest, Void.class);
 //
-//        ResponseEntity<UserResponse> response = restTemplate.postForEntity("http://localhost:%d/api/v1/users".formatted(port), emailRequest, UserResponse.class);
+//        Assertions.assertEquals(HttpStatusCode.valueOf(200), response.getStatusCode());
 //
-//        assertEquals(HttpStatusCode.valueOf(201), response.getStatusCode());
+//        await().atMost(10, TimeUnit.SECONDS).until(() -> greenMail.getReceivedMessages().length == 1);
 //
-//        MimeMessage receivedMessage = greenMail.getReceivedMessages()[0];
-//
-//        Assertions.assertEquals(1, receivedMessage.getAllRecipients().length);
-//        Assertions.assertEquals("sergio@example", receivedMessage.getAllRecipients()[0].toString());
-//        Assertions.assertEquals("Email confirmation", receivedMessage.getSubject());
+//        MimeMessage message = greenMail.getReceivedMessages()[0];
 //    }
 
     @Test
