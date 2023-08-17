@@ -44,17 +44,17 @@ public class GetStudentCoursesEndpoint {
         @ApiResponse(
                 responseCode = "400",
                 content = {
-                        @Content(schema = @Schema(implementation = ProblemDetail.class), mediaType = "application/json")
+                    @Content(schema = @Schema(implementation = ProblemDetail.class), mediaType = "application/json")
                 }),
         @ApiResponse(
                 responseCode = "403",
                 content = {
-                        @Content(schema = @Schema(implementation = ProblemDetail.class), mediaType = "application/json")
+                    @Content(schema = @Schema(implementation = ProblemDetail.class), mediaType = "application/json")
                 }),
         @ApiResponse(
                 responseCode = "404",
                 content = {
-                        @Content(schema = @Schema(implementation = ProblemDetail.class), mediaType = "application/json")
+                    @Content(schema = @Schema(implementation = ProblemDetail.class), mediaType = "application/json")
                 })
     })
     @GetMapping("users/{id}/enrollments")

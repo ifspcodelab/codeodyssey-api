@@ -4,6 +4,7 @@ import lombok.RequiredArgsConstructor;
 import org.springframework.context.annotation.Bean;
 import org.springframework.context.annotation.Configuration;
 import org.springframework.security.authentication.AuthenticationProvider;
+import org.springframework.security.config.Customizer;
 import org.springframework.security.config.annotation.method.configuration.EnableMethodSecurity;
 import org.springframework.security.config.annotation.web.builders.HttpSecurity;
 import org.springframework.security.config.annotation.web.configuration.EnableWebSecurity;
@@ -27,7 +28,7 @@ public class SecurityConfig {
         "/v3/api-docs/**",
         "/api/v1/refreshtoken",
         "api/v1/users",
-        "api/v1/users/confirmation/*"
+        "api/v1/users/confirmation/*",
     };
 
     private static final String[] STUDENTS_ALLOWED = {};
@@ -55,7 +56,7 @@ public class SecurityConfig {
         }
 
         try {
-            return http.build();
+            return http.cors(Customizer.withDefaults()).build();
         } catch (Exception e) {
             throw new RuntimeException(e);
         }

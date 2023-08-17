@@ -37,17 +37,17 @@ public class CreateCourseEndpoint {
         @ApiResponse(
                 responseCode = "400",
                 content = {
-                        @Content(schema = @Schema(implementation = ProblemDetail.class), mediaType = "application/json")
+                    @Content(schema = @Schema(implementation = ProblemDetail.class), mediaType = "application/json")
                 }),
         @ApiResponse(
                 responseCode = "403",
                 content = {
-                        @Content(schema = @Schema(implementation = ProblemDetail.class), mediaType = "application/json")
+                    @Content(schema = @Schema(implementation = ProblemDetail.class), mediaType = "application/json")
                 }),
         @ApiResponse(
                 responseCode = "409",
                 content = {
-                        @Content(schema = @Schema(implementation = ProblemDetail.class), mediaType = "application/json")
+                    @Content(schema = @Schema(implementation = ProblemDetail.class), mediaType = "application/json")
                 })
     })
     @PostMapping

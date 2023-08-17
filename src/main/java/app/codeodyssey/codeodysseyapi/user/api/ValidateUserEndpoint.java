@@ -23,24 +23,23 @@ public class ValidateUserEndpoint {
 
     @Operation(
             summary = "Validate an user.",
-            description = "Validates and returns an user given a valid confirmation token."
-    )
+            description = "Validates and returns an user given a valid confirmation token.")
     @ApiResponses({
-            @ApiResponse(
-                    responseCode = "200",
-                    content = {
-                            @Content(schema = @Schema(implementation = UserResponse.class), mediaType = "application/json")
-                    }),
-            @ApiResponse(
-                    responseCode = "401",
-                    content = {
-                            @Content(schema = @Schema(implementation = ProblemDetail.class), mediaType = "application/json")
-                    }),
-            @ApiResponse(
-                    responseCode = "409",
-                    content = {
-                            @Content(schema = @Schema(implementation = ProblemDetail.class), mediaType = "application/json")
-                    })
+        @ApiResponse(
+                responseCode = "200",
+                content = {
+                    @Content(schema = @Schema(implementation = UserResponse.class), mediaType = "application/json")
+                }),
+        @ApiResponse(
+                responseCode = "401",
+                content = {
+                    @Content(schema = @Schema(implementation = ProblemDetail.class), mediaType = "application/json")
+                }),
+        @ApiResponse(
+                responseCode = "409",
+                content = {
+                    @Content(schema = @Schema(implementation = ProblemDetail.class), mediaType = "application/json")
+                })
     })
     @PatchMapping("confirmation/{token}")
     public ResponseEntity<UserResponse> patch(@PathVariable String token) {

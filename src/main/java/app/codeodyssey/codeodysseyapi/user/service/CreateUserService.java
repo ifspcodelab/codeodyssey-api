@@ -27,9 +27,9 @@ public class CreateUserService {
         }
 
         User user = new User(command.email(), command.name(), this.passwordEncoder.encode(command.password()));
-        user = userRepository.save(user);
+        userRepository.save(user);
 
-        sendEmailService.sendEmail(user.getEmail());
+        sendEmailService.sendEmail(user.getEmail(), user.getToken());
 
         return userMapper.to(user);
     }

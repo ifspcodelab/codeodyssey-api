@@ -27,26 +27,25 @@ public class CreateUserEndpoint {
 
     @Operation(
             summary = "Create an user.",
-            description = "Creates, saves and returns an user given a name, email and password."
-    )
+            description = "Creates, saves and returns an user given a name, email and password.")
     @ApiResponses({
-            @ApiResponse(
-                    responseCode = "201",
-                    content = {
-                            @Content(schema = @Schema(implementation = UserResponse.class), mediaType = "application/json")
-                    }),
-            @ApiResponse(
-                    responseCode = "409",
-                    content = {
-                            @Content(schema = @Schema(implementation = ProblemDetail.class), mediaType = "application/json")
-                    }),
-            @ApiResponse(
-                    responseCode = "400",
-                    content = {
-                            @Content(schema = @Schema(implementation = ProblemDetail.class), mediaType = "application/json")
-                    })
+        @ApiResponse(
+                responseCode = "201",
+                content = {
+                    @Content(schema = @Schema(implementation = UserResponse.class), mediaType = "application/json")
+                }),
+        @ApiResponse(
+                responseCode = "409",
+                content = {
+                    @Content(schema = @Schema(implementation = ProblemDetail.class), mediaType = "application/json")
+                }),
+        @ApiResponse(
+                responseCode = "400",
+                content = {
+                    @Content(schema = @Schema(implementation = ProblemDetail.class), mediaType = "application/json")
+                })
     })
-    @PostMapping
+    @PostMapping()
     public ResponseEntity<UserResponse> post(@RequestBody @Valid CreateUserCommand command) {
         return new ResponseEntity<>(createUserService.execute(command), HttpStatus.CREATED);
     }

@@ -44,17 +44,17 @@ public class CreateEnrollmentEndpoint {
         @ApiResponse(
                 responseCode = "400",
                 content = {
-                        @Content(schema = @Schema(implementation = ProblemDetail.class), mediaType = "application/json")
+                    @Content(schema = @Schema(implementation = ProblemDetail.class), mediaType = "application/json")
                 }),
         @ApiResponse(
                 responseCode = "404",
                 content = {
-                        @Content(schema = @Schema(implementation = ProblemDetail.class), mediaType = "application/json")
+                    @Content(schema = @Schema(implementation = ProblemDetail.class), mediaType = "application/json")
                 }),
         @ApiResponse(
                 responseCode = "409",
                 content = {
-                        @Content(schema = @Schema(implementation = ProblemDetail.class), mediaType = "application/json")
+                    @Content(schema = @Schema(implementation = ProblemDetail.class), mediaType = "application/json")
                 })
     })
     @PostMapping("{invitationId}/enrollments")
