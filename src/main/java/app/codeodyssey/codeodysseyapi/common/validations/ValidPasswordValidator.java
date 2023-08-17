@@ -1,6 +1,7 @@
 package app.codeodyssey.codeodysseyapi.common.validations;
 
 import app.codeodyssey.codeodysseyapi.common.exception.InvalidPasswordException;
+import app.codeodyssey.codeodysseyapi.common.exception.PasswordProblem;
 import jakarta.validation.ConstraintValidator;
 import jakarta.validation.ConstraintValidatorContext;
 import java.util.regex.Pattern;
@@ -14,19 +15,26 @@ public class ValidPasswordValidator implements ConstraintValidator<ValidPassword
 
     @Override
     public boolean isValid(String password, ConstraintValidatorContext context) {
-        if (password == null || password.trim().isEmpty()) {
-            throw new InvalidPasswordException(
-                    "A senha deve conter pelo menos uma letra maiúscula, uma letra minúscula, um número, um caractere especial e ter entre 8 e 64 caracteres.");
+        if (password == null) {
+            throw new InvalidPasswordException(PasswordProblem.NULL.getMessage());
+        }
+
+        if (password.isEmpty()) {
+            throw new InvalidPasswordException(PasswordProblem.EMPTY.getMessage());
         }
 
         int passwordLength = password.length();
-        boolean isValid = passwordLength >= MIN_PASSWORD_LENGTH
-                && passwordLength <= MAX_PASSWORD_LENGTH
-                && Pattern.matches(PASSWORD_PATTERN, password);
 
-        if (!isValid) {
-            throw new InvalidPasswordException(
-                    "The password must contain at least one uppercase letter, one lowercase letter, one number, one special character, and be between 8 and 64 characters.");
+        if (passwordLength < MIN_PASSWORD_LENGTH) {
+            throw new InvalidPasswordException(PasswordProblem.MIN_LENGTH.getMessage());
+        }
+
+        if (passwordLength > MAX_PASSWORD_LENGTH) {
+            throw new InvalidPasswordException(PasswordProblem.MAX_LENGTH.getMessage());
+        }
+
+        if (!Pattern.matches(PASSWORD_PATTERN, password)) {
+            throw new InvalidPasswordException(PasswordProblem.PATTERN.getMessage());
         }
 
         return true;

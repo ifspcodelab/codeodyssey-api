@@ -1,14 +1,17 @@
 package app.codeodyssey.codeodysseyapi.user.data;
 
+import app.codeodyssey.codeodysseyapi.token.data.RefreshToken;
+import com.fasterxml.jackson.annotation.JsonIgnore;
 import jakarta.persistence.*;
-import java.time.Instant;
-import java.util.Collection;
-import java.util.List;
-import java.util.UUID;
 import lombok.*;
 import org.springframework.security.core.GrantedAuthority;
 import org.springframework.security.core.authority.SimpleGrantedAuthority;
 import org.springframework.security.core.userdetails.UserDetails;
+
+import java.time.Instant;
+import java.util.Collection;
+import java.util.List;
+import java.util.UUID;
 
 @Entity
 @Table(name = "users")
@@ -31,6 +34,9 @@ public class User implements UserDetails {
     private Instant createdAt;
     private boolean isValidated;
     private String token;
+
+    @OneToMany(mappedBy = "user")
+    private List<RefreshToken> refreshTokens;
 
     public User(String email, String name, String password) {
         this.id = UUID.randomUUID();

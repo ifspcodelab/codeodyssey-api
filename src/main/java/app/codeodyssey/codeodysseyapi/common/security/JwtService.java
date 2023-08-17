@@ -21,6 +21,7 @@ import java.util.function.Function;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
 import org.apache.commons.lang3.time.DateUtils;
+import org.springframework.security.authentication.BadCredentialsException;
 import org.springframework.security.core.userdetails.UserDetails;
 import org.springframework.stereotype.Component;
 import org.springframework.stereotype.Service;
@@ -37,6 +38,10 @@ public class JwtService {
 
     public String extractUsername(String token) {
         return extractClaim(token, Claims::getSubject);
+    }
+
+    public String extractEmail(String token) {
+        return String.valueOf(extractAllClaims(token).get("email"));
     }
 
     public <T> T extractClaim(String token, Function<Claims, T> claimsResolver) {
@@ -62,7 +67,7 @@ public class JwtService {
                 .setClaims(extraClaims)
                 .setSubject(this.userRepository
                         .findByEmail(userDetails.getUsername())
-                        .get()
+                        .orElseThrow(() -> new BadCredentialsException("Bad credentials"))
                         .getId()
                         .toString())
                 .setIssuer(jwtConfig.getIssuer())

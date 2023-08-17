@@ -1,5 +1,7 @@
 package app.codeodyssey.codeodysseyapi.common.exception;
 
+import java.util.ArrayList;
+import java.util.List;
 import java.util.UUID;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
@@ -69,7 +71,7 @@ public class GlobalExceptionHandler {
     public ResponseEntity<ProblemDetail> tokenException(TokenException ex) {
         log.warn("Token problem: {}", ex.getMessage());
 
-        HttpStatus status = HttpStatus.UNAUTHORIZED;
+        HttpStatus status = HttpStatus.NOT_FOUND;
         String title = "Token problem";
         String detail = ex.getMessage();
 
@@ -99,20 +101,18 @@ public class GlobalExceptionHandler {
     public ResponseEntity<ProblemDetail> handleValidationException(MethodArgumentNotValidException ex) {
         HttpStatus status = HttpStatus.BAD_REQUEST;
         String title = "Validation Error";
-        StringBuilder detailBuilder = new StringBuilder();
+        List<String> details = new ArrayList<>();
 
         ex.getBindingResult().getFieldErrors().forEach(error -> {
             String errorMessage = messageSource.getMessage(error, LocaleContextHolder.getLocale());
+            details.add(errorMessage);
 
-            detailBuilder.append(errorMessage);
         });
-        String detail = detailBuilder.toString();
-
         ProblemDetail problem = ProblemDetail.forStatus(status);
         problem.setTitle(title);
-        problem.setDetail(detail);
+        problem.setDetail(details.get(0));
 
-        log.warn("{} - {}", title, detail);
+        log.warn("{} - {}", title, details.get(0));
 
         return new ResponseEntity<>(problem, status);
     }

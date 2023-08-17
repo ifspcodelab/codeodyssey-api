@@ -14,10 +14,8 @@ import app.codeodyssey.codeodysseyapi.user.util.UserFactory;
 import java.util.List;
 import java.util.Optional;
 import java.util.UUID;
-import org.junit.jupiter.api.AfterEach;
-import org.junit.jupiter.api.BeforeEach;
-import org.junit.jupiter.api.DisplayName;
-import org.junit.jupiter.api.Test;
+
+import org.junit.jupiter.api.*;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.boot.test.autoconfigure.jdbc.AutoConfigureTestDatabase;
 import org.springframework.boot.test.context.SpringBootTest;
@@ -30,7 +28,7 @@ import org.testcontainers.junit.jupiter.Testcontainers;
 @AutoConfigureTestDatabase(replace = AutoConfigureTestDatabase.Replace.NONE)
 @ContextConfiguration(initializers = {DatabaseContainerInitializer.class})
 @Testcontainers
-public class UserRepositoryIntegrationTest {
+public class UserRepositoryTest {
     @Autowired
     private UserRepository userRepository;
 
@@ -83,13 +81,16 @@ public class UserRepositoryIntegrationTest {
 
     @Test
     @DisplayName("get an existing email and return its associated user")
-    void getUserByEmail_givenExistingEmail_returnsUser() {
+    void findUserByEmail_givenExistingEmail_returnsUser() {
         User user = new User("sergio@example.com", "Sergio", passwordEncoder.encode("password#123"));
         userRepository.save(user);
 
-        User foundUser = userRepository.getUserByEmail("sergio@example.com");
+        Optional<User> foundUserOptional = userRepository.findByEmail(user.getEmail());
 
-        assertNotNull(foundUser);
+        Assertions.assertTrue(foundUserOptional.isPresent());
+
+        User foundUser = foundUserOptional.get();
+
         assertEquals(user.getId(), foundUser.getId());
         assertEquals(user.getEmail(), foundUser.getEmail());
         assertEquals(user.getToken(), foundUser.getToken());
@@ -100,11 +101,11 @@ public class UserRepositoryIntegrationTest {
     }
 
     @Test
-    @DisplayName("get a nonexistent email and return null")
-    void getUserByEmail_givenNonExistingEmail_returnsNull() {
-        User foundUser = userRepository.getUserByEmail("nonexistent@example.com");
+    @DisplayName("get a nonexistent email and return empty")
+    void findUserByEmail_givenNonExistingEmail_returnsEmpty() {
+        Optional<User> foundUserOptional = userRepository.findByEmail("sergio@example.com");
 
-        assertNull(foundUser);
+        Assertions.assertTrue(foundUserOptional.isEmpty());
     }
 
     @Test
