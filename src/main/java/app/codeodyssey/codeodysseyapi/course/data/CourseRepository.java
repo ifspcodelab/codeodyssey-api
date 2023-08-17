@@ -26,4 +26,13 @@ public interface CourseRepository extends JpaRepository<Course, UUID> {
             ORDER BY course.name, course.endDate
     """)
     List<Course> findAllByStudentIdOrderByNameAscEndDateAsc(UUID id);
+
+    @Query(
+            """
+            SELECT course
+            FROM Course course
+            WHERE course.professor.id = :professorId
+            AND course.slug = :courseSlug
+    """)
+    Course findByProfessorIdAndCourseSlug(UUID professorId, String courseSlug);
 }

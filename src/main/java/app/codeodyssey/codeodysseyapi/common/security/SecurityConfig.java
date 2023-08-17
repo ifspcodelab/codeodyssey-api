@@ -29,6 +29,7 @@ public class SecurityConfig {
         "/api/v1/refreshtoken",
         "api/v1/users",
         "api/v1/users/confirmation/*",
+        "/api/v1/users/*/courses/*/students"
     };
 
     private static final String[] STUDENTS_ALLOWED = {};
