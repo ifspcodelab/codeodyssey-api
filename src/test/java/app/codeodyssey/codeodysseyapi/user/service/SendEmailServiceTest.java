@@ -1,60 +1,64 @@
 package app.codeodyssey.codeodysseyapi.user.service;
 
-import static org.mockito.Mockito.any;
-import static org.mockito.Mockito.verify;
-
 import app.codeodyssey.codeodysseyapi.DatabaseContainerInitializer;
-import app.codeodyssey.codeodysseyapi.user.data.User;
 import app.codeodyssey.codeodysseyapi.user.data.UserRepository;
-import org.junit.jupiter.api.Assertions;
-import org.junit.jupiter.api.DisplayName;
-import org.junit.jupiter.api.Test;
+import com.icegreen.greenmail.configuration.GreenMailConfiguration;
+import com.icegreen.greenmail.junit5.GreenMailExtension;
+import com.icegreen.greenmail.util.ServerSetupTest;
+import jakarta.mail.MessagingException;
+import jakarta.mail.internet.MimeMessage;
+import org.junit.jupiter.api.*;
+import org.junit.jupiter.api.extension.RegisterExtension;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.boot.test.autoconfigure.jdbc.AutoConfigureTestDatabase;
 import org.springframework.boot.test.context.SpringBootTest;
-import org.springframework.boot.test.mock.mockito.MockBean;
-import org.springframework.mail.SimpleMailMessage;
-import org.springframework.mail.javamail.JavaMailSender;
-import org.springframework.security.crypto.password.PasswordEncoder;
+import org.springframework.boot.test.web.server.LocalServerPort;
+import org.springframework.http.*;
 import org.springframework.test.context.ContextConfiguration;
-import org.testcontainers.junit.jupiter.Testcontainers;
+import org.springframework.web.client.RestTemplate;
 
-@SpringBootTest
-@DisplayName("test for the SendEmailService")
+import java.util.Objects;
+
+
+@SpringBootTest(webEnvironment=SpringBootTest.WebEnvironment.RANDOM_PORT)
 @AutoConfigureTestDatabase(replace = AutoConfigureTestDatabase.Replace.NONE)
 @ContextConfiguration(initializers = {DatabaseContainerInitializer.class})
-@Testcontainers
 public class SendEmailServiceTest {
     @Autowired
     private UserRepository userRepository;
 
-    @Autowired
-    private SendEmailService sendEmailService;
+    private RestTemplate restTemplate;
 
-    @Autowired
-    private PasswordEncoder passwordEncoder;
+    @LocalServerPort
+    Integer port;
 
-    @MockBean
-    private JavaMailSender mailSender;
+    @RegisterExtension
+    static GreenMailExtension greenMail = new GreenMailExtension(ServerSetupTest.SMTP)
+            .withConfiguration(GreenMailConfiguration.aConfig().withUser("user", "admin"))
+            .withPerMethodLifecycle(false);
+
+    @BeforeEach
+    void setUp() {
+        userRepository.deleteAll();
+        restTemplate = new RestTemplate();
+    }
+
+    @AfterEach
+    void tearDown() {
+        userRepository.deleteAll();
+    }
 
     @Test
-    @DisplayName("send email to the provided email")
-    void sendEmail_givenEmail_success() {
-        User user = new User("sergio@example.com", "Sergio", passwordEncoder.encode("password#123"));
-        userRepository.save(user);
+    @DisplayName("Send email to user and verify its delivery")
+    void should_send_email_to_user_with_green_mail_extension() throws MessagingException {
+        HttpEntity<CreateUserCommand> request = new HttpEntity<>(new CreateUserCommand("Sergio", "sergio@example.com",
+                "Password#123"));
 
-        sendEmailService.sendEmail(user.getEmail());
+        ResponseEntity<Void> response = restTemplate.postForEntity("http://localhost:%d/api/v1/users".formatted(port), request, Void.class);
 
-        User foundUser = userRepository.getUserByEmail(user.getEmail());
+        Assertions.assertEquals(HttpStatusCode.valueOf(201), response.getStatusCode());
 
-        verify(mailSender).send(any(SimpleMailMessage.class));
-        Assertions.assertNotNull(foundUser);
-        Assertions.assertEquals(user.getToken(), foundUser.getToken());
-        Assertions.assertEquals(user.getEmail(), foundUser.getEmail());
-        Assertions.assertEquals(user.getId(), foundUser.getId());
-        Assertions.assertEquals(user.getPassword(), foundUser.getPassword());
-        Assertions.assertEquals(user.isValidated(), foundUser.isValidated());
-        Assertions.assertEquals(user.getRole(), foundUser.getRole());
-        Assertions.assertEquals(user.getName(), foundUser.getName());
+        MimeMessage receivedMessage = greenMail.getReceivedMessages()[0];
+        Assertions.assertEquals(Objects.requireNonNull(request.getBody()).email(), receivedMessage.getAllRecipients()[0].toString());
     }
 }

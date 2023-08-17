@@ -1,0 +1,27 @@
+spring:
+  datasource:
+    url: ${DATASOURCE_URL:jdbc:postgresql://localhost:5432/codeodyssey-api}
+    username: ${DATASOURCE_USERNAME:postgres}
+    password: ${DATASOURCE_PASSWORD:postgres}
+  mail:
+    username: user
+    password: admin
+    host: 127.0.0.1
+    port: 3025
+    protocol: smtp
+application:
+  jwt:
+    issuer: code-odyssey
+    secret-key: ${JWT_SECRET:404E635266556A586E3272357538782F413F4428472B4B6250645367566B5970}
+    access-token-exp: ${ACCESS_TOKEN_EXPIRATION_AFTER_MINUTES:15}
+    refresh-token-exp: ${REFRESH_TOKEN_EXPIRATION_AFTER_MINUTES:1440}
+
+frontend:
+  url: ${FRONTEND_URL:http://localhost:5173}
+
+time:
+  register-expiration-time: 900
+
+scheduler:
+  registration:
+    interval: ${SCHEDULER_REGISTRATION_INTERVAL:60000}
