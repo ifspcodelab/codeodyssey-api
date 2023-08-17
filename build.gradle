@@ -51,7 +51,11 @@ dependencies {
 	testImplementation 'org.springframework.boot:spring-boot-testcontainers'
 	testImplementation 'org.testcontainers:postgresql:1.18.3'
 	testImplementation group: 'org.springframework.security', name: 'spring-security-test', version: '6.1.2'
-}
+	implementation 'org.apache.httpcomponents.client5:httpclient5:5.2.1'
+	testImplementation 'com.icegreen:greenmail-junit5:2.0.0'
+	testImplementation group: 'org.awaitility', name: 'awaitility', version: '4.2.0'
+	implementation 'com.sun.mail:jakarta.mail:2.0.1'
+	}
 
 tasks.named('test') {
 	useJUnitPlatform()

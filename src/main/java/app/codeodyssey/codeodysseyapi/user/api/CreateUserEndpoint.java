@@ -45,7 +45,7 @@ public class CreateUserEndpoint {
                     @Content(schema = @Schema(implementation = ProblemDetail.class), mediaType = "application/json")
                 })
     })
-    @PostMapping
+    @PostMapping()
     public ResponseEntity<UserResponse> post(@RequestBody @Valid CreateUserCommand command) {
         return new ResponseEntity<>(createUserService.execute(command), HttpStatus.CREATED);
     }
