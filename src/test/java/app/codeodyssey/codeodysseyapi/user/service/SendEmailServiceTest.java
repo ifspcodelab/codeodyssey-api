@@ -49,6 +49,7 @@ public class SendEmailServiceTest {
     }
 
     @Test
+    @DisplayName("Send email to user and verify its delivery")
     void should_send_email_to_user_with_green_mail_extension() throws MessagingException {
         HttpEntity<CreateUserCommand> request = new HttpEntity<>(new CreateUserCommand("Sergio", "sergio@example.com",
                 "Password#123"));
