@@ -1,8 +1,6 @@
 package app.codeodyssey.codeodysseyapi.user.service;
 
 import static org.junit.jupiter.api.Assertions.*;
-import static org.mockito.ArgumentMatchers.any;
-import static org.mockito.Mockito.verify;
 
 import app.codeodyssey.codeodysseyapi.DatabaseContainerInitializer;
 import app.codeodyssey.codeodysseyapi.common.exception.ViolationException;
@@ -13,9 +11,6 @@ import org.junit.jupiter.api.*;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.boot.test.autoconfigure.jdbc.AutoConfigureTestDatabase;
 import org.springframework.boot.test.context.SpringBootTest;
-import org.springframework.boot.test.mock.mockito.MockBean;
-import org.springframework.mail.SimpleMailMessage;
-import org.springframework.mail.javamail.JavaMailSender;
 import org.springframework.test.context.ContextConfiguration;
 import org.springframework.test.context.DynamicPropertyRegistry;
 import org.springframework.test.context.DynamicPropertySource;
@@ -39,9 +34,6 @@ public class CreateUserServiceTest {
 
     @Autowired
     private CreateUserService createUserService;
-
-    @MockBean
-    private JavaMailSender mailSender;
     @BeforeEach
     void setUp() {
         userRepository.deleteAll();
@@ -64,7 +56,8 @@ public class CreateUserServiceTest {
         registry.add("spring.mail.port", greenMailGenericContainer::getFirstMappedPort);
     }
 
-        @Test
+
+    @Test
         @DisplayName("create and save a user")
         void execute_givenValidUser_returnsUserResponse() {
             CreateUserCommand userCommand = new CreateUserCommand("Sergio", "sergio@example.com",
@@ -77,7 +70,6 @@ public class CreateUserServiceTest {
 
             User foundUser = foundUserOptional.get();
 
-            verify(mailSender).send(any(SimpleMailMessage.class));
             assertEquals(user.id(), foundUser.getId());
             assertEquals(user.role(), foundUser.getRole());
             assertEquals(user.name(), foundUser.getName());

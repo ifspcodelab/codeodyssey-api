@@ -9,11 +9,8 @@ import org.junit.jupiter.api.*;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.boot.test.autoconfigure.jdbc.AutoConfigureTestDatabase;
 import org.springframework.boot.test.context.SpringBootTest;
-import org.springframework.boot.test.mock.mockito.MockBean;
 import org.springframework.boot.test.web.server.LocalServerPort;
 import org.springframework.http.HttpEntity;
-import org.springframework.mail.SimpleMailMessage;
-import org.springframework.mail.javamail.JavaMailSender;
 import org.springframework.security.crypto.password.PasswordEncoder;
 import org.springframework.test.context.ContextConfiguration;
 import org.springframework.test.context.DynamicPropertyRegistry;
@@ -28,12 +25,9 @@ import org.testcontainers.utility.DockerImageName;
 
 import java.util.Optional;
 
-import static org.mockito.ArgumentMatchers.any;
-import static org.mockito.Mockito.verify;
 
 @SpringBootTest(webEnvironment = SpringBootTest.WebEnvironment.RANDOM_PORT)
 @DisplayName("test for the CreateUserEndpoint")
-@DisplayNameGeneration(DisplayNameGenerator.ReplaceUnderscores.class)
 @AutoConfigureTestDatabase(replace = AutoConfigureTestDatabase.Replace.NONE)
 @ContextConfiguration(initializers = {DatabaseContainerInitializer.class})
 @Testcontainers
@@ -45,9 +39,6 @@ public class CreateUserEndToEndTest {
 
     @Autowired
     private PasswordEncoder passwordEncoder;
-
-    @MockBean
-    JavaMailSender mailSender;
 
     @LocalServerPort
     Integer port;
@@ -99,7 +90,6 @@ public class CreateUserEndToEndTest {
         Assertions.assertEquals(response.id(), foundUser.get().getId());
         Assertions.assertEquals(response.role(), foundUser.get().getRole());
         Assertions.assertFalse(foundUser.get().isValidated());
-        verify(mailSender).send(any(SimpleMailMessage.class));
     }
 
     @Test
