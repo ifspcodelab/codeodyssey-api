@@ -10,6 +10,6 @@ public final class RefreshTokenFactory {
     private RefreshTokenFactory() {}
 
     public static RefreshToken createValidRefreshToken(User user) {
-        return new RefreshToken(UUID.randomUUID(), user, Instant.now(), RefreshTokenStatus.UNUSED);
+        return new RefreshToken(UUID.randomUUID(), user, Instant.now(), RefreshTokenStatus.UNUSED, Instant.now());
     }
 }

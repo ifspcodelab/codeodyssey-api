@@ -124,9 +124,9 @@ public class LoginEndToEndTest {
         HttpEntity<LoginRequest> request = new HttpEntity<>(new LoginRequest("john@email.com", "123456"));
 
         Assertions.assertThrows(
-                HttpClientErrorException.BadRequest.class,
+                HttpClientErrorException.Forbidden.class,
                 () -> restTemplate.postForObject(url, request, LoginResponse.class),
-                "should throw BadRequest");
+                "should throw ForbiddenException");
     }
 
     @Test

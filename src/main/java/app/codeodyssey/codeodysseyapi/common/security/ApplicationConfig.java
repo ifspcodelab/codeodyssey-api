@@ -1,7 +1,5 @@
 package app.codeodyssey.codeodysseyapi.common.security;
 
-import app.codeodyssey.codeodysseyapi.common.exception.Resource;
-import app.codeodyssey.codeodysseyapi.common.exception.UserNotFoundException;
 import app.codeodyssey.codeodysseyapi.user.data.UserRepository;
 import lombok.RequiredArgsConstructor;
 import lombok.SneakyThrows;
@@ -10,6 +8,7 @@ import org.springframework.context.annotation.Bean;
 import org.springframework.context.annotation.Configuration;
 import org.springframework.security.authentication.AuthenticationManager;
 import org.springframework.security.authentication.AuthenticationProvider;
+import org.springframework.security.authentication.BadCredentialsException;
 import org.springframework.security.authentication.dao.DaoAuthenticationProvider;
 import org.springframework.security.config.annotation.authentication.configuration.AuthenticationConfiguration;
 import org.springframework.security.core.userdetails.UserDetailsService;
@@ -27,7 +26,7 @@ public class ApplicationConfig {
     public UserDetailsService userDetailsService() {
         return email -> userRepository
                 .findByEmail(email)
-                .orElseThrow(() -> new UserNotFoundException("user #" + email + " not found", Resource.USER));
+                .orElseThrow(() -> new BadCredentialsException("Bad credentials"));
     }
 
     @Bean
