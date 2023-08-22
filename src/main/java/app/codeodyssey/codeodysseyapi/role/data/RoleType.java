@@ -1,6 +1,6 @@
 package app.codeodyssey.codeodysseyapi.role.data;
 
-public enum UserRole {
+public enum RoleType {
     STUDENT,
     PROFESSOR,
     ADMIN
