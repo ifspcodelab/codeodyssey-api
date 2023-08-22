@@ -1,4 +1,4 @@
-package app.codeodyssey.codeodysseyapi.user.data;
+package app.codeodyssey.codeodysseyapi.role.data;
 
 public enum UserRole {
     STUDENT,
