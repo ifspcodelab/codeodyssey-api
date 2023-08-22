@@ -1,7 +1,8 @@
 package app.codeodyssey.codeodysseyapi.user.data;
 
+import app.codeodyssey.codeodysseyapi.role.data.Role;
+import app.codeodyssey.codeodysseyapi.role.data.RoleType;
 import app.codeodyssey.codeodysseyapi.token.data.RefreshToken;
-import com.fasterxml.jackson.annotation.JsonIgnore;
 import jakarta.persistence.*;
 import lombok.*;
 import org.springframework.security.core.GrantedAuthority;
@@ -9,6 +10,7 @@ import org.springframework.security.core.authority.SimpleGrantedAuthority;
 import org.springframework.security.core.userdetails.UserDetails;
 
 import java.time.Instant;
+import java.util.ArrayList;
 import java.util.Collection;
 import java.util.List;
 import java.util.UUID;
@@ -28,8 +30,9 @@ public class User implements UserDetails {
     private String name;
     private String password;
 
-    @Enumerated(EnumType.STRING)
-    private UserRole role;
+    @ManyToMany(fetch = FetchType.EAGER)
+    @JoinTable(name = "user_roles", joinColumns = @JoinColumn(name = "user_id"), inverseJoinColumns = @JoinColumn(name = "role_id"))
+    private List<Role> roles = new ArrayList<>();
 
     private Instant createdAt;
     private boolean isValidated;
@@ -43,7 +46,7 @@ public class User implements UserDetails {
         this.email = email;
         this.name = name;
         this.password = password;
-        this.role = UserRole.STUDENT;
+        this.roles.add(new Role(UUID.randomUUID(), RoleType.STUDENT));
         this.createdAt = Instant.now();
         this.isValidated = false;
         this.token = UUID.randomUUID().toString();
@@ -51,7 +54,7 @@ public class User implements UserDetails {
 
     @Override
     public Collection<? extends GrantedAuthority> getAuthorities() {
-        return List.of(new SimpleGrantedAuthority(role.name()));
+        return roles.stream().map(r -> new SimpleGrantedAuthority(r.getRole().name())).toList();
     }
 
     @Override
