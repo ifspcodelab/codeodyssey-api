@@ -1,0 +1,5 @@
+CREATE TABLE roles(
+    id UUID NOT NULL,
+    role VARCHAR(10) NOT NULL,
+    CONSTRAINT roles_pk PRIMARY KEY (id)
+)
