@@ -1,6 +1,7 @@
 package app.codeodyssey.codeodysseyapi.role.data;
 
 import app.codeodyssey.codeodysseyapi.user.data.User;
+import com.fasterxml.jackson.annotation.JsonIgnore;
 import jakarta.persistence.*;
 import lombok.AllArgsConstructor;
 import lombok.Builder;
@@ -24,7 +25,8 @@ public class Role {
     @Enumerated(EnumType.STRING)
     private RoleType role;
 
-    @ManyToMany(mappedBy = "roles")
+    @JsonIgnore
+    @ManyToMany(mappedBy = "roles", fetch = FetchType.EAGER)
     private List<User> users;
 
     public Role() {
