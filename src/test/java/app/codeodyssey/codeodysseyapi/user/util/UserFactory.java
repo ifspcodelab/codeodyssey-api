@@ -65,4 +65,13 @@ public final class UserFactory {
 
         return user;
     }
+
+    public static User sampleUserResendEmail() {
+        User user = new User(
+                "poirot@email.com", "Hercule Poirot", "$2a$12$H43oAFLSYG0SdqhJ9oE2BuG0Sk43lmNFBzD1oUCHMHIE4o2dPVWnC");
+        user.setRole(UserRole.STUDENT);
+        user.setCreatedAt(user.getCreatedAt().minusSeconds(200));
+
+        return user;
+    }
 }
