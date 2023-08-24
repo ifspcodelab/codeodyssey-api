@@ -61,7 +61,7 @@ public class RefreshTokenEndpoint {
                 .map(user -> {
                     claims.put("name", user.getName());
                     claims.put("email", user.getEmail());
-                    claims.put("role", user.getRole());
+                    claims.put("roles", user.getRoles());
                     String accessToken = jwtService.generateAccessToken(claims, user);
                     return new ResponseEntity<>(
                             new RefreshTokenResponse(

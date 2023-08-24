@@ -42,7 +42,7 @@ public class GetTokenService {
         Map<String, Object> claims = new ConcurrentHashMap<>();
         claims.put("name", user.getName());
         claims.put("email", user.getEmail());
-        claims.put("role", roles.get(0));
+        claims.put("roles", roles);
 
         return new LoginResponse(
                 jwtService.generateAccessToken(claims, user),
