@@ -9,13 +9,15 @@ import app.codeodyssey.codeodysseyapi.course.data.CourseRepository;
 import app.codeodyssey.codeodysseyapi.invitation.api.InvitationResponse;
 import app.codeodyssey.codeodysseyapi.invitation.data.Invitation;
 import app.codeodyssey.codeodysseyapi.invitation.data.InvitationRepository;
+import app.codeodyssey.codeodysseyapi.role.data.RoleType;
 import app.codeodyssey.codeodysseyapi.user.data.User;
 import app.codeodyssey.codeodysseyapi.user.data.UserRepository;
-import app.codeodyssey.codeodysseyapi.user.data.UserRole;
+import lombok.AllArgsConstructor;
+import org.springframework.security.core.authority.SimpleGrantedAuthority;
+import org.springframework.stereotype.Service;
+
 import java.util.Optional;
 import java.util.UUID;
-import lombok.AllArgsConstructor;
-import org.springframework.stereotype.Service;
 
 @Service
 @AllArgsConstructor
@@ -32,7 +34,7 @@ public class CreateInvitationService {
             throw new EmailNotFoundException(userEmail);
         }
 
-        if (!user.get().getRole().equals(UserRole.PROFESSOR)) {
+        if (!user.get().getAuthorities().contains(new SimpleGrantedAuthority(RoleType.PROFESSOR.name()))) {
             throw new ForbiddenAccessException(user.get().getId());
         }
 
