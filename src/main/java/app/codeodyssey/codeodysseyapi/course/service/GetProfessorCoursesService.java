@@ -4,14 +4,16 @@ import app.codeodyssey.codeodysseyapi.common.exception.EmailNotFoundException;
 import app.codeodyssey.codeodysseyapi.common.exception.ForbiddenAccessException;
 import app.codeodyssey.codeodysseyapi.course.api.CourseResponse;
 import app.codeodyssey.codeodysseyapi.course.data.CourseRepository;
+import app.codeodyssey.codeodysseyapi.role.data.RoleType;
 import app.codeodyssey.codeodysseyapi.user.data.User;
 import app.codeodyssey.codeodysseyapi.user.data.UserRepository;
-import app.codeodyssey.codeodysseyapi.user.data.UserRole;
+import lombok.AllArgsConstructor;
+import org.springframework.security.core.authority.SimpleGrantedAuthority;
+import org.springframework.stereotype.Service;
+
 import java.util.List;
 import java.util.Optional;
 import java.util.UUID;
-import lombok.AllArgsConstructor;
-import org.springframework.stereotype.Service;
 
 @Service
 @AllArgsConstructor
@@ -27,7 +29,7 @@ public class GetProfessorCoursesService {
             throw new EmailNotFoundException(userEmail);
         }
 
-        if (!user.get().getRole().equals(UserRole.PROFESSOR)) {
+        if (!user.get().getAuthorities().contains(new SimpleGrantedAuthority(RoleType.PROFESSOR.name()))) {
             throw new ForbiddenAccessException(user.get().getId());
         }
 
