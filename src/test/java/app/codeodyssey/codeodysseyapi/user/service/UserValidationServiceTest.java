@@ -3,7 +3,8 @@ package app.codeodyssey.codeodysseyapi.user.service;
 import static org.junit.jupiter.api.Assertions.*;
 
 import app.codeodyssey.codeodysseyapi.DatabaseContainerInitializer;
-import app.codeodyssey.codeodysseyapi.common.exception.TokenException;
+import app.codeodyssey.codeodysseyapi.common.exception.ExpiredTokenException;
+import app.codeodyssey.codeodysseyapi.common.exception.NoneExistentTokenException;
 import app.codeodyssey.codeodysseyapi.common.exception.UserAlreadyValidatedException;
 import app.codeodyssey.codeodysseyapi.user.data.User;
 import app.codeodyssey.codeodysseyapi.user.data.UserRepository;
@@ -96,7 +97,7 @@ public class UserValidationServiceTest {
         user.setCreatedAt(user.getCreatedAt().minus(expirationTime + 1, ChronoUnit.SECONDS));
         userRepository.save(user);
 
-        assertThrows(TokenException.class, () -> userValidationService.validateUser(user.getToken()));
+        assertThrows(ExpiredTokenException.class, () -> userValidationService.validateUser(user.getToken()));
         assertFalse(user.isValidated());
 
         Optional <User> foundUserOptional = userRepository.findByEmail(user.getEmail());
@@ -118,7 +119,7 @@ public class UserValidationServiceTest {
     @DisplayName("try to validate a user with a non-existent token and throw an exception")
     void validateUser_givenNonExistentToken_exceptionThrown() {
         assertThrows(
-                TokenException.class,
+                NoneExistentTokenException.class,
                 () -> userValidationService.validateUser(UUID.randomUUID().toString()));
     }
 }

@@ -1,6 +1,7 @@
 package app.codeodyssey.codeodysseyapi.user.service;
 
-import app.codeodyssey.codeodysseyapi.common.exception.TokenException;
+import app.codeodyssey.codeodysseyapi.common.exception.ExpiredTokenException;
+import app.codeodyssey.codeodysseyapi.common.exception.NoneExistentTokenException;
 import app.codeodyssey.codeodysseyapi.common.exception.TokenProblem;
 import app.codeodyssey.codeodysseyapi.common.exception.UserAlreadyValidatedException;
 import app.codeodyssey.codeodysseyapi.user.data.User;
@@ -42,9 +43,9 @@ public class UserValidationService {
                 return user;
             }
 
-            throw new TokenException(TokenProblem.EXPIRED.getMessage());
+            throw new ExpiredTokenException(TokenProblem.EXPIRED.getMessage());
         }
 
-        throw new TokenException(TokenProblem.NONEXISTENT.getMessage());
+        throw new NoneExistentTokenException(TokenProblem.NONEXISTENT.getMessage());
     }
 }
