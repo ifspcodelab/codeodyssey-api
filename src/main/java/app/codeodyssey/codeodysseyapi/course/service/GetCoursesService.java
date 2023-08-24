@@ -6,10 +6,11 @@ import app.codeodyssey.codeodysseyapi.course.api.CourseResponse;
 import app.codeodyssey.codeodysseyapi.course.data.CourseRepository;
 import app.codeodyssey.codeodysseyapi.user.data.User;
 import app.codeodyssey.codeodysseyapi.user.data.UserRepository;
-import app.codeodyssey.codeodysseyapi.user.data.UserRole;
+import app.codeodyssey.codeodysseyapi.role.data.RoleType;
 import java.util.List;
 import java.util.Optional;
 import lombok.AllArgsConstructor;
+import org.springframework.security.core.authority.SimpleGrantedAuthority;
 import org.springframework.stereotype.Service;
 
 @Service
@@ -26,7 +27,7 @@ public class GetCoursesService {
             throw new EmailNotFoundException(userEmail);
         }
 
-        if (!user.get().getRole().equals(UserRole.ADMIN)) {
+        if (!user.get().getAuthorities().contains(new SimpleGrantedAuthority(RoleType.ADMIN.name()))) {
             throw new ForbiddenAccessException(user.get().getId());
         }
 
