@@ -33,7 +33,7 @@ public class ResendEmailEndpoint {
                             @Content(schema = @Schema(implementation = UserResponse.class), mediaType = "application/json")
                     }),
             @ApiResponse(
-                    responseCode = "400",
+                    responseCode = "404",
                     content = {
                             @Content(schema = @Schema(implementation = ProblemDetail.class), mediaType = "application/json")
                     }),
