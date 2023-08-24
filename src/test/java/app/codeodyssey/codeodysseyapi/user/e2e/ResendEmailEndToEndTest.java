@@ -98,4 +98,16 @@ public class ResendEmailEndToEndTest {
 
         Assertions.assertTrue(foundUser.isPresent());
     }
+
+    @Test
+    @DisplayName("post an non existent email")
+    void post_resendEmail_returnsNotFoundException() {
+        HttpEntity<ResendEmailCommand> request = new HttpEntity<>(new ResendEmailCommand("holmess@email.com"));
+
+        Assertions.assertThrows(
+                HttpClientErrorException.NotFound.class,
+                () -> restTemplate.postForObject(url, request, UserResponse.class),
+                "should throw EmailNotFoundException"
+        );
+    }
 }
