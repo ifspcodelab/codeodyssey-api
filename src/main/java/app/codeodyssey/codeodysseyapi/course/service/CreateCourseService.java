@@ -4,12 +4,14 @@ import app.codeodyssey.codeodysseyapi.common.exception.*;
 import app.codeodyssey.codeodysseyapi.course.api.CourseResponse;
 import app.codeodyssey.codeodysseyapi.course.data.Course;
 import app.codeodyssey.codeodysseyapi.course.data.CourseRepository;
+import app.codeodyssey.codeodysseyapi.role.data.RoleType;
 import app.codeodyssey.codeodysseyapi.user.data.User;
 import app.codeodyssey.codeodysseyapi.user.data.UserRepository;
-import app.codeodyssey.codeodysseyapi.user.data.UserRole;
+
 import java.time.LocalDate;
 import java.util.UUID;
 import lombok.AllArgsConstructor;
+import org.springframework.security.core.authority.SimpleGrantedAuthority;
 import org.springframework.stereotype.Service;
 
 @Service
@@ -24,7 +26,7 @@ public class CreateCourseService {
                 .findById(professorId)
                 .orElseThrow(() -> new ResourceNotFoundException(professorId, Resource.USER));
 
-        if (!professor.getRole().equals(UserRole.PROFESSOR)) {
+        if (!professor.getAuthorities().contains(new SimpleGrantedAuthority(RoleType.PROFESSOR.name()))) {
             throw new ForbiddenAccessException(professorId);
         }
 
