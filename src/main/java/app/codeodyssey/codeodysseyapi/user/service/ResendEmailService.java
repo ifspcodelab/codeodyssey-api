@@ -2,13 +2,11 @@ package app.codeodyssey.codeodysseyapi.user.service;
 
 import app.codeodyssey.codeodysseyapi.common.exception.EmailNotFoundException;
 import app.codeodyssey.codeodysseyapi.common.exception.ResendEmailException;
-import app.codeodyssey.codeodysseyapi.common.exception.ViolationType;
 import app.codeodyssey.codeodysseyapi.user.api.UserResponse;
 import app.codeodyssey.codeodysseyapi.user.data.User;
 import app.codeodyssey.codeodysseyapi.user.data.UserRepository;
 import lombok.AllArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
-import org.springframework.mail.MailException;
 import org.springframework.stereotype.Service;
 
 import java.time.Instant;
