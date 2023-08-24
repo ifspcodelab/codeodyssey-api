@@ -23,6 +23,8 @@ import org.testcontainers.junit.jupiter.Container;
 import org.testcontainers.junit.jupiter.Testcontainers;
 import org.testcontainers.utility.DockerImageName;
 
+import java.util.Optional;
+
 @SpringBootTest(webEnvironment = SpringBootTest.WebEnvironment.RANDOM_PORT)
 @DisplayName("test for the ResendEmailEndpoint")
 @AutoConfigureTestDatabase(replace = AutoConfigureTestDatabase.Replace.NONE)
@@ -40,11 +42,14 @@ public class ResendEmailEndToEndTest {
     String url;
 
     User user;
+    User userWithTimeDelayed;
 
     @BeforeEach
     void setUp() {
         user = UserFactory.sampleUserStudent();
+        userWithTimeDelayed = UserFactory.sampleUserResendEmail();
         userRepository.save(user);
+        userRepository.save(userWithTimeDelayed);
         url = "http://localhost:%d/api/v1/users/resend-email".formatted(port);
         restTemplate = new RestTemplate();
     }
@@ -76,5 +81,21 @@ public class ResendEmailEndToEndTest {
                 () -> restTemplate.postForObject(url, request, UserResponse.class),
                 "should throw ResendEmailException"
         );
+    }
+
+    @Test
+    @DisplayName("post an email with user with delayed time")
+    void post_resendEmail_returnsUser() {
+        HttpEntity<ResendEmailCommand> request = new HttpEntity<>(new ResendEmailCommand("poirot@email.com"));
+
+        UserResponse response = restTemplate.postForObject(url, request, UserResponse.class);
+
+        Assertions.assertNotNull(request.getBody());
+        Assertions.assertNotNull(response);
+        Assertions.assertEquals(request.getBody().email(), response.email());
+
+        Optional<User> foundUser = userRepository.findByEmail(response.email());
+
+        Assertions.assertTrue(foundUser.isPresent());
     }
 }
