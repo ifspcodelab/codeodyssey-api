@@ -1,14 +1,12 @@
 package app.codeodyssey.codeodysseyapi.user.data;
 
 import app.codeodyssey.codeodysseyapi.token.data.RefreshToken;
-import com.fasterxml.jackson.annotation.JsonIgnore;
 import jakarta.persistence.*;
 import lombok.*;
 import org.springframework.security.core.GrantedAuthority;
 import org.springframework.security.core.authority.SimpleGrantedAuthority;
 import org.springframework.security.core.userdetails.UserDetails;
-
-import java.time.Instant;
+import java.time.LocalDateTime;
 import java.util.Collection;
 import java.util.List;
 import java.util.UUID;
@@ -31,7 +29,7 @@ public class User implements UserDetails {
     @Enumerated(EnumType.STRING)
     private UserRole role;
 
-    private Instant createdAt;
+    private LocalDateTime createdAt;
     private boolean isValidated;
     private String token;
 
@@ -44,7 +42,7 @@ public class User implements UserDetails {
         this.name = name;
         this.password = password;
         this.role = UserRole.STUDENT;
-        this.createdAt = Instant.now();
+        this.createdAt = LocalDateTime.now();
         this.isValidated = false;
         this.token = UUID.randomUUID().toString();
     }

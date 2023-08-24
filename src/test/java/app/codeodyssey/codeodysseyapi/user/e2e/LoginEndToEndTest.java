@@ -9,7 +9,7 @@ import app.codeodyssey.codeodysseyapi.user.data.UserRepository;
 import app.codeodyssey.codeodysseyapi.user.data.UserRole;
 import io.jsonwebtoken.Claims;
 import io.jsonwebtoken.Jwts;
-import java.time.Instant;
+import java.time.LocalDateTime;
 import java.util.UUID;
 import org.junit.jupiter.api.Assertions;
 import org.junit.jupiter.api.BeforeEach;
@@ -69,7 +69,7 @@ public class LoginEndToEndTest {
                 .email(email)
                 .password(password)
                 .role(UserRole.STUDENT)
-                .createdAt(Instant.now())
+                .createdAt(LocalDateTime.now())
                 .isValidated(true)
                 .token(UUID.randomUUID().toString())
                 .build());
@@ -105,7 +105,7 @@ public class LoginEndToEndTest {
                 .email("john@email.com")
                 .password("$2a$10$oe40I38YdnKGq/QiH99kfOaJUY4QwMCSBDwpUR60iOXhD48/y/dDe")
                 .role(UserRole.STUDENT)
-                .createdAt(Instant.now())
+                .createdAt(LocalDateTime.now())
                 .isValidated(true)
                 .token(UUID.randomUUID().toString())
                 .build());
@@ -141,7 +141,7 @@ public class LoginEndToEndTest {
                 .email(email)
                 .password(password)
                 .role(UserRole.STUDENT)
-                .createdAt(Instant.now())
+                .createdAt(LocalDateTime.now())
                 .isValidated(true)
                 .token(UUID.randomUUID().toString())
                 .build());

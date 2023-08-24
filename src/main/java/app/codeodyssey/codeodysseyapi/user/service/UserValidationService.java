@@ -6,7 +6,7 @@ import app.codeodyssey.codeodysseyapi.common.exception.UserAlreadyValidatedExcep
 import app.codeodyssey.codeodysseyapi.user.data.User;
 import app.codeodyssey.codeodysseyapi.user.data.UserRepository;
 import java.time.Duration;
-import java.time.Instant;
+import java.time.LocalDateTime;
 import java.util.Optional;
 import lombok.RequiredArgsConstructor;
 import org.springframework.beans.factory.annotation.Value;
@@ -30,8 +30,8 @@ public class UserValidationService {
                 throw new UserAlreadyValidatedException("User is already validated");
             }
 
-            Instant currentTime = Instant.now();
-            Instant userCreationTime = user.getCreatedAt();
+            LocalDateTime currentTime = LocalDateTime.now();
+            LocalDateTime userCreationTime = user.getCreatedAt();
             Duration timeElapsed = Duration.between(userCreationTime, currentTime);
             long secondsElapsed = timeElapsed.getSeconds();
 

@@ -2,7 +2,7 @@ package app.codeodyssey.codeodysseyapi.user.service;
 
 import app.codeodyssey.codeodysseyapi.user.data.User;
 import app.codeodyssey.codeodysseyapi.user.data.UserRepository;
-import java.time.Instant;
+import java.time.LocalDateTime;
 import java.time.temporal.ChronoUnit;
 import java.util.ArrayList;
 import java.util.List;
@@ -26,7 +26,7 @@ public class UserCleanupService {
         List<User> usersToDelete = new ArrayList<>();
 
         for (User user : nonValidatedUsers) {
-            if (Instant.now().isAfter(user.getCreatedAt().plus(expirationTime, ChronoUnit.SECONDS))) {
+            if (LocalDateTime.now().isAfter(user.getCreatedAt().plus(expirationTime, ChronoUnit.SECONDS))) {
                 usersToDelete.add(user);
             }
         }
