@@ -37,5 +37,8 @@ public class UserCleanupService {
         for (User user : usersToDelete) {
             log.info("User with id " + user.getToken() + " was excluded due to unvalidated email");
         }
+
+        nonValidatedUsers.clear();
+        usersToDelete.clear();
     }
 }
