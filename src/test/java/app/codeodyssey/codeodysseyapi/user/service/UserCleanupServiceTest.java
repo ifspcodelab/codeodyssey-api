@@ -12,10 +12,13 @@ import java.util.List;
 import java.util.Optional;
 
 import org.junit.jupiter.api.*;
+import org.junit.jupiter.api.extension.ExtendWith;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.beans.factory.annotation.Value;
 import org.springframework.boot.test.autoconfigure.jdbc.AutoConfigureTestDatabase;
 import org.springframework.boot.test.context.SpringBootTest;
+import org.springframework.boot.test.system.CapturedOutput;
+import org.springframework.boot.test.system.OutputCaptureExtension;
 import org.springframework.test.context.ContextConfiguration;
 import org.testcontainers.junit.jupiter.Testcontainers;
 
@@ -24,6 +27,7 @@ import org.testcontainers.junit.jupiter.Testcontainers;
 @AutoConfigureTestDatabase(replace = AutoConfigureTestDatabase.Replace.NONE)
 @ContextConfiguration(initializers = {DatabaseContainerInitializer.class})
 @Testcontainers
+@ExtendWith(OutputCaptureExtension.class)
 public class UserCleanupServiceTest {
     @Autowired
     private UserCleanupService userCleanupService;
@@ -46,7 +50,7 @@ public class UserCleanupServiceTest {
 
     @Test
     @DisplayName("clean user who is out the expiration time")
-    void cleanup_givenUserOutExpirationTime_returnsNull() {
+    void cleanup_givenUserOutExpirationTime_returnsNull(CapturedOutput output) {
         User user = new User("Sergio", "sergio@example.com", "password");
         user.setCreatedAt(user.getCreatedAt().minus(expirationTime, ChronoUnit.SECONDS));
         userRepository.save(user);
@@ -54,11 +58,13 @@ public class UserCleanupServiceTest {
         userCleanupService.cleanupUser();
 
         assertThat(userRepository.findByEmail(user.getEmail())).isEmpty();
+        assertThat(userRepository.findAll()).isEmpty();
+        assertTrue(output.toString().contains("User with id " + user.getId() + " was excluded due to unvalidated email"));
     }
 
     @Test
     @DisplayName("clean users who are out the expiration time")
-    void cleanup_givenUsersOutExpirationTime_returnsEmpty() {
+    void cleanup_givenUsersOutExpirationTime_returnsEmpty(CapturedOutput output) {
         User user1 = new User("user1@example.com", "User 1", "password");
         user1.setCreatedAt(user1.getCreatedAt().minus(expirationTime, ChronoUnit.SECONDS));
 
@@ -73,6 +79,9 @@ public class UserCleanupServiceTest {
         userCleanupService.cleanupUser();
 
         assertThat(userRepository.findAll()).isEmpty();
+        assertTrue(output.toString().contains("User with id " + user1.getId() + " was excluded due to unvalidated email"));
+        assertTrue(output.toString().contains("User with id " + user2.getId() + " was excluded due to unvalidated email"));
+        assertTrue(output.toString().contains("User with id " + user3.getId() + " was excluded due to unvalidated email"));
     }
 
     @Test

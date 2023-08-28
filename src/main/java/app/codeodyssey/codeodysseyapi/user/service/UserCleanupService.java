@@ -35,7 +35,7 @@ public class UserCleanupService {
         userRepository.deleteAllInBatch(usersToDelete);
 
         for (User user : usersToDelete) {
-            log.info("User with id " + user.getToken() + " was excluded due to unvalidated email");
+            log.info("User with id " + user.getId() + " was excluded due to unvalidated email");
         }
 
         nonValidatedUsers.clear();
