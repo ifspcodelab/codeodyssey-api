@@ -31,10 +31,12 @@ public class UserValidationService {
                 throw new UserAlreadyValidatedException("User is already validated");
             }
 
-            LocalDateTime currentTime = LocalDateTime.now();
             LocalDateTime userCreationTime = user.getCreatedAt();
-            Duration timeElapsed = Duration.between(userCreationTime, currentTime);
+            Duration timeElapsed = Duration.between(userCreationTime, LocalDateTime.now());
             long secondsElapsed = timeElapsed.getSeconds();
+            System.out.println(userCreationTime);
+            System.out.println(timeElapsed.getSeconds());
+            System.out.println(timeElapsed.getNano());
 
             if (secondsElapsed <= expirationTime) {
                 user.setValidated(true);
