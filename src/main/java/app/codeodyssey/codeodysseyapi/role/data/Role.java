@@ -33,8 +33,8 @@ public class Role {
         this.id = UUID.randomUUID();
     }
 
-    public Role(UUID id, RoleType type) {
+    public Role(UUID id, RoleType role) {
         this.id = id;
-        this.role = type;
+        this.role = role;
     }
 }

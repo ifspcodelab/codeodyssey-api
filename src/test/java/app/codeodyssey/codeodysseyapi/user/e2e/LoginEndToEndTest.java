@@ -1,15 +1,18 @@
 package app.codeodyssey.codeodysseyapi.user.e2e;
 
 import app.codeodyssey.codeodysseyapi.DatabaseContainerInitializer;
+import app.codeodyssey.codeodysseyapi.role.data.Role;
+import app.codeodyssey.codeodysseyapi.role.data.RoleRepository;
+import app.codeodyssey.codeodysseyapi.role.data.RoleType;
 import app.codeodyssey.codeodysseyapi.token.data.RefreshTokenRepository;
 import app.codeodyssey.codeodysseyapi.user.api.LoginRequest;
 import app.codeodyssey.codeodysseyapi.user.api.LoginResponse;
 import app.codeodyssey.codeodysseyapi.user.data.User;
 import app.codeodyssey.codeodysseyapi.user.data.UserRepository;
-import app.codeodyssey.codeodysseyapi.user.data.UserRole;
 import io.jsonwebtoken.Claims;
 import io.jsonwebtoken.Jwts;
 import java.time.Instant;
+import java.util.List;
 import java.util.UUID;
 import org.junit.jupiter.api.Assertions;
 import org.junit.jupiter.api.BeforeEach;
@@ -40,6 +43,9 @@ public class LoginEndToEndTest {
     @Autowired
     RefreshTokenRepository tokenRepository;
 
+    @Autowired
+    RoleRepository roleRepository;
+
     @Value("${application.jwt.secret-key}")
     private String jwtSecret;
 
@@ -63,12 +69,15 @@ public class LoginEndToEndTest {
         var name = "John Doe";
         var email = "john@email.com";
         var password = "$2a$10$oe40I38YdnKGq/QiH99kfOaJUY4QwMCSBDwpUR60iOXhD48/y/dDe";
+
+        Role role = this.roleRepository.save(new Role(UUID.randomUUID(), RoleType.STUDENT));
+
         User user = userRepository.save(User.builder()
                 .id(UUID.randomUUID())
                 .name(name)
                 .email(email)
                 .password(password)
-                .role(UserRole.STUDENT)
+                .roles(List.of(role))
                 .createdAt(Instant.now())
                 .isValidated(true)
                 .token(UUID.randomUUID().toString())
@@ -89,7 +98,7 @@ public class LoginEndToEndTest {
                 .getBody();
 
         Assertions.assertEquals(body.getSubject(), user.getId().toString());
-        Assertions.assertEquals(body.get("role"), "STUDENT");
+        Assertions.assertNotNull(body.get("roles"));
         Assertions.assertEquals(body.getIssuer(), "code-odyssey");
         Assertions.assertEquals(body.get("name"), user.getName());
         Assertions.assertEquals(body.get("email"), user.getEmail());
@@ -99,12 +108,14 @@ public class LoginEndToEndTest {
     @DisplayName("should throw data integrity exception when tries to save an already saved user")
     void save_givenAnAlreadySavedUser_returnsException() {
 
+        Role role = this.roleRepository.save(new Role(UUID.randomUUID(), RoleType.STUDENT));
+
         User user = userRepository.save(User.builder()
                 .id(UUID.randomUUID())
                 .name("John Doe")
                 .email("john@email.com")
                 .password("$2a$10$oe40I38YdnKGq/QiH99kfOaJUY4QwMCSBDwpUR60iOXhD48/y/dDe")
-                .role(UserRole.STUDENT)
+                .roles(List.of(role))
                 .createdAt(Instant.now())
                 .isValidated(true)
                 .token(UUID.randomUUID().toString())
@@ -132,6 +143,9 @@ public class LoginEndToEndTest {
     @Test
     @DisplayName("login given an invalid password returns bad credentials")
     void login_givenAnInvalidPassword_returnsException() {
+
+        Role role = this.roleRepository.save(new Role(UUID.randomUUID(), RoleType.STUDENT));
+
         var name = "John Doe";
         var email = "john@email.com";
         var password = "$2a$10$oe40I38YdnKGq/QiH99kfOaJUY4QwMCSBDwpUR60iOXhD48/y/dDe";
@@ -140,7 +154,7 @@ public class LoginEndToEndTest {
                 .name(name)
                 .email(email)
                 .password(password)
-                .role(UserRole.STUDENT)
+                .roles(List.of(role))
                 .createdAt(Instant.now())
                 .isValidated(true)
                 .token(UUID.randomUUID().toString())
