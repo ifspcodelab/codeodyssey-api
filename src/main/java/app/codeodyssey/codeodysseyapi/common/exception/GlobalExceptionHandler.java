@@ -129,6 +129,8 @@ public class GlobalExceptionHandler {
 
         log.warn("{} - {}", title, details.get(0));
 
+        details.clear();
+
         return new ResponseEntity<>(problem, status);
     }
 
