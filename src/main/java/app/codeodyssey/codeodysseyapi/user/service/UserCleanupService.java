@@ -23,7 +23,8 @@ public class UserCleanupService {
 
     @Scheduled(fixedRateString = "${scheduler.registration.interval}")
     public void cleanupUser() {
-        System.out.println("Cleanup accessed");
+        log.info("Cleanup accessed");
+
         List<User> nonValidatedUsers = userRepository.findByIsValidated(false);
         List<User> usersToDelete = new ArrayList<>();
 
