@@ -85,7 +85,7 @@ public class CreateInvitationEndToEndTest {
         refreshTokenRepository.save(authTokenPair.getRefreshToken());
         httpHeaders.setBearerAuth(authTokenPair.getAccessToken());
         HttpEntity<?> request =
-                new HttpEntity<>(new InvitationCreateCommand(LocalDate.now().plusMonths(1)), httpHeaders);
+                new HttpEntity<>(new InvitationCreateCommand(LocalDate.now()), httpHeaders);
         url += "/%s/invitations".formatted(course.getId());
 
         var response = assertDoesNotThrow(
@@ -109,7 +109,7 @@ public class CreateInvitationEndToEndTest {
         refreshTokenRepository.save(authTokenPair.getRefreshToken());
         httpHeaders.setBearerAuth(authTokenPair.getAccessToken());
         HttpEntity<?> request =
-                new HttpEntity<>(new InvitationCreateCommand(LocalDate.now().plusMonths(1)), httpHeaders);
+                new HttpEntity<>(new InvitationCreateCommand(LocalDate.now()), httpHeaders);
         url += "/%s/invitations".formatted(course.getId());
 
         var throwable =

@@ -35,7 +35,7 @@ public class SecurityConfig {
 
     private static final String[] STUDENTS_ALLOWED = {};
 
-    private static final String[] PROF_ALLOWED = {"/api/v1/users/*/courses"};
+    private static final String[] PROF_ALLOWED = {"/api/v1/users/*/courses", "/api/v1/users/*/courses/*/students"};
 
     @Bean
     public SecurityFilterChain securityFilterChain(HttpSecurity http) {

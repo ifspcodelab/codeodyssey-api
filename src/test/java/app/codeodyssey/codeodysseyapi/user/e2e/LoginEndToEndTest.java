@@ -9,6 +9,7 @@ import app.codeodyssey.codeodysseyapi.user.data.UserRepository;
 import app.codeodyssey.codeodysseyapi.user.data.UserRole;
 import io.jsonwebtoken.Claims;
 import io.jsonwebtoken.Jwts;
+
 import java.time.Instant;
 import java.util.UUID;
 import org.junit.jupiter.api.Assertions;

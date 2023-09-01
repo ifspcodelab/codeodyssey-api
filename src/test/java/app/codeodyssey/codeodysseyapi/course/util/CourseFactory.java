@@ -23,8 +23,8 @@ public final class CourseFactory {
         return new Course(
                 "Spring MVC",
                 "spring-mvc",
-                LocalDate.of(2023, 7, 3),
-                LocalDate.of(2023, 7, 7),
+                LocalDate.now(),
+                LocalDate.now(),
                 UserFactory.sampleUserProfessor());
     }
 
@@ -39,8 +39,8 @@ public final class CourseFactory {
         return new Course(
                 "Spring Security",
                 "spring-security",
-                LocalDate.of(2023, 7, 10),
-                LocalDate.of(2023, 7, 14),
+                LocalDate.now(),
+                LocalDate.now(),
                 UserFactory.sampleUserProfessor());
     }
 
@@ -55,8 +55,8 @@ public final class CourseFactory {
         return new Course(
                 "Spring Cloud",
                 "spring-cloud",
-                LocalDate.of(2023, 7, 17),
-                LocalDate.of(2023, 7, 21),
+                LocalDate.now(),
+                LocalDate.now(),
                 UserFactory.sampleUserProfessor());
     }
 

@@ -5,9 +5,7 @@ import static org.assertj.core.api.Assertions.catchThrowable;
 import static org.junit.jupiter.api.Assertions.assertDoesNotThrow;
 
 import app.codeodyssey.codeodysseyapi.DatabaseContainerInitializer;
-import app.codeodyssey.codeodysseyapi.common.exception.ForbiddenAccessException;
-import app.codeodyssey.codeodysseyapi.common.exception.Resource;
-import app.codeodyssey.codeodysseyapi.common.exception.ResourceNotFoundException;
+import app.codeodyssey.codeodysseyapi.common.exception.*;
 import app.codeodyssey.codeodysseyapi.course.data.CourseRepository;
 import app.codeodyssey.codeodysseyapi.course.util.CourseFactory;
 import app.codeodyssey.codeodysseyapi.invitation.api.InvitationResponse;
@@ -121,5 +119,45 @@ public class CreateInvitationServiceTest {
         assertThat(serviceThrowable).isInstanceOf(ForbiddenAccessException.class);
         ForbiddenAccessException forbiddenAccessException = (ForbiddenAccessException) serviceThrowable;
         assertThat(forbiddenAccessException.getId()).isEqualTo(professorB.getId());
+    }
+
+    @Test
+    @DisplayName("createInvitationService given expiration date before current date returns conflict")
+    void createInvitationService_givenExpirationDateBeforeCurrentDate_returnsConflict() {
+        var course = CourseFactory.sampleCourse();
+        var professor = course.getProfessor();
+        var command = new InvitationCreateCommand(LocalDate.of(1000, 01, 01));
+        userRepository.save(professor);
+        courseRepository.save(course);
+
+        var serviceThrowable = (RuntimeException)
+                catchThrowable(() -> createInvitationService.execute(command, course.getId(), professor.getEmail()));
+
+        assertThat(serviceThrowable).isNotNull();
+        assertThat(serviceThrowable).isInstanceOf(ViolationException.class);
+        ViolationException violationException = (ViolationException) serviceThrowable;
+        assertThat(violationException.getResource()).isEqualTo(Resource.INVITATION);
+        assertThat(violationException.getType()).isEqualTo(ViolationType.INVITATION_EXPIRATION_DATE_BEFORE_TODAY);
+        assertThat(violationException.getDetails()).isEqualTo(command.expirationDate().toString());
+    }
+
+    @Test
+    @DisplayName("createInvitationService given expiration date after course end date returns conflict")
+    void createInvitationService_givenExpirationDateAfterCourseEndDate_returnsConflict() {
+        var course = CourseFactory.sampleCourse();
+        var professor = course.getProfessor();
+        var command = new InvitationCreateCommand(course.getEndDate().plusDays(1));
+        userRepository.save(professor);
+        courseRepository.save(course);
+
+        var serviceThrowable = (RuntimeException)
+                catchThrowable(() -> createInvitationService.execute(command, course.getId(), professor.getEmail()));
+
+        assertThat(serviceThrowable).isNotNull();
+        assertThat(serviceThrowable).isInstanceOf(ViolationException.class);
+        ViolationException violationException = (ViolationException) serviceThrowable;
+        assertThat(violationException.getResource()).isEqualTo(Resource.INVITATION);
+        assertThat(violationException.getType()).isEqualTo(ViolationType.INVITATION_EXPIRATION_DATE_AFTER_COURSE_END_DATE);
+        assertThat(violationException.getDetails()).isEqualTo(command.expirationDate().toString());
     }
 }

@@ -95,10 +95,10 @@ public class ValidateUserEndToEndTest {
         HttpEntity<User> request = new HttpEntity<>(user);
 
         Assertions.assertThrows(
-                HttpClientErrorException.NotFound.class,
+                HttpClientErrorException.UnprocessableEntity.class,
                 () -> restTemplate.patchForObject("http://localhost:" + port + "/api/v1/users/confirmation/" +
                         user.getToken(), request, UserResponse.class),
-                "should throw TokenException (Token Expired)"
+                "should throw ExpiredTokenException (Expired Token)"
         );
 
         Optional<User> foundUserOptional = userRepository.findByEmail(user.getEmail());
@@ -124,7 +124,7 @@ public class ValidateUserEndToEndTest {
                 HttpClientErrorException.NotFound.class,
                 () -> restTemplate.patchForObject("http://localhost:" + port + "/api/v1/users/confirmation/" +
                         UUID.randomUUID(), null, Void.class),
-                "should throw TokenException (no user associated with this toke"
+                "should throw NoneExistentTokenException (no user associated with this toke"
         );
     }
 
