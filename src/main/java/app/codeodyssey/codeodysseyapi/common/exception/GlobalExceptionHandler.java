@@ -1,8 +1,5 @@
 package app.codeodyssey.codeodysseyapi.common.exception;
 
-import java.util.ArrayList;
-import java.util.List;
-import java.util.UUID;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.context.MessageSource;
@@ -14,6 +11,10 @@ import org.springframework.security.authentication.BadCredentialsException;
 import org.springframework.web.bind.MethodArgumentNotValidException;
 import org.springframework.web.bind.annotation.ControllerAdvice;
 import org.springframework.web.bind.annotation.ExceptionHandler;
+
+import java.util.ArrayList;
+import java.util.List;
+import java.util.UUID;
 
 @ControllerAdvice
 @Slf4j
@@ -215,6 +216,21 @@ public class GlobalExceptionHandler {
         UUID courseId = ex.getCourseId();
         String title = "Student already enrolled";
         String detail = "Student with id=%s is already enrolled on course id=%s.".formatted(studentId, courseId);
+
+        ProblemDetail problem = ProblemDetail.forStatus(status);
+        problem.setTitle(title);
+        problem.setDetail(detail);
+
+        log.warn(detail);
+        return new ResponseEntity<>(problem, status);
+    }
+
+    @ExceptionHandler(ResendEmailException.class)
+    public ResponseEntity<ProblemDetail> resendEmailDelay(ResendEmailException ex) {
+        HttpStatus status = HttpStatus.UNPROCESSABLE_ENTITY;
+        String email = ex.getEmail();
+        String title = "Time to resend not passed";
+        String detail = "One minute to resend email to %s has not been passed yet".formatted(email);
 
         ProblemDetail problem = ProblemDetail.forStatus(status);
         problem.setTitle(title);
