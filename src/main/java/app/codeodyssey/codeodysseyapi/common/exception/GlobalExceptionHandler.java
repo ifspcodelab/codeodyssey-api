@@ -67,11 +67,26 @@ public class GlobalExceptionHandler {
         return new ResponseEntity<>(problem, status);
     }
 
-    @ExceptionHandler(TokenException.class)
-    public ResponseEntity<ProblemDetail> tokenException(TokenException ex) {
+    @ExceptionHandler(NoneExistentTokenException.class)
+    public ResponseEntity<ProblemDetail> NoneExistentTokenException(NoneExistentTokenException ex) {
         log.warn("Token problem: {}", ex.getMessage());
 
         HttpStatus status = HttpStatus.NOT_FOUND;
+        String title = "Token problem";
+        String detail = ex.getMessage();
+
+        ProblemDetail problem = ProblemDetail.forStatus(status);
+        problem.setTitle(title);
+        problem.setDetail(detail);
+
+        return new ResponseEntity<>(problem, status);
+    }
+
+    @ExceptionHandler(ExpiredTokenException.class)
+    public ResponseEntity<ProblemDetail> ExpiredTokenException(ExpiredTokenException ex) {
+        log.warn("Token problem: {}", ex.getMessage());
+
+        HttpStatus status = HttpStatus.UNPROCESSABLE_ENTITY;
         String title = "Token problem";
         String detail = ex.getMessage();
 
@@ -113,6 +128,8 @@ public class GlobalExceptionHandler {
         problem.setDetail(details.get(0));
 
         log.warn("{} - {}", title, details.get(0));
+
+        details.clear();
 
         return new ResponseEntity<>(problem, status);
     }

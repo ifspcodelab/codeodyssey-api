@@ -31,7 +31,7 @@ public class ValidateUserEndpoint {
                     @Content(schema = @Schema(implementation = UserResponse.class), mediaType = "application/json")
                 }),
         @ApiResponse(
-                responseCode = "401",
+                responseCode = "404",
                 content = {
                     @Content(schema = @Schema(implementation = ProblemDetail.class), mediaType = "application/json")
                 }),
@@ -39,8 +39,15 @@ public class ValidateUserEndpoint {
                 responseCode = "409",
                 content = {
                     @Content(schema = @Schema(implementation = ProblemDetail.class), mediaType = "application/json")
+                }),
+
+        @ApiResponse(
+                responseCode = "422",
+                content = {
+                        @Content(schema = @Schema(implementation = ProblemDetail.class), mediaType = "application/json")
                 })
     })
+
     @PatchMapping("confirmation/{token}")
     public ResponseEntity<UserResponse> patch(@PathVariable String token) {
         return ResponseEntity.ok(userMapper.to(userValidationService.validateUser(token)));

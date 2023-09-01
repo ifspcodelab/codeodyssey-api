@@ -6,8 +6,8 @@ import org.springframework.web.bind.annotation.ResponseStatus;
 
 @Getter
 @ResponseStatus(HttpStatus.NOT_FOUND)
-public class TokenException extends RuntimeException {
-    public TokenException(String message) {
+public class NoneExistentTokenException extends RuntimeException {
+    public NoneExistentTokenException(String message) {
         super(message);
     }
 }

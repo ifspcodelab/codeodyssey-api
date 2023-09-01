@@ -8,9 +8,12 @@ import app.codeodyssey.codeodysseyapi.user.api.UserResponse;
 import app.codeodyssey.codeodysseyapi.user.data.User;
 import app.codeodyssey.codeodysseyapi.user.data.UserRepository;
 import org.junit.jupiter.api.*;
+import org.junit.jupiter.api.extension.ExtendWith;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.boot.test.autoconfigure.jdbc.AutoConfigureTestDatabase;
 import org.springframework.boot.test.context.SpringBootTest;
+import org.springframework.boot.test.system.CapturedOutput;
+import org.springframework.boot.test.system.OutputCaptureExtension;
 import org.springframework.test.context.ContextConfiguration;
 import org.springframework.test.context.DynamicPropertyRegistry;
 import org.springframework.test.context.DynamicPropertySource;
@@ -28,6 +31,7 @@ import java.util.Optional;
 @AutoConfigureTestDatabase(replace = AutoConfigureTestDatabase.Replace.NONE)
 @ContextConfiguration(initializers = {DatabaseContainerInitializer.class})
 @Testcontainers
+@ExtendWith({OutputCaptureExtension.class})
 public class CreateUserServiceTest {
     @Autowired
     private UserRepository userRepository;
@@ -59,7 +63,7 @@ public class CreateUserServiceTest {
 
     @Test
         @DisplayName("create and save a user")
-        void execute_givenValidUser_returnsUserResponse() {
+        void execute_givenValidUser_returnsUserResponse(CapturedOutput output) {
             CreateUserCommand userCommand = new CreateUserCommand("Sergio", "sergio@example.com",
                     "password#123");
             UserResponse user = createUserService.execute(userCommand);
@@ -74,6 +78,7 @@ public class CreateUserServiceTest {
             assertEquals(user.role(), foundUser.getRole());
             assertEquals(user.name(), foundUser.getName());
             assertEquals(user.email(), foundUser.getEmail());
+            assertTrue(output.toString().contains("User with id " + user.id() + " was registered"));
         }
 
     @Test
