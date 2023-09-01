@@ -1,9 +1,6 @@
 package app.codeodyssey.codeodysseyapi.invitation.service;
 
-import app.codeodyssey.codeodysseyapi.common.exception.EmailNotFoundException;
-import app.codeodyssey.codeodysseyapi.common.exception.ForbiddenAccessException;
-import app.codeodyssey.codeodysseyapi.common.exception.Resource;
-import app.codeodyssey.codeodysseyapi.common.exception.ResourceNotFoundException;
+import app.codeodyssey.codeodysseyapi.common.exception.*;
 import app.codeodyssey.codeodysseyapi.course.data.Course;
 import app.codeodyssey.codeodysseyapi.course.data.CourseRepository;
 import app.codeodyssey.codeodysseyapi.invitation.api.InvitationResponse;
@@ -12,6 +9,8 @@ import app.codeodyssey.codeodysseyapi.invitation.data.InvitationRepository;
 import app.codeodyssey.codeodysseyapi.user.data.User;
 import app.codeodyssey.codeodysseyapi.user.data.UserRepository;
 import app.codeodyssey.codeodysseyapi.user.data.UserRole;
+
+import java.time.LocalDate;
 import java.util.Optional;
 import java.util.UUID;
 import lombok.AllArgsConstructor;
@@ -44,6 +43,20 @@ public class CreateInvitationService {
 
         if (!course.get().getProfessor().getId().equals(user.get().getId())) {
             throw new ForbiddenAccessException(user.get().getId());
+        }
+
+        if (command.expirationDate().isBefore(LocalDate.now())) {
+            throw new ViolationException(
+                    Resource.INVITATION,
+                    ViolationType.INVITATION_EXPIRATION_DATE_BEFORE_TODAY,
+                    command.expirationDate().toString());
+        }
+
+        if (command.expirationDate().isAfter(course.get().getEndDate())) {
+            throw new ViolationException(
+                    Resource.INVITATION,
+                    ViolationType.INVITATION_EXPIRATION_DATE_AFTER_COURSE_END_DATE,
+                    command.expirationDate().toString());
         }
 
         Invitation invitation = new Invitation(command.expirationDate(), course.get());

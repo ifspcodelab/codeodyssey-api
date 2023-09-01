@@ -16,6 +16,7 @@ public final class AccessTokenFactory {
     public static String sampleAccessToken(User user) {
         Map<String, Object> userClaims = new HashMap<>();
         userClaims.put("role", user.getRole().toString());
+        userClaims.put("email", user.getEmail());
 
         String rawKey = "404E635266556A586E3272357538782F413F4428472B4B6250645367566B5970";
 
