@@ -27,10 +27,6 @@ public class GetStudentCoursesService {
             throw new EmailNotFoundException(userEmail);
         }
 
-        if (!user.get().getRole().equals(UserRole.STUDENT)) {
-            throw new ForbiddenAccessException(user.get().getId());
-        }
-
         if (!user.get().getId().equals(id)) {
             throw new ForbiddenAccessException(user.get().getId());
         }
