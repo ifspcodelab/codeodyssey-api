@@ -30,6 +30,10 @@ public class GetTokenService {
                 .findByEmail(request.email().toLowerCase())
                 .orElseThrow(() -> new BadCredentialsException("Bad credentials"));
 
+        if(!userEmail.isValidated()){
+            throw new BadCredentialsException("Bad credentials");
+        }
+
         Authentication authentication =
                 authManager.authenticate(new UsernamePasswordAuthenticationToken(userEmail, request.password()));
 
