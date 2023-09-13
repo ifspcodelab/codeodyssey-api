@@ -30,12 +30,16 @@ public class SecurityConfig {
         "api/v1/users",
         "api/v1/users/confirmation/*",
         "api/v1/users/resend-email",
-        "/api/v1/users/*/courses/*/students"
+        "/api/v1/invitations/*/enrollments"
     };
 
     private static final String[] STUDENTS_ALLOWED = {};
 
-    private static final String[] PROF_ALLOWED = {"/api/v1/users/*/courses", "/api/v1/users/*/courses/*/students"};
+    private static final String[] PROF_ALLOWED = {
+            "/api/v1/users/*/courses",
+            "/api/v1/users/*/courses/*/students",
+            "/api/v1/courses/*/invitations"
+    };
 
     @Bean
     public SecurityFilterChain securityFilterChain(HttpSecurity http) {
