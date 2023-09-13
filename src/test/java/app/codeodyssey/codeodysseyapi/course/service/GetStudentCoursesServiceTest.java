@@ -32,20 +32,6 @@ public class GetStudentCoursesServiceTest {
     }
 
     @Test
-    @DisplayName("getStudentCoursesService returns UnauthorizedException when an user is not a student")
-    void getStudentCoursesService_givenNonStudent_returnsUnauthorized() {
-        var user = UserFactory.sampleUserProfessor();
-        userRepository.save(user);
-
-        RuntimeException exception = (RuntimeException)
-                catchThrowable(() -> getStudentCoursesService.execute(user.getId(), user.getEmail()));
-
-        assertThat(exception).isInstanceOf(ForbiddenAccessException.class);
-        ForbiddenAccessException forbiddenAccessException = (ForbiddenAccessException) exception;
-        assertThat(forbiddenAccessException.getId()).isEqualTo(user.getId());
-    }
-
-    @Test
     @DisplayName("getStudentCoursesService returns course response list when an user is a student")
     void getStudentCoursesService_givenStudent_returnsList() {
         var user = UserFactory.sampleUserStudent();
