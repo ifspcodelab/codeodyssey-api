@@ -32,9 +32,9 @@ public class Invitation {
 
     private Instant createdAt;
 
-    public Invitation(UUID id, String link, LocalDate expirationDate, Course course) {
-        this.id = id;
-        this.link = link;
+    public Invitation(LocalDate expirationDate, Course course) {
+        this.id = UUID.randomUUID();
+        this.link = "/invitations/%s".formatted(id);
         this.expirationDate = expirationDate;
         this.course = course;
         this.createdAt = Instant.now();

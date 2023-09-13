@@ -59,9 +59,7 @@ public class CreateInvitationService {
                     command.expirationDate().toString());
         }
 
-        UUID id = UUID.randomUUID();
-        String invitationLink = "/invitations/%s".formatted(id);
-        Invitation invitation = new Invitation(id, invitationLink, command.expirationDate(), course.get());
+        Invitation invitation = new Invitation(command.expirationDate(), course.get());
         invitationRepository.save(invitation);
 
         return invitationMapper.to(invitation);
