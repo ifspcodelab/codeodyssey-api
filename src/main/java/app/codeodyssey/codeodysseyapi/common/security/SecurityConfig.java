@@ -30,7 +30,8 @@ public class SecurityConfig {
         "api/v1/users",
         "api/v1/users/confirmation/*",
         "api/v1/users/resend-email",
-        "/api/v1/invitations/*/enrollments"
+        "/api/v1/invitations/*/enrollments",
+        "/api/v1/invitations/*"
     };
 
     private static final String[] STUDENTS_ALLOWED = {};
