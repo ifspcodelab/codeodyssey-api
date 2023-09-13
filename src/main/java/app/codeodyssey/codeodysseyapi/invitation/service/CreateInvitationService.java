@@ -59,10 +59,11 @@ public class CreateInvitationService {
                     command.expirationDate().toString());
         }
 
-        Invitation invitation = new Invitation(command.expirationDate(), course.get());
+        UUID id = UUID.randomUUID();
+        String invitationLink = "/invitations/%s".formatted(id);
+        Invitation invitation = new Invitation(id, invitationLink, command.expirationDate(), course.get());
         invitationRepository.save(invitation);
-        String invitationLink = "/invitations/%s".formatted(invitation.getId());
 
-        return invitationMapper.to(invitation, invitationLink);
+        return invitationMapper.to(invitation);
     }
 }

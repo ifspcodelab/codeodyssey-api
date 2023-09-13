@@ -6,5 +6,5 @@ import org.mapstruct.Mapper;
 
 @Mapper(componentModel = "spring")
 public interface InvitationMapper {
-    InvitationResponse to(Invitation invitation, String link);
+    InvitationResponse to(Invitation invitation);
 }
