@@ -1,6 +1,6 @@
 CREATE TABLE invitations(
     id UUID NOT NULL,
-    link CHAR(49),
+    link CHAR(49) NOT NULL,
     expiration_date DATE NOT NULL,
     created_at TIMESTAMP NOT NULL,
     course_id UUID NOT NULL,
