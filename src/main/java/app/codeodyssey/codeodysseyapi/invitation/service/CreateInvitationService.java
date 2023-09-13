@@ -61,7 +61,7 @@ public class CreateInvitationService {
 
         Invitation invitation = new Invitation(command.expirationDate(), course.get());
         invitationRepository.save(invitation);
-        String invitationLink = "/invitation/%s".formatted(invitation.getId());
+        String invitationLink = "/invitations/%s".formatted(invitation.getId());
 
         return invitationMapper.to(invitation, invitationLink);
     }
