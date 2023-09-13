@@ -19,7 +19,7 @@ import org.springframework.security.web.authentication.UsernamePasswordAuthentic
 @EnableMethodSecurity
 public class SecurityConfig {
 
-    private final JwtAuthenticationFilter jwtAuthFilter;
+    private final JwtAuthFilter jwtAuthFilter;
     private final AuthenticationProvider authProvider;
 
     private static final String[] NO_AUTH_REQUIRED = {
@@ -30,12 +30,14 @@ public class SecurityConfig {
         "api/v1/users",
         "api/v1/users/confirmation/*",
         "api/v1/users/resend-email",
+        "/api/v1/users/*/courses/*/students",
+        "/api/v1/users/*/courses",
         "/api/v1/users/*/courses/*/students"
     };
 
     private static final String[] STUDENTS_ALLOWED = {};
 
-    private static final String[] PROF_ALLOWED = {"/api/v1/users/*/courses", "/api/v1/users/*/courses/*/students"};
+    private static final String[] PROF_ALLOWED = {};
 
     @Bean
     public SecurityFilterChain securityFilterChain(HttpSecurity http) {

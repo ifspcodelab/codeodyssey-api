@@ -27,7 +27,7 @@ public class GetProfessorCoursesService {
             throw new EmailNotFoundException(userEmail);
         }
 
-        if (!user.get().getRole().equals(UserRole.PROFESSOR)) {
+        if (user.get().getRole().equals(UserRole.STUDENT)) {
             throw new ForbiddenAccessException(user.get().getId());
         }
 
