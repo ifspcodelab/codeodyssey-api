@@ -14,6 +14,7 @@ import java.util.Optional;
 import java.util.UUID;
 import lombok.AllArgsConstructor;
 import org.springframework.stereotype.Service;
+import org.springframework.transaction.annotation.Transactional;
 
 @Service
 @AllArgsConstructor
@@ -23,6 +24,7 @@ public class CreateEnrollmentService {
     private final EnrollmentRepository enrollmentRepository;
     private final EnrollmentMapper enrollmentMapper;
 
+    @Transactional
     public EnrollmentResponse execute(UUID invitationId, String userEmail) {
         Optional<User> studentOpt = userRepository.findByEmail(userEmail);
 
