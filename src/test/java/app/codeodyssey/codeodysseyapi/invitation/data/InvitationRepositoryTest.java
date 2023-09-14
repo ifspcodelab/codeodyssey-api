@@ -18,8 +18,6 @@ import org.springframework.boot.test.context.SpringBootTest;
 import org.springframework.test.context.ContextConfiguration;
 import org.testcontainers.junit.jupiter.Testcontainers;
 
-import java.util.List;
-
 import static org.assertj.core.api.Assertions.assertThat;
 
 @SpringBootTest
@@ -58,33 +56,35 @@ public class InvitationRepositoryTest {
 
     @Test
     @DisplayName("returns an empty list when the course doesn't have any invitations")
-    void findAllByCourseId_givenCourseWithNoInvitations_returnEmpty() {
-        List<Invitation> invitationList = invitationRepository.findAllByCourseId(course.getId());
-        assertThat(invitationList).isEmpty();
+    void findAllByCourseId_givenCourseWithNoInvitations_returnNull() {
+        Invitation invitation = invitationRepository.findByCourseId(course.getId());
+
+        assertThat(invitation).isNull();
     }
 
     @Test
-    @DisplayName("returns a list when the course have one invitation")
-    void findAllByCourseId_givenCourseWithOneInvitation_returnList() {
+    @DisplayName("returns an invitation when the course has one invitation")
+    void findAllByCourseId_givenCourseWithOneInvitation_returnInvitation() {
         var invitation = InvitationFactory.sampleInvitationWithCourse(course);
         invitationRepository.save(invitation);
 
-        List<Invitation> invitationList = invitationRepository.findAllByCourseId(course.getId());
-        assertThat(invitationList).isNotEmpty();
-        assertThat(invitationList).hasSize(1);
+        Invitation invitationRepositoryByCourseId = invitationRepository.findByCourseId(course.getId());
+
+        assertThat(invitationRepositoryByCourseId).isNotNull();
+        assertThat(invitationRepositoryByCourseId.getId()).isEqualTo(invitation.getId());
     }
 
     @Test
-    @DisplayName("returns a list when the course has many invitations")
+    @DisplayName("returns the last invitation created when the course has many invitations")
     void findAllByCourseId_givenCourseWithManyInvitations_returnList() {
-        var invitation1 = InvitationFactory.sampleInvitationWithCourse(course);
-        invitationRepository.save(invitation1);
+        var invitationA = InvitationFactory.sampleInvitationWithCourse(course);
+        invitationRepository.save(invitationA);
 
-        var invitation2 = InvitationFactory.sampleInvitationWithCourse(course);
-        invitationRepository.save(invitation2);
+        var invitationB = InvitationFactory.sampleInvitationWithCourse(course);
+        invitationRepository.save(invitationB);
 
-        List<Invitation> invitationList = invitationRepository.findAllByCourseId(course.getId());
-        assertThat(invitationList).isNotEmpty();
-        assertThat(invitationList).hasSize(2);
+        Invitation invitationRepositoryByCourseId = invitationRepository.findByCourseId(course.getId());
+        assertThat(invitationRepositoryByCourseId).isNotNull();
+        assertThat(invitationRepositoryByCourseId.getId()).isEqualTo(invitationB.getId());
     }
 }

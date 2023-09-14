@@ -4,6 +4,7 @@ import app.codeodyssey.codeodysseyapi.DatabaseContainerInitializer;
 import app.codeodyssey.codeodysseyapi.course.data.Course;
 import app.codeodyssey.codeodysseyapi.course.data.CourseRepository;
 import app.codeodyssey.codeodysseyapi.course.util.CourseFactory;
+import app.codeodyssey.codeodysseyapi.invitation.api.InvitationResponse;
 import app.codeodyssey.codeodysseyapi.invitation.data.Invitation;
 import app.codeodyssey.codeodysseyapi.invitation.data.InvitationRepository;
 import app.codeodyssey.codeodysseyapi.invitation.util.InvitationFactory;
@@ -28,7 +29,6 @@ import org.springframework.web.client.HttpClientErrorException;
 import org.springframework.web.client.RestTemplate;
 import org.testcontainers.junit.jupiter.Testcontainers;
 
-import java.util.List;
 import java.util.UUID;
 
 import static org.assertj.core.api.Assertions.assertThat;
@@ -39,7 +39,7 @@ import static org.assertj.core.api.Assertions.catchThrowable;
 @AutoConfigureTestDatabase(replace = AutoConfigureTestDatabase.Replace.NONE)
 @ContextConfiguration(initializers = {DatabaseContainerInitializer.class})
 @Testcontainers
-public class GetInvitationsEndToEndTest {
+public class GetInvitationEndToEndTest {
     @LocalServerPort
     Integer port;
 
@@ -82,8 +82,8 @@ public class GetInvitationsEndToEndTest {
     }
 
     @Test
-    @DisplayName("returns an invitation list when given a valid course id and professor is logged in")
-    void getInvitationsEndpoint_givenValidCourseIdAndProfessorLoggedIn_returnsList() {
+    @DisplayName("returns an invitation when given a valid course id and professor is logged in")
+    void getInvitationsEndpoint_givenValidCourseIdAndProfessorLoggedIn_returnsInvitation() {
         url = "http://localhost:%d/api/v1/invitations/%s"
                 .formatted(port, course.getId());
         restTemplate = new RestTemplate();
@@ -93,7 +93,7 @@ public class GetInvitationsEndToEndTest {
         httpHeaders.setBearerAuth(token);
         HttpEntity<?> request = new HttpEntity<>(null, httpHeaders);
 
-        var response = restTemplate.exchange(url, HttpMethod.GET, request, List.class);
+        var response = restTemplate.exchange(url, HttpMethod.GET, request, InvitationResponse.class);
 
         assertThat(response).isNotNull();
         assertThat(response.getStatusCode()).isEqualTo(HttpStatus.OK);
