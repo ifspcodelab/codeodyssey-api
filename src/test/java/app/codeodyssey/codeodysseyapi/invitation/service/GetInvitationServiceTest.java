@@ -32,9 +32,9 @@ import static org.assertj.core.api.Assertions.assertThat;
 @DisplayName("Tests for Get Invitations Service")
 @AutoConfigureTestDatabase(replace = AutoConfigureTestDatabase.Replace.NONE)
 @ContextConfiguration(initializers = {DatabaseContainerInitializer.class})
-public class GetInvitationsServiceTest {
+public class GetInvitationServiceTest {
     @Autowired
-    GetInvitationsService getInvitationsService;
+    GetInvitationService getInvitationService;
 
     @Autowired
     private UserRepository userRepository;
@@ -70,7 +70,7 @@ public class GetInvitationsServiceTest {
     @Test
     @DisplayName("returns a user list when given a valid course id and and professor is logged in")
     void getInvitationsService_givenValidCourseIdAndProfessorLoggedIn_returnsList() {
-        List<InvitationResponse> invitationList = getInvitationsService.execute(course.getId(), professor.getEmail());
+        List<InvitationResponse> invitationList = getInvitationService.execute(course.getId(), professor.getEmail());
         assertThat(invitationList).isNotEmpty();
     }
 
@@ -81,7 +81,7 @@ public class GetInvitationsServiceTest {
         userRepository.save(user);
 
         Assertions.assertThatExceptionOfType(ForbiddenAccessException.class)
-                .isThrownBy(() -> getInvitationsService.execute(user.getId(), user.getEmail()));
+                .isThrownBy(() -> getInvitationService.execute(user.getId(), user.getEmail()));
     }
 
     @Test
@@ -90,6 +90,6 @@ public class GetInvitationsServiceTest {
         UUID invalidCourseId = UUID.randomUUID();
 
         Assertions.assertThatExceptionOfType(ResourceNotFoundException.class)
-                .isThrownBy(() -> getInvitationsService.execute(invalidCourseId, professor.getEmail()));
+                .isThrownBy(() -> getInvitationService.execute(invalidCourseId, professor.getEmail()));
     }
 }

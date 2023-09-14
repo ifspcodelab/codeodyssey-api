@@ -14,19 +14,18 @@ import app.codeodyssey.codeodysseyapi.user.data.UserRole;
 import lombok.AllArgsConstructor;
 import org.springframework.stereotype.Service;
 
-import java.util.List;
 import java.util.Optional;
 import java.util.UUID;
 
 @Service
 @AllArgsConstructor
-public class GetInvitationsService {
+public class GetInvitationService {
     private final InvitationRepository invitationRepository;
     private final UserRepository userRepository;
     private final CourseRepository courseRepository;
     private final InvitationMapper invitationMapper;
 
-    public List<InvitationResponse> execute(UUID courseId, String userEmail) {
+    public InvitationResponse execute(UUID courseId, String userEmail) {
         Optional<User> user = userRepository.findByEmail(userEmail);
 
         if (user.isEmpty()) {
@@ -41,6 +40,6 @@ public class GetInvitationsService {
                 .findById(courseId)
                 .orElseThrow(() -> new ResourceNotFoundException(courseId, Resource.COURSE));
 
-        return invitationMapper.to(invitationRepository.findAllByCourseId(course.getId()));
+        return invitationMapper.to(invitationRepository.findByCourseId(course.getId()));
     }
 }
