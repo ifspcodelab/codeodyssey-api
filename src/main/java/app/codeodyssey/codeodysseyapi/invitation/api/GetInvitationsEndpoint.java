@@ -1,8 +1,15 @@
 package app.codeodyssey.codeodysseyapi.invitation.api;
 
 import app.codeodyssey.codeodysseyapi.invitation.service.GetInvitationsService;
+import io.swagger.v3.oas.annotations.Operation;
+import io.swagger.v3.oas.annotations.media.ArraySchema;
+import io.swagger.v3.oas.annotations.media.Content;
+import io.swagger.v3.oas.annotations.media.Schema;
+import io.swagger.v3.oas.annotations.responses.ApiResponse;
+import io.swagger.v3.oas.annotations.responses.ApiResponses;
 import jakarta.validation.Valid;
 import lombok.AllArgsConstructor;
+import org.springframework.http.ProblemDetail;
 import org.springframework.http.ResponseEntity;
 import org.springframework.security.core.Authentication;
 import org.springframework.security.core.userdetails.UserDetails;
@@ -19,6 +26,40 @@ import java.util.UUID;
 @AllArgsConstructor
 public class GetInvitationsEndpoint {
     private final GetInvitationsService getInvitationsService;
+
+    @Operation(
+            summary = "Get invitation.",
+            description = "Returns an invitation given a invitation id.",
+            tags = {"Invitation"})
+    @ApiResponses({
+            @ApiResponse(
+                    responseCode = "200",
+                    content = {
+                            @Content(
+                                    array = @ArraySchema(schema = @Schema(implementation = InvitationResponse.class)),
+                                    mediaType = "application/json")
+                    }),
+            @ApiResponse(
+                    responseCode = "400",
+                    content = {
+                            @Content(schema = @Schema(implementation = ProblemDetail.class), mediaType = "application/json")
+                    }),
+            @ApiResponse(
+                    responseCode = "403",
+                    content = {
+                            @Content(schema = @Schema(implementation = ProblemDetail.class), mediaType = "application/json")
+                    }),
+            @ApiResponse(
+                    responseCode = "404",
+                    content = {
+                            @Content(schema = @Schema(implementation = ProblemDetail.class), mediaType = "application/json")
+                    }),
+            @ApiResponse(
+                    responseCode = "409",
+                    content = {
+                            @Content(schema = @Schema(implementation = ProblemDetail.class), mediaType = "application/json")
+                    })
+    })
 
     @GetMapping("{courseId}")
     public ResponseEntity<List<InvitationResponse>> get(@PathVariable @Valid UUID courseId, Authentication authentication) {
