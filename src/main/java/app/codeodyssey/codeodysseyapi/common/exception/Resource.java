@@ -10,7 +10,8 @@ public enum Resource {
     USER("User"),
     REFRESH_TOKEN("RefreshToken"),
     ACCESS_TOKEN("AccessToken"),
-    INVITATION("Invitation");
+    INVITATION("Invitation"),
+    ENROLLMENT("Enrollment");
 
     private final String name;
 }

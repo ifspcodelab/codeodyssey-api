@@ -1,9 +1,6 @@
 package app.codeodyssey.codeodysseyapi.enrollment.service;
 
-import app.codeodyssey.codeodysseyapi.common.exception.EmailNotFoundException;
-import app.codeodyssey.codeodysseyapi.common.exception.Resource;
-import app.codeodyssey.codeodysseyapi.common.exception.ResourceNotFoundException;
-import app.codeodyssey.codeodysseyapi.common.exception.StudentAlreadyEnrolledException;
+import app.codeodyssey.codeodysseyapi.common.exception.*;
 import app.codeodyssey.codeodysseyapi.enrollment.data.Enrollment;
 import app.codeodyssey.codeodysseyapi.enrollment.data.EnrollmentRepository;
 import app.codeodyssey.codeodysseyapi.invitation.data.Invitation;
@@ -41,6 +38,10 @@ public class CreateEnrollmentService {
         }
 
         Invitation invitation = invitationOpt.get();
+
+        if (student.equals(invitation.getCourse().getProfessor())){
+            throw new ViolationException(Resource.ENROLLMENT, ViolationType.ENROLLMENT_PROFESSOR_WHO_CREATED_COURSE_CANNOT_BE_ENROLLED, student.getEmail());
+        }
 
         boolean exists = enrollmentRepository.existsByStudentIdAndInvitation_Course_Id(
                 student.getId(), invitation.getCourse().getId());
