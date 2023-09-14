@@ -5,7 +5,10 @@ import static org.assertj.core.api.Assertions.catchThrowable;
 import static org.junit.jupiter.api.Assertions.assertDoesNotThrow;
 
 import app.codeodyssey.codeodysseyapi.DatabaseContainerInitializer;
+import app.codeodyssey.codeodysseyapi.common.exception.Resource;
 import app.codeodyssey.codeodysseyapi.common.exception.StudentAlreadyEnrolledException;
+import app.codeodyssey.codeodysseyapi.common.exception.ViolationException;
+import app.codeodyssey.codeodysseyapi.common.exception.ViolationType;
 import app.codeodyssey.codeodysseyapi.course.data.CourseRepository;
 import app.codeodyssey.codeodysseyapi.course.util.CourseFactory;
 import app.codeodyssey.codeodysseyapi.enrollment.data.EnrollmentRepository;
@@ -70,6 +73,29 @@ public class CreateEnrollmentServiceTest {
         assertThat(enrollment).isInstanceOf(EnrollmentResponse.class);
         assertThat(enrollment.invitation().id()).isEqualTo(invitation.getId());
         assertThat(enrollment.student().id()).isEqualTo(student.getId());
+    }
+
+    @Test
+    @DisplayName("createEnrollmentService given student and invitation returns violation exception")
+    void createEnrollmentService_givenStudentAndInvitation_returnsViolationException() {
+        var course = CourseFactory.sampleCourse();
+        var professor = course.getProfessor();
+        var invitation = InvitationFactory.sampleInvitation(LocalDate.now().plusMonths(1), course);
+        var enrollment = EnrollmentFactory.sampleEnrollment(invitation, professor);
+        userRepository.save(professor);
+        courseRepository.save(course);
+        invitationRepository.save(invitation);
+        enrollmentRepository.save(enrollment);
+
+        var exception = (RuntimeException)
+                catchThrowable(() -> createEnrollmentService.execute(invitation.getId(), professor.getEmail()));
+
+        assertThat(exception).isNotNull();
+        assertThat(exception).isInstanceOf(ViolationException.class);
+        ViolationException violationException = (ViolationException) exception;
+        assertThat(violationException.getResource()).isEqualTo(Resource.ENROLLMENT);
+        assertThat(violationException.getType()).isEqualTo(ViolationType.ENROLLMENT_PROFESSOR_WHO_CREATED_COURSE_CANNOT_BE_ENROLLED);
+        assertThat(violationException.getDetails()).isEqualTo(professor.getEmail());
     }
 
     @Test
