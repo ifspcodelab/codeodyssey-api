@@ -19,7 +19,7 @@ import org.springframework.security.web.authentication.UsernamePasswordAuthentic
 @EnableMethodSecurity
 public class SecurityConfig {
 
-    private final JwtAuthenticationFilter jwtAuthFilter;
+    private final JwtAuthFilter jwtAuthFilter;
     private final AuthenticationProvider authProvider;
 
     private static final String[] NO_AUTH_REQUIRED = {
@@ -30,16 +30,11 @@ public class SecurityConfig {
         "api/v1/users",
         "api/v1/users/confirmation/*",
         "api/v1/users/resend-email",
+        "/api/v1/users/*/courses/*/students",
+        "/api/v1/users/*/courses",
+        "/api/v1/users/*/courses/*/students",
         "/api/v1/invitations/*/enrollments",
         "/api/v1/invitations/*"
-    };
-
-    private static final String[] STUDENTS_ALLOWED = {};
-
-    private static final String[] PROF_ALLOWED = {
-            "/api/v1/users/*/courses",
-            "/api/v1/users/*/courses/*/students",
-            "/api/v1/courses/*/invitations"
     };
 
     @Bean
@@ -48,10 +43,6 @@ public class SecurityConfig {
             http.csrf(AbstractHttpConfigurer::disable)
                     .authorizeHttpRequests(auth -> auth.requestMatchers(NO_AUTH_REQUIRED)
                             .permitAll()
-                            .requestMatchers(STUDENTS_ALLOWED)
-                            .hasAnyAuthority("STUDENT")
-                            .requestMatchers(PROF_ALLOWED)
-                            .hasAnyAuthority("PROFESSOR")
                             .anyRequest()
                             .authenticated())
                     .sessionManagement(sess -> sess.sessionCreationPolicy(SessionCreationPolicy.STATELESS))

@@ -5,5 +5,5 @@ CREATE TABLE refreshtokens(
     created_at TIMESTAMP NOT NULL,
     user_id UUID NOT NULL,
     CONSTRAINT refreshtokens_pk PRIMARY KEY (id),
-    CONSTRAINT user_fk FOREIGN KEY (user_id) REFERENCES users(id)
+    CONSTRAINT user_fk FOREIGN KEY (user_id) REFERENCES users(id) ON DELETE CASCADE
 )

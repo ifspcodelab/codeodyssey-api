@@ -24,7 +24,7 @@ public class CreateCourseService {
                 .findById(professorId)
                 .orElseThrow(() -> new ResourceNotFoundException(professorId, Resource.USER));
 
-        if (!professor.getRole().equals(UserRole.PROFESSOR)) {
+        if (professor.getRole().equals(UserRole.STUDENT)) {
             throw new ForbiddenAccessException(professorId);
         }
 
