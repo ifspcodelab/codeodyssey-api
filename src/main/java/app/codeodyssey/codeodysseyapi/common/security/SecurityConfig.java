@@ -35,20 +35,12 @@ public class SecurityConfig {
         "/api/v1/users/*/courses/*/students"
     };
 
-    private static final String[] STUDENTS_ALLOWED = {};
-
-    private static final String[] PROF_ALLOWED = {};
-
     @Bean
     public SecurityFilterChain securityFilterChain(HttpSecurity http) {
         try {
             http.csrf(AbstractHttpConfigurer::disable)
                     .authorizeHttpRequests(auth -> auth.requestMatchers(NO_AUTH_REQUIRED)
                             .permitAll()
-                            .requestMatchers(STUDENTS_ALLOWED)
-                            .hasAnyAuthority("STUDENT")
-                            .requestMatchers(PROF_ALLOWED)
-                            .hasAnyAuthority("PROFESSOR")
                             .anyRequest()
                             .authenticated())
                     .sessionManagement(sess -> sess.sessionCreationPolicy(SessionCreationPolicy.STATELESS))
