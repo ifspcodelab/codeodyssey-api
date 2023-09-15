@@ -239,4 +239,20 @@ public class GlobalExceptionHandler {
         log.warn(detail);
         return new ResponseEntity<>(problem, status);
     }
+
+    @ExceptionHandler(InvitationLinkExpiredException.class)
+    public ResponseEntity<ProblemDetail> invitationLinkExpired(InvitationLinkExpiredException ex) {
+        HttpStatus status = HttpStatus.GONE;
+        UUID invitationId = ex.getInvitationId();
+        UUID courseId = ex.getCourseId();
+        String title = "Invitation link expired";
+        String detail = "Invitation with id=%s is expired on course id=%s.".formatted(invitationId, courseId);
+
+        ProblemDetail problem = ProblemDetail.forStatus(status);
+        problem.setTitle(title);
+        problem.setDetail(detail);
+
+        log.warn(detail);
+        return new ResponseEntity<>(problem, status);
+    }
 }

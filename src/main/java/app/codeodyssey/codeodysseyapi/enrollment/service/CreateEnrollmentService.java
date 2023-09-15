@@ -7,6 +7,8 @@ import app.codeodyssey.codeodysseyapi.invitation.data.Invitation;
 import app.codeodyssey.codeodysseyapi.invitation.data.InvitationRepository;
 import app.codeodyssey.codeodysseyapi.user.data.User;
 import app.codeodyssey.codeodysseyapi.user.data.UserRepository;
+
+import java.time.LocalDate;
 import java.util.Optional;
 import java.util.UUID;
 import lombok.AllArgsConstructor;
@@ -45,6 +47,12 @@ public class CreateEnrollmentService {
 
         boolean exists = enrollmentRepository.existsByStudentIdAndInvitation_Course_Id(
                 student.getId(), invitation.getCourse().getId());
+
+        if (invitation.getExpirationDate().isBefore(LocalDate.now())) {
+            throw new InvitationLinkExpiredException(
+                    invitation.getId(), invitation.getCourse().getId());
+        }
+
         if (exists) {
             throw new StudentAlreadyEnrolledException(
                     student.getId(), invitation.getCourse().getId());
