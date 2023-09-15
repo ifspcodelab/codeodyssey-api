@@ -27,8 +27,12 @@ public class GetTokenService {
 
     public LoginResponse execute(LoginRequest request) {
         var userEmail = this.userRepository
-                .findByEmail(request.email().toLowerCase())
+                .findByEmail(request.email())
                 .orElseThrow(() -> new BadCredentialsException("Bad credentials"));
+
+        if(!userEmail.isValidated()){
+            throw new BadCredentialsException("Bad credentials");
+        }
 
         Authentication authentication =
                 authManager.authenticate(new UsernamePasswordAuthenticationToken(userEmail, request.password()));
