@@ -32,7 +32,9 @@ public class SecurityConfig {
         "api/v1/users/resend-email",
         "/api/v1/users/*/courses/*/students",
         "/api/v1/users/*/courses",
-        "/api/v1/users/*/courses/*/students"
+        "/api/v1/users/*/courses/*/students",
+        "/api/v1/invitations/*/enrollments",
+        "/api/v1/invitations/*"
     };
 
     @Bean

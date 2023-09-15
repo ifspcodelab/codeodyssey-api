@@ -5,7 +5,7 @@ import static org.assertj.core.api.Assertions.catchThrowable;
 import static org.junit.jupiter.api.Assertions.assertDoesNotThrow;
 
 import app.codeodyssey.codeodysseyapi.DatabaseContainerInitializer;
-import app.codeodyssey.codeodysseyapi.common.exception.StudentAlreadyEnrolledException;
+import app.codeodyssey.codeodysseyapi.common.exception.*;
 import app.codeodyssey.codeodysseyapi.course.data.CourseRepository;
 import app.codeodyssey.codeodysseyapi.course.util.CourseFactory;
 import app.codeodyssey.codeodysseyapi.enrollment.data.EnrollmentRepository;
@@ -73,6 +73,29 @@ public class CreateEnrollmentServiceTest {
     }
 
     @Test
+    @DisplayName("createEnrollmentService given student and invitation returns violation exception")
+    void createEnrollmentService_givenStudentAndInvitation_returnsViolationException() {
+        var course = CourseFactory.sampleCourse();
+        var professor = course.getProfessor();
+        var invitation = InvitationFactory.sampleInvitation(LocalDate.now().plusMonths(1), course);
+        var enrollment = EnrollmentFactory.sampleEnrollment(invitation, professor);
+        userRepository.save(professor);
+        courseRepository.save(course);
+        invitationRepository.save(invitation);
+        enrollmentRepository.save(enrollment);
+
+        var exception = (RuntimeException)
+                catchThrowable(() -> createEnrollmentService.execute(invitation.getId(), professor.getEmail()));
+
+        assertThat(exception).isNotNull();
+        assertThat(exception).isInstanceOf(ViolationException.class);
+        ViolationException violationException = (ViolationException) exception;
+        assertThat(violationException.getResource()).isEqualTo(Resource.ENROLLMENT);
+        assertThat(violationException.getType()).isEqualTo(ViolationType.ENROLLMENT_PROFESSOR_WHO_CREATED_COURSE_CANNOT_BE_ENROLLED);
+        assertThat(violationException.getDetails()).isEqualTo(professor.getEmail());
+    }
+
+    @Test
     @DisplayName("createEnrollmentService given student and invitation returns StudentAlreadyEnrolled exception")
     void createEnrollmentService_givenStudentAndInvitation_returnsAlreadyEnrolled() {
         var student = UserFactory.sampleUserStudent();
@@ -93,5 +116,27 @@ public class CreateEnrollmentServiceTest {
         StudentAlreadyEnrolledException alreadyEnrolledException = (StudentAlreadyEnrolledException) exception;
         assertThat(alreadyEnrolledException.getStudentId()).isEqualTo(student.getId());
         assertThat(alreadyEnrolledException.getCourseId()).isEqualTo(course.getId());
+    }
+
+    @Test
+    @DisplayName("createEnrollmentService given student and invitation returns InvitationLinkExpired exception")
+    void createEnrollmentService_givenStudentAndInvitation_returnsInvitationLinkExpired() {
+        var student = UserFactory.sampleUserStudent();
+        var course = CourseFactory.sampleCourse();
+        var professor = course.getProfessor();
+        var invitation = InvitationFactory.sampleInvitation(LocalDate.now(), course);
+        invitation.setExpirationDate(LocalDate.now().minusMonths(1));
+        userRepository.saveAll(List.of(student, professor));
+        courseRepository.save(course);
+        invitationRepository.save(invitation);
+
+        var exception = (RuntimeException)
+                catchThrowable(() -> createEnrollmentService.execute(invitation.getId(), student.getEmail()));
+
+        assertThat(exception).isNotNull();
+        assertThat(exception).isInstanceOf(InvitationLinkExpiredException.class);
+        InvitationLinkExpiredException invitationLinkExpiredException = (InvitationLinkExpiredException) exception;
+        assertThat(invitationLinkExpiredException.getInvitationId()).isEqualTo(invitation.getId());
+        assertThat(invitationLinkExpiredException.getCourseId()).isEqualTo(course.getId());
     }
 }

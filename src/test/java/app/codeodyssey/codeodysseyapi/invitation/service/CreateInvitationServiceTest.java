@@ -62,7 +62,7 @@ public class CreateInvitationServiceTest {
         assertThat(invitation).isNotNull();
         assertThat(invitation).isInstanceOf(InvitationResponse.class);
         assertThat(invitation.expirationDate()).isEqualTo(command.expirationDate());
-        assertThat(invitation.link()).isEqualTo("/invites/%s".formatted(invitation.id()));
+        assertThat(invitation.link()).isEqualTo("/invitations/%s".formatted(invitation.id()));
     }
 
     @Test

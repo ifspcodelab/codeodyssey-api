@@ -23,6 +23,8 @@ public class Invitation {
     @Id
     private UUID id;
 
+    private String link;
+
     private LocalDate expirationDate;
 
     @ManyToOne
@@ -32,6 +34,7 @@ public class Invitation {
 
     public Invitation(LocalDate expirationDate, Course course) {
         this.id = UUID.randomUUID();
+        this.link = "/invitations/%s".formatted(id);
         this.expirationDate = expirationDate;
         this.course = course;
         this.createdAt = Instant.now();
