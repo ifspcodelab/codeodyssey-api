@@ -3,6 +3,7 @@ package app.codeodyssey.codeodysseyapi.enrollment.service;
 import static org.assertj.core.api.Assertions.assertThat;
 import static org.assertj.core.api.Assertions.catchThrowable;
 import static org.junit.jupiter.api.Assertions.assertDoesNotThrow;
+import static org.junit.jupiter.api.Assertions.assertTrue;
 
 import app.codeodyssey.codeodysseyapi.DatabaseContainerInitializer;
 import app.codeodyssey.codeodysseyapi.common.exception.*;
@@ -19,15 +20,19 @@ import java.util.List;
 import org.junit.jupiter.api.AfterEach;
 import org.junit.jupiter.api.DisplayName;
 import org.junit.jupiter.api.Test;
+import org.junit.jupiter.api.extension.ExtendWith;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.boot.test.autoconfigure.jdbc.AutoConfigureTestDatabase;
 import org.springframework.boot.test.context.SpringBootTest;
+import org.springframework.boot.test.system.CapturedOutput;
+import org.springframework.boot.test.system.OutputCaptureExtension;
 import org.springframework.test.context.ContextConfiguration;
 
 @SpringBootTest
 @DisplayName("Create Enrollment Service tests")
 @AutoConfigureTestDatabase(replace = AutoConfigureTestDatabase.Replace.NONE)
 @ContextConfiguration(initializers = {DatabaseContainerInitializer.class})
+@ExtendWith({OutputCaptureExtension.class})
 public class CreateEnrollmentServiceTest {
     @Autowired
     UserRepository userRepository;
@@ -54,7 +59,7 @@ public class CreateEnrollmentServiceTest {
 
     @Test
     @DisplayName("createEnrollmentService given student and invitation returns enrollment")
-    void createEnrollmentService_givenStudentAndInvitation_returnsEnrollment() {
+    void createEnrollmentService_givenStudentAndInvitation_returnsEnrollment(CapturedOutput output) {
         var student = UserFactory.sampleUserStudent();
         var course = CourseFactory.sampleCourse();
         var professor = course.getProfessor();
@@ -70,6 +75,7 @@ public class CreateEnrollmentServiceTest {
         assertThat(enrollment).isInstanceOf(EnrollmentResponse.class);
         assertThat(enrollment.invitation().id()).isEqualTo(invitation.getId());
         assertThat(enrollment.student().id()).isEqualTo(student.getId());
+        assertTrue(output.toString().contains("Invitation accepted by student with id " + student.getId() + " from course with id " + invitation.getCourse().getId()));
     }
 
     @Test
