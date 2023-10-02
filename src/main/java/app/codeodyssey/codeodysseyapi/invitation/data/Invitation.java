@@ -32,11 +32,14 @@ public class Invitation {
 
     private Instant createdAt;
 
+    private boolean isActive;
+
     public Invitation(LocalDate expirationDate, Course course) {
         this.id = UUID.randomUUID();
         this.link = "/invitations/%s".formatted(id);
         this.expirationDate = expirationDate;
         this.course = course;
         this.createdAt = Instant.now();
+        this.isActive = true;
     }
 }
