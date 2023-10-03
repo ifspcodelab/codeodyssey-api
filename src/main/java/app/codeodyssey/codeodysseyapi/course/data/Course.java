@@ -1,12 +1,13 @@
 package app.codeodyssey.codeodysseyapi.course.data;
 
+import app.codeodyssey.codeodysseyapi.activity.data.Activity;
 import app.codeodyssey.codeodysseyapi.user.data.User;
-import jakarta.persistence.Entity;
-import jakarta.persistence.Id;
-import jakarta.persistence.ManyToOne;
-import jakarta.persistence.Table;
+import jakarta.persistence.*;
+
 import java.time.Instant;
 import java.time.LocalDate;
+import java.util.ArrayList;
+import java.util.List;
 import java.util.UUID;
 import lombok.AllArgsConstructor;
 import lombok.Getter;
@@ -32,6 +33,9 @@ public class Course {
     private User professor;
 
     private Instant createdAt;
+
+    @OneToMany(mappedBy = "course", fetch = FetchType.EAGER)
+    private List<Activity> activities;
 
     public Course(String name, String slug, LocalDate startDate, LocalDate endDate, User professor) {
         this.id = UUID.randomUUID();
