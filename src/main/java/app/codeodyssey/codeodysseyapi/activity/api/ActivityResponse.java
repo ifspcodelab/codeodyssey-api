@@ -1,5 +1,7 @@
 package app.codeodyssey.codeodysseyapi.activity.api;
 
+import app.codeodyssey.codeodysseyapi.course.data.Course;
+
 import java.time.Instant;
 import java.util.UUID;
 
@@ -11,6 +13,5 @@ public record ActivityResponse(UUID id,
                                byte[] initialFile,
                                byte[] solutionFile,
                                byte[] testFile,
-                               String extension,
-                               UUID courseId) {
+                               String extension) {
 }

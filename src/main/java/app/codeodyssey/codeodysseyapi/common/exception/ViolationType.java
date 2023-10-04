@@ -12,7 +12,9 @@ public enum ViolationType {
     COURSE_SLUG_NOT_FOUND("Slug not found"),
     INVITATION_EXPIRATION_DATE_BEFORE_TODAY("Expiration date is in the past"),
     INVITATION_EXPIRATION_DATE_AFTER_COURSE_END_DATE("Expiration date is earlier than the course end date"),
-    ENROLLMENT_PROFESSOR_WHO_CREATED_COURSE_CANNOT_BE_ENROLLED("professor who created the course cannot be enrolled in it");
+    ENROLLMENT_PROFESSOR_WHO_CREATED_COURSE_CANNOT_BE_ENROLLED("professor who created the course cannot be enrolled in it"),
+    ACTIVITY_START_DATE_BEFORE_TODAY("Start date is in the past"),
+    ACTIVITY_END_DATE_BEFORE_START_DATE("End date is earlier than its start date");
 
     private final String name;
 }

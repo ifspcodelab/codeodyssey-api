@@ -32,10 +32,35 @@ public class Activity {
     @Column(columnDefinition="BLOB")
     private byte[] testFile;
 
+    private String extension;
+
     @ManyToOne(fetch = FetchType.EAGER)
     private Course course;
 
     public Activity() {
         this.id = UUID.randomUUID();
+    }
+
+    public Activity(String title,
+                    String description,
+                    Instant startDate,
+                    Instant endDate,
+                    byte[] initialFile,
+                    byte[] solutionFile,
+                    byte[] testFile,
+                    String extension,
+                    Course course) {
+
+        this.id = UUID.randomUUID();
+        this.title = title;
+        this.description = description;
+        this.startDate = startDate;
+        this.endDate = endDate;
+        this.initialFile = initialFile;
+        this.solutionFile = solutionFile;
+        this.testFile = testFile;
+        this.extension = extension;
+        this.course = course;
+
     }
 }
