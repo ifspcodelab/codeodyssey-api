@@ -2,11 +2,13 @@ package app.codeodyssey.codeodysseyapi.activity.data;
 
 import app.codeodyssey.codeodysseyapi.course.data.Course;
 import jakarta.persistence.*;
-import lombok.Builder;
 import lombok.Data;
+import org.hibernate.annotations.Type;
 
 import java.time.Instant;
 import java.util.UUID;
+
+import static jakarta.persistence.FetchType.LAZY;
 
 @Entity
 @Table(name = "activities")
@@ -21,14 +23,14 @@ public class Activity {
     private Instant startDate;
     private Instant endDate;
 
-    @Lob
-    private Byte[] initialFile;
+    @Column(columnDefinition="BLOB")
+    private byte[] initialFile;
 
-    @Lob
-    private Byte[] solutionFile;
+    @Column(columnDefinition="BLOB")
+    private byte[] solutionFile;
 
-    @Lob
-    private Byte[] testFile;
+    @Column(columnDefinition="BLOB")
+    private byte[] testFile;
 
     @ManyToOne(fetch = FetchType.EAGER)
     private Course course;
