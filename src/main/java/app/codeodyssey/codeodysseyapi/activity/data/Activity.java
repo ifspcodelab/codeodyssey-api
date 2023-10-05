@@ -3,12 +3,9 @@ package app.codeodyssey.codeodysseyapi.activity.data;
 import app.codeodyssey.codeodysseyapi.course.data.Course;
 import jakarta.persistence.*;
 import lombok.Data;
-import org.hibernate.annotations.Type;
 
 import java.time.Instant;
 import java.util.UUID;
-
-import static jakarta.persistence.FetchType.LAZY;
 
 @Entity
 @Table(name = "activities")
@@ -22,15 +19,9 @@ public class Activity {
     private String description;
     private Instant startDate;
     private Instant endDate;
-
-    @Column(columnDefinition="BLOB")
-    private byte[] initialFile;
-
-    @Column(columnDefinition="BLOB")
-    private byte[] solutionFile;
-
-    @Column(columnDefinition="BLOB")
-    private byte[] testFile;
+    private String initialFile;
+    private String solutionFile;
+    private String testFile;
 
     private String extension;
 
@@ -45,9 +36,9 @@ public class Activity {
                     String description,
                     Instant startDate,
                     Instant endDate,
-                    byte[] initialFile,
-                    byte[] solutionFile,
-                    byte[] testFile,
+                    String initialFile,
+                    String solutionFile,
+                    String testFile,
                     String extension,
                     Course course) {
 

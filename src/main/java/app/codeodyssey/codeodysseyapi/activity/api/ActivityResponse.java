@@ -10,8 +10,8 @@ public record ActivityResponse(UUID id,
                                String description,
                                Instant startDate,
                                Instant endDate,
-                               byte[] initialFile,
-                               byte[] solutionFile,
-                               byte[] testFile,
+                               String initialFile,
+                               String solutionFile,
+                               String testFile,
                                String extension) {
 }
