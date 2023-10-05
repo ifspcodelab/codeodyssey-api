@@ -1,9 +1,6 @@
 package app.codeodyssey.codeodysseyapi.resolution.service;
 
-import jakarta.validation.constraints.NotNull;
-
-import java.time.LocalDate;
+import org.springframework.web.multipart.MultipartFile;
 
 public record CreateResolutionCommand(
-        Byte resolutionFile
-        ) {}
+        MultipartFile resolutionFile) {}

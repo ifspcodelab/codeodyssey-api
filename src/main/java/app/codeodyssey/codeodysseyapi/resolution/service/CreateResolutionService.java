@@ -9,11 +9,14 @@ import app.codeodyssey.codeodysseyapi.course.data.Course;
 import app.codeodyssey.codeodysseyapi.course.data.CourseRepository;
 import app.codeodyssey.codeodysseyapi.resolution.api.ResolutionResponse;
 import app.codeodyssey.codeodysseyapi.resolution.data.Resolution;
+import app.codeodyssey.codeodysseyapi.resolution.data.ResolutionRepository;
 import app.codeodyssey.codeodysseyapi.user.data.User;
 import app.codeodyssey.codeodysseyapi.user.data.UserRepository;
 import lombok.AllArgsConstructor;
 import org.springframework.stereotype.Service;
+import org.springframework.web.multipart.MultipartFile;
 
+import java.io.IOException;
 import java.util.Optional;
 import java.util.UUID;
 
@@ -24,8 +27,9 @@ public class CreateResolutionService {
     private final UserRepository userRepository;
     private final CourseRepository courseRepository;
     private final ActivityRepository activityRepository;
+    private final ResolutionRepository resolutionRepository;
 
-    public ResolutionResponse execute(UUID courseId, UUID activityId, CreateResolutionCommand command, String userEmail) {
+    public ResolutionResponse execute(UUID courseId, UUID activityId, MultipartFile resolutionFile, String userEmail) throws IOException {
         Optional<User> user = userRepository.findByEmail(userEmail);
 
         if (user.isEmpty()) {
@@ -40,7 +44,7 @@ public class CreateResolutionService {
 
         Optional<Activity> activity = activityRepository.findById(activityId);
 
-        Resolution resolution = new Resolution(activity.get(), user.get(), command.resolutionFile());
+        Resolution resolution = resolutionRepository.save(new Resolution(activity.get(), user.get(), resolutionFile.getBytes()));
         return resolutionMapper.to(resolution);
     }
 }

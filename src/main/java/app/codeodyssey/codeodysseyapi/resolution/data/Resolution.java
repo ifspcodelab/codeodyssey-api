@@ -33,11 +33,11 @@ public class Resolution {
 
     private LocalDate submitDate;
 
-    private Byte resolutionFile;
+    private byte[] resolutionFile;
 
     private Instant createdAt;
 
-    public Resolution(Activity activity, User student, Byte resolutionFile) {
+    public Resolution(Activity activity, User student, byte[] resolutionFile) {
         this.id = UUID.randomUUID();
         this.activity = activity;
         this.student = student;

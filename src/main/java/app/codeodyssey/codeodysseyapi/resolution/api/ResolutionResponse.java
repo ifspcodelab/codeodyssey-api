@@ -12,5 +12,5 @@ public record ResolutionResponse (
         ActivityResponse activity,
         UserResponse student,
         LocalDate submitDate,
-        Byte resolutionFile,
+        byte[] resolutionFile,
         Instant createdAt){}
