@@ -12,6 +12,5 @@ public record ActivityResponse (
         CourseResponse course,
         LocalDate startDate,
         LocalDate endDate,
-        Byte initialFile,
         Instant createdAt){}
 

@@ -33,17 +33,14 @@ public class Activity {
 
     private LocalDate endDate;
 
-    private Byte initialFile;
-
     private Instant createdAt;
 
-    public Activity(String title, Course course, LocalDate startDate, LocalDate endDate, Byte initialFile) {
+    public Activity(String title, Course course, LocalDate startDate, LocalDate endDate) {
         this.id = UUID.randomUUID();
         this.title = title;
         this.course = course;
         this.startDate = startDate;
         this.endDate = endDate;
-        this.initialFile = initialFile;
         this.createdAt = Instant.now();
     }
 }

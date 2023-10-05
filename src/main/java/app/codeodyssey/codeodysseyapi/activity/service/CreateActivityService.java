@@ -2,7 +2,10 @@ package app.codeodyssey.codeodysseyapi.activity.service;
 
 import app.codeodyssey.codeodysseyapi.activity.api.ActivityResponse;
 import app.codeodyssey.codeodysseyapi.activity.data.Activity;
+import app.codeodyssey.codeodysseyapi.activity.data.ActivityRepository;
 import app.codeodyssey.codeodysseyapi.common.exception.EmailNotFoundException;
+import app.codeodyssey.codeodysseyapi.common.exception.Resource;
+import app.codeodyssey.codeodysseyapi.common.exception.ResourceNotFoundException;
 import app.codeodyssey.codeodysseyapi.course.data.Course;
 import app.codeodyssey.codeodysseyapi.course.data.CourseRepository;
 import app.codeodyssey.codeodysseyapi.user.data.User;
@@ -17,6 +20,7 @@ import java.util.UUID;
 @AllArgsConstructor
 public class CreateActivityService {
     private final ActivityMapper activityMapper;
+    private final ActivityRepository activityRepository;
     private final UserRepository userRepository;
     private final CourseRepository courseRepository;
 
@@ -27,9 +31,9 @@ public class CreateActivityService {
             throw new EmailNotFoundException(userEmail);
         }
 
-        Optional<Course> course = courseRepository.findById(courseId);
+        Course course = courseRepository.findById(courseId).orElseThrow(() -> new ResourceNotFoundException(courseId, Resource.COURSE));
 
-        Activity activity = new Activity(command.title(), course.get(), command.startDate(), command.endDate(), command.initialFile());
+        Activity activity = activityRepository.save(new Activity(command.title(), course, command.startDate(), command.endDate()));
 
         return activityMapper.to(activity);
     }
