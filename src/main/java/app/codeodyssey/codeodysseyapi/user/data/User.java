@@ -1,5 +1,6 @@
 package app.codeodyssey.codeodysseyapi.user.data;
 
+import app.codeodyssey.codeodysseyapi.enrollment.data.Enrollment;
 import app.codeodyssey.codeodysseyapi.token.data.RefreshToken;
 import jakarta.persistence.*;
 import lombok.*;
@@ -8,6 +9,7 @@ import org.springframework.security.core.authority.SimpleGrantedAuthority;
 import org.springframework.security.core.userdetails.UserDetails;
 
 import java.time.Instant;
+import java.util.ArrayList;
 import java.util.Collection;
 import java.util.List;
 import java.util.UUID;
@@ -34,8 +36,11 @@ public class User implements UserDetails {
     private boolean isValidated;
     private String token;
 
-    @OneToMany(mappedBy = "user")
+    @OneToMany(mappedBy = "user", fetch = FetchType.EAGER)
     private List<RefreshToken> refreshTokens;
+
+    @OneToMany(mappedBy = "student", fetch = FetchType.EAGER)
+    private List<Enrollment> enrollments;
 
     public User(String email, String name, String password) {
         this.id = UUID.randomUUID();
