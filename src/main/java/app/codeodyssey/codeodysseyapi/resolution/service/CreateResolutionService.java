@@ -14,9 +14,9 @@ import app.codeodyssey.codeodysseyapi.user.data.User;
 import app.codeodyssey.codeodysseyapi.user.data.UserRepository;
 import lombok.AllArgsConstructor;
 import org.springframework.stereotype.Service;
-import org.springframework.web.multipart.MultipartFile;
 
 import java.io.IOException;
+import java.util.Base64;
 import java.util.Optional;
 import java.util.UUID;
 
@@ -29,7 +29,7 @@ public class CreateResolutionService {
     private final ActivityRepository activityRepository;
     private final ResolutionRepository resolutionRepository;
 
-    public ResolutionResponse execute(UUID courseId, UUID activityId, MultipartFile resolutionFile, String userEmail) throws IOException {
+    public ResolutionResponse execute(UUID courseId, UUID activityId, CreateResolutionCommand command, String userEmail) {
         Optional<User> user = userRepository.findByEmail(userEmail);
 
         if (user.isEmpty()) {
@@ -44,7 +44,9 @@ public class CreateResolutionService {
 
         Optional<Activity> activity = activityRepository.findById(activityId);
 
-        Resolution resolution = resolutionRepository.save(new Resolution(activity.get(), user.get(), resolutionFile.getBytes()));
+        byte[] resolutionFile = Base64.getDecoder().decode(command.resolutionFile().getBytes());
+
+        Resolution resolution = resolutionRepository.save(new Resolution(activity.get(), user.get(), resolutionFile));
         return resolutionMapper.to(resolution);
     }
 }
