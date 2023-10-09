@@ -2,9 +2,7 @@ package app.codeodyssey.codeodysseyapi.resolution.service;
 
 import app.codeodyssey.codeodysseyapi.activity.data.Activity;
 import app.codeodyssey.codeodysseyapi.activity.data.ActivityRepository;
-import app.codeodyssey.codeodysseyapi.common.exception.EmailNotFoundException;
-import app.codeodyssey.codeodysseyapi.common.exception.Resource;
-import app.codeodyssey.codeodysseyapi.common.exception.ResourceNotFoundException;
+import app.codeodyssey.codeodysseyapi.common.exception.*;
 import app.codeodyssey.codeodysseyapi.course.data.Course;
 import app.codeodyssey.codeodysseyapi.course.data.CourseRepository;
 import app.codeodyssey.codeodysseyapi.resolution.api.ResolutionResponse;
@@ -43,9 +41,30 @@ public class CreateResolutionService {
 
         Optional<Activity> activity = activityRepository.findById(activityId);
 
+        if (activity.isEmpty()) {
+            throw new ResourceNotFoundException(activityId, Resource.ACTIVITY);
+        }
+
         byte[] resolutionFile = Base64.getDecoder().decode(command.resolutionFile().getBytes());
 
-        Resolution resolution = resolutionRepository.save(new Resolution(activity.get(), user.get(), resolutionFile));
+        Resolution resolution = new Resolution(activity.get(), user.get(), resolutionFile);
+
+        if (resolution.getSubmitDate().isBefore(activity.get().getStartDate())) {
+            throw new ViolationException(
+                    Resource.RESOLUTION,
+                    ViolationType.RESOLUTION_SUBMIT_DATE_BEFORE_ACTIVITY_STAR_DATE,
+                    resolution.getSubmitDate().toString());
+        }
+
+        if (resolution.getSubmitDate().isAfter(activity.get().getEndDate())) {
+            throw new ViolationException(
+                    Resource.RESOLUTION,
+                    ViolationType.RESOLUTION_SUBMIT_DATE_AFTER_ACTIVITY_END_DATE,
+                    resolution.getSubmitDate().toString());
+        }
+
+        resolutionRepository.save(resolution);
+
         return resolutionMapper.to(resolution);
     }
 }

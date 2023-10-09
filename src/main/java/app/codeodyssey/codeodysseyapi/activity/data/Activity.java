@@ -11,7 +11,6 @@ import lombok.NoArgsConstructor;
 import lombok.Setter;
 
 import java.time.Instant;
-import java.time.LocalDate;
 import java.util.UUID;
 
 @Entity
@@ -29,18 +28,15 @@ public class Activity {
     @ManyToOne
     private Course course;
 
-    private LocalDate startDate;
+    private Instant startDate;
 
-    private LocalDate endDate;
+    private Instant endDate;
 
-    private Instant createdAt;
-
-    public Activity(String title, Course course, LocalDate startDate, LocalDate endDate) {
+    public Activity(String title, Course course, Instant startDate, Instant endDate) {
         this.id = UUID.randomUUID();
         this.title = title;
         this.course = course;
         this.startDate = startDate;
         this.endDate = endDate;
-        this.createdAt = Instant.now();
     }
 }

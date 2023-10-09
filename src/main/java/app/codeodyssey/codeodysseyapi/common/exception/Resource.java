@@ -11,7 +11,9 @@ public enum Resource {
     REFRESH_TOKEN("RefreshToken"),
     ACCESS_TOKEN("AccessToken"),
     INVITATION("Invitation"),
-    ENROLLMENT("Enrollment");
+    ENROLLMENT("Enrollment"),
+    ACTIVITY("Activity"),
+    RESOLUTION("Resolution");
 
     private final String name;
 }

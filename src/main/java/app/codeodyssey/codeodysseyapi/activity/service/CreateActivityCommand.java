@@ -2,9 +2,9 @@ package app.codeodyssey.codeodysseyapi.activity.service;
 
 import jakarta.validation.constraints.NotNull;
 
-import java.time.LocalDate;
+import java.time.Instant;
 
 public record CreateActivityCommand(
         @NotNull String title,
-        @NotNull LocalDate startDate,
-        @NotNull LocalDate endDate) {}
+        @NotNull Instant startDate,
+        @NotNull Instant endDate) {}

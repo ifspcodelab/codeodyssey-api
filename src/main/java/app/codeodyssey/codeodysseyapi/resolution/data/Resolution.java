@@ -12,7 +12,6 @@ import lombok.NoArgsConstructor;
 import lombok.Setter;
 
 import java.time.Instant;
-import java.time.LocalDate;
 import java.util.UUID;
 
 @Entity
@@ -31,18 +30,15 @@ public class Resolution {
     @ManyToOne
     private User student;
 
-    private LocalDate submitDate;
+    private Instant submitDate;
 
     private byte[] resolutionFile;
-
-    private Instant createdAt;
 
     public Resolution(Activity activity, User student, byte[] resolutionFile) {
         this.id = UUID.randomUUID();
         this.activity = activity;
         this.student = student;
-        this.submitDate = LocalDate.now();
+        this.submitDate = Instant.now();
         this.resolutionFile = resolutionFile;
-        this.createdAt = Instant.now();
     }
 }
