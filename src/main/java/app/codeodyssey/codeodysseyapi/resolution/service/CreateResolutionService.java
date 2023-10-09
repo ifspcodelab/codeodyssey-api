@@ -15,7 +15,6 @@ import app.codeodyssey.codeodysseyapi.user.data.UserRepository;
 import lombok.AllArgsConstructor;
 import org.springframework.stereotype.Service;
 
-import java.io.IOException;
 import java.util.Base64;
 import java.util.Optional;
 import java.util.UUID;
