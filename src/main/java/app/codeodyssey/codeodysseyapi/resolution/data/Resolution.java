@@ -32,9 +32,9 @@ public class Resolution {
 
     private Instant submitDate;
 
-    private byte[] resolutionFile;
+    private String resolutionFile;
 
-    public Resolution(Activity activity, User student, byte[] resolutionFile) {
+    public Resolution(Activity activity, User student, String resolutionFile) {
         this.id = UUID.randomUUID();
         this.activity = activity;
         this.student = student;

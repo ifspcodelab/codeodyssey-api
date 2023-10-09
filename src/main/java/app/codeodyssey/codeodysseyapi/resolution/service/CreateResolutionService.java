@@ -13,7 +13,6 @@ import app.codeodyssey.codeodysseyapi.user.data.UserRepository;
 import lombok.AllArgsConstructor;
 import org.springframework.stereotype.Service;
 
-import java.util.Base64;
 import java.util.Optional;
 import java.util.UUID;
 
@@ -45,9 +44,7 @@ public class CreateResolutionService {
             throw new ResourceNotFoundException(activityId, Resource.ACTIVITY);
         }
 
-        byte[] resolutionFile = Base64.getDecoder().decode(command.resolutionFile().getBytes());
-
-        Resolution resolution = new Resolution(activity.get(), user.get(), resolutionFile);
+        Resolution resolution = new Resolution(activity.get(), user.get(), command.resolutionFile());
 
         if (resolution.getSubmitDate().isBefore(activity.get().getStartDate())) {
             throw new ViolationException(
