@@ -1,4 +1,6 @@
 package app.codeodyssey.codeodysseyapi.resolution.service;
 
+import jakarta.validation.constraints.NotNull;
+
 public record CreateResolutionCommand(
-        String resolutionFile) {}
+        @NotNull String resolutionFile) {}
