@@ -14,7 +14,8 @@ public enum ViolationType {
     INVITATION_EXPIRATION_DATE_AFTER_COURSE_END_DATE("Expiration date is earlier than the course end date"),
     ENROLLMENT_PROFESSOR_WHO_CREATED_COURSE_CANNOT_BE_ENROLLED("professor who created the course cannot be enrolled in it"),
     RESOLUTION_SUBMIT_DATE_BEFORE_ACTIVITY_STAR_DATE("Submit date is earlier than its activity start date"),
-    RESOLUTION_SUBMIT_DATE_AFTER_ACTIVITY_END_DATE("Submit date later than its activity end date");
+    RESOLUTION_SUBMIT_DATE_AFTER_ACTIVITY_END_DATE("Submit date later than its activity end date"),
+    ACTIVITY_NOT_FOUND("Activity not found");
 
     private final String name;
 }
