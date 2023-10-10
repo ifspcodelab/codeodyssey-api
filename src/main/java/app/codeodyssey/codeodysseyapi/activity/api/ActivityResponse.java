@@ -7,8 +7,22 @@ import java.util.UUID;
 
 public record ActivityResponse (
         UUID id,
+
         String title,
+
+        String description,
+
         CourseResponse course,
+
         Instant startDate,
-        Instant endDate){}
+
+        Instant endDate,
+
+        String initialFile,
+
+        String solutionFile,
+
+        String testFile,
+
+        String extension){}
 

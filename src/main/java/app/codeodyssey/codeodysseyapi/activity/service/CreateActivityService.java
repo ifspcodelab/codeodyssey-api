@@ -33,7 +33,8 @@ public class CreateActivityService {
 
         Course course = courseRepository.findById(courseId).orElseThrow(() -> new ResourceNotFoundException(courseId, Resource.COURSE));
 
-        Activity activity = activityRepository.save(new Activity(command.title(), course, command.startDate(), command.endDate()));
+        Activity activity = activityRepository.save(new Activity(command.title(), command.description(), course,
+                command.startDate(), command.endDate(), command.initialFile(), command.solutionFile(), command.testFile(), command.extension()));
 
         return activityMapper.to(activity);
     }

@@ -25,6 +25,8 @@ public class Activity {
 
     private String title;
 
+    private String description;
+
     @ManyToOne
     private Course course;
 
@@ -32,11 +34,25 @@ public class Activity {
 
     private Instant endDate;
 
-    public Activity(String title, Course course, Instant startDate, Instant endDate) {
+    private String initialFile;
+
+    private String solutionFile;
+
+    private String testFile;
+
+    private String extension;
+
+    public Activity(String title, String description, Course course, Instant startDate, Instant endDate,
+                    String initialFile, String solutionFile, String testFile, String extension) {
         this.id = UUID.randomUUID();
         this.title = title;
+        this.description = description;
         this.course = course;
         this.startDate = startDate;
         this.endDate = endDate;
+        this.initialFile = initialFile;
+        this.solutionFile = solutionFile;
+        this.testFile = testFile;
+        this.extension = extension;
     }
 }
