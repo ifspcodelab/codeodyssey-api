@@ -32,28 +32,29 @@ public class CreateResolutionService {
             throw new EmailNotFoundException(userEmail);
         }
 
-        Optional<Course> course = courseRepository.findById(courseId);
-
-        if (course.isEmpty()) {
-            throw new ResourceNotFoundException(courseId, Resource.COURSE);
+        if (!activityRepository.existsByCourseIdAndId(courseId, activityId)) {
+            throw new ViolationException(Resource.ACTIVITY, ViolationType.ACTIVITY_NOT_FOUND, activityId.toString());
         }
 
-        Optional<Activity> activity = activityRepository.findById(activityId);
+        //Course course = courseRepository.findById(courseId).orElseThrow(() -> new ResourceNotFoundException(courseId, Resource.COURSE));
 
-        if (activity.isEmpty()) {
-            throw new ResourceNotFoundException(activityId, Resource.ACTIVITY);
-        }
+        //enrollment
 
-        Resolution resolution = new Resolution(activity.get(), user.get(), command.resolutionFile());
+        Activity activity = activityRepository.findById(activityId)
+                .orElseThrow(() -> new ResourceNotFoundException(activityId, Resource.ACTIVITY));
 
-        if (resolution.getSubmitDate().isBefore(activity.get().getStartDate())) {
+
+
+        Resolution resolution = new Resolution(activity, user.get(), command.resolutionFile());
+
+        if (resolution.getSubmitDate().isBefore(activity.getStartDate())) {
             throw new ViolationException(
                     Resource.RESOLUTION,
                     ViolationType.RESOLUTION_SUBMIT_DATE_BEFORE_ACTIVITY_STAR_DATE,
                     resolution.getSubmitDate().toString());
         }
 
-        if (resolution.getSubmitDate().isAfter(activity.get().getEndDate())) {
+        if (resolution.getSubmitDate().isAfter(activity.getEndDate())) {
             throw new ViolationException(
                     Resource.RESOLUTION,
                     ViolationType.RESOLUTION_SUBMIT_DATE_AFTER_ACTIVITY_END_DATE,

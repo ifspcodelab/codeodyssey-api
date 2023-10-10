@@ -29,6 +29,8 @@ public class GetActivityService {
             throw new ViolationException(Resource.ACTIVITY, ViolationType.ACTIVITY_NOT_FOUND, activityId.toString());
         }
 
+        //enrollment
+
         return activityMapper.to(activityRepository.findByCourseIdAndActivityId(courseId, activityId));
     }
 }
