@@ -3,6 +3,7 @@ package app.codeodyssey.codeodysseyapi.activity.service;
 import app.codeodyssey.codeodysseyapi.activity.api.ActivityResponse;
 import app.codeodyssey.codeodysseyapi.activity.data.ActivityRepository;
 import app.codeodyssey.codeodysseyapi.common.exception.*;
+import app.codeodyssey.codeodysseyapi.enrollment.data.EnrollmentRepository;
 import app.codeodyssey.codeodysseyapi.user.data.User;
 import app.codeodyssey.codeodysseyapi.user.data.UserRepository;
 import lombok.AllArgsConstructor;
@@ -17,6 +18,7 @@ public class GetActivityService {
     private final ActivityMapper activityMapper;
     private final ActivityRepository activityRepository;
     private final UserRepository userRepository;
+    private final EnrollmentRepository enrollmentRepository;
 
     public ActivityResponse execute(UUID courseId, UUID activityId, String userEmail) {
         Optional<User> user = userRepository.findByEmail(userEmail);
@@ -26,10 +28,12 @@ public class GetActivityService {
         }
 
         if (!activityRepository.existsByCourseIdAndId(courseId, activityId)) {
-            throw new ViolationException(Resource.ACTIVITY, ViolationType.ACTIVITY_NOT_FOUND, activityId.toString());
+            throw new ViolationException(Resource.ACTIVITY, ViolationType.ACTIVITY_IS_NOT_FROM_COURSE, activityId.toString());
         }
 
-        //enrollment
+        if (!enrollmentRepository.existsByStudentIdAndInvitation_Course_Id(user.get().getId(), courseId)) {
+            throw new StudentNotEnrolledException(user.get().getId(), courseId);
+        }
 
         return activityMapper.to(activityRepository.findByCourseIdAndActivityId(courseId, activityId));
     }

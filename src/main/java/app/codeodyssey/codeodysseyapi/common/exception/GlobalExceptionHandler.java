@@ -255,4 +255,20 @@ public class GlobalExceptionHandler {
         log.warn(detail);
         return new ResponseEntity<>(problem, status);
     }
+
+    @ExceptionHandler(StudentNotEnrolledException.class)
+    public ResponseEntity<ProblemDetail> studentNotEnrolled(StudentNotEnrolledException ex) {
+        HttpStatus status = HttpStatus.CONFLICT;
+        UUID studentId = ex.getStudentId();
+        UUID courseId = ex.getCourseId();
+        String title = "Student not enrolled";
+        String detail = "Student with id=%s is not enrolled on course with id=%s.".formatted(studentId, courseId);
+
+        ProblemDetail problem = ProblemDetail.forStatus(status);
+        problem.setTitle(title);
+        problem.setDetail(detail);
+
+        log.warn(detail);
+        return new ResponseEntity<>(problem, status);
+    }
 }
