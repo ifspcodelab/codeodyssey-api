@@ -36,6 +36,7 @@ public class SecurityConfig {
         "/api/v1/invitations/*/enrollments",
         "/api/v1/invitations/*",
         "/api/v1/courses/*/activities",
+        "/api/v1/courses/*/activities/*",
         "/api/v1/courses/*/activities/*/resolutions"
     };
 
