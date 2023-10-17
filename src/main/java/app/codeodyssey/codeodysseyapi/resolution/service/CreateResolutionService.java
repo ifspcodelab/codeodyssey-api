@@ -36,7 +36,7 @@ public class CreateResolutionService {
         }
 
         if (!enrollmentRepository.existsByStudentIdAndInvitation_Course_Id(user.get().getId(), courseId)) {
-            throw new StudentNotEnrolledException(user.get().getId(), courseId);
+            throw new UserNotAssociatedException(user.get().getId(), courseId);
         }
 
         Activity activity = activityRepository.findById(activityId)

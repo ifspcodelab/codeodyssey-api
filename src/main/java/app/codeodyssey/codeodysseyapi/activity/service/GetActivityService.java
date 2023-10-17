@@ -36,13 +36,13 @@ public class GetActivityService {
 
         if (user.get().getRole().equals(UserRole.STUDENT)){
             if (!enrollmentRepository.existsByStudentIdAndInvitation_Course_Id(user.get().getId(), courseId)) {
-                throw new StudentNotEnrolledException(user.get().getId(), courseId);
+                throw new UserNotAssociatedException(user.get().getId(), courseId);
             }
         }
 
         if (user.get().getRole().equals(UserRole.PROFESSOR)){
             if (!courseRepository.existsByProfessorIdAndId(user.get().getId(), courseId)) {
-                throw new StudentNotEnrolledException(user.get().getId(), courseId);
+                throw new UserNotAssociatedException(user.get().getId(), courseId);
             }
         }
 

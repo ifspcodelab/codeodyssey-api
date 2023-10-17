@@ -256,13 +256,13 @@ public class GlobalExceptionHandler {
         return new ResponseEntity<>(problem, status);
     }
 
-    @ExceptionHandler(StudentNotEnrolledException.class)
-    public ResponseEntity<ProblemDetail> studentNotEnrolled(StudentNotEnrolledException ex) {
+    @ExceptionHandler(UserNotAssociatedException.class)
+    public ResponseEntity<ProblemDetail> userNotEnrolled(UserNotAssociatedException ex) {
         HttpStatus status = HttpStatus.CONFLICT;
-        UUID studentId = ex.getStudentId();
+        UUID userId = ex.getUserId();
         UUID courseId = ex.getCourseId();
-        String title = "Student not enrolled";
-        String detail = "Student with id=%s is not enrolled on course with id=%s.".formatted(studentId, courseId);
+        String title = "User not associated";
+        String detail = "User with id=%s is not associated with course id=%s.".formatted(userId, courseId);
 
         ProblemDetail problem = ProblemDetail.forStatus(status);
         problem.setTitle(title);
