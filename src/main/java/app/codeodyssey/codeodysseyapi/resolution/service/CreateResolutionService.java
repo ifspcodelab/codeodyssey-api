@@ -31,6 +31,9 @@ public class CreateResolutionService {
             throw new EmailNotFoundException(userEmail);
         }
 
+        Activity activity = activityRepository.findById(activityId)
+                .orElseThrow(() -> new ResourceNotFoundException(activityId, Resource.ACTIVITY));
+
         if (!activityRepository.existsByCourseIdAndId(courseId, activityId)) {
             throw new ViolationException(Resource.ACTIVITY, ViolationType.ACTIVITY_IS_NOT_FROM_COURSE, activityId.toString());
         }
@@ -38,9 +41,6 @@ public class CreateResolutionService {
         if (!enrollmentRepository.existsByStudentIdAndInvitation_Course_Id(user.get().getId(), courseId)) {
             throw new UserNotAssociatedException(user.get().getId(), courseId);
         }
-
-        Activity activity = activityRepository.findById(activityId)
-                .orElseThrow(() -> new ResourceNotFoundException(activityId, Resource.ACTIVITY));
 
         Resolution resolution = new Resolution(activity, user.get(), command.resolutionFile());
 
