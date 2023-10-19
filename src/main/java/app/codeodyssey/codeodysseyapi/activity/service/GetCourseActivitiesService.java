@@ -37,18 +37,18 @@ public class GetCourseActivitiesService {
         User user = this.userRepository.findByEmail(username)
                 .orElseThrow(() -> new EmailNotFoundException(username));
 
-        if (user.getRole().equals(UserRole.PROFESSOR)) {
-            if (!course.getProfessor().getId().equals(user.getId())) {
-                throw new ForbiddenAccessException(user.getId());
-            }
-        }
+        if (!user.getRole().equals(UserRole.ADMIN)) {
 
-        if (user.getRole().equals(UserRole.STUDENT)) {
             for (Enrollment e : user.getEnrollments()) {
                 if (e.getInvitation().getCourse().getId().equals(course.getId())) {
                     return this.activityMapper.to(course.getActivities());
                 }
+
+                if (course.getProfessor().getId().equals(user.getId())) {
+                    return this.activityMapper.to(course.getActivities());
+                }
             }
+
             throw new ForbiddenAccessException(user.getId());
         }
 
