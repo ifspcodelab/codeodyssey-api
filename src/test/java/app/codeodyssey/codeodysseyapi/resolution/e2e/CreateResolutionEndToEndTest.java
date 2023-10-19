@@ -146,30 +146,8 @@ public class CreateResolutionEndToEndTest {
     }
 
     @Test
-    @DisplayName("returns conflict when given an invalid course id")
-    void createResolutionEndpoint_givenInvalidCourseId_returns409Conflict() {
-        var courseB = CourseFactory.sampleCourseBWithProfessor(professor);
-        courseRepository.save(courseB);
-
-        url = "http://localhost:%d/api/v1/courses/%s/activities/%s/resolutions"
-                .formatted(port, courseB.getId(), activity.getId());
-        restTemplate = new RestTemplate();
-        httpHeaders = new HttpHeaders();
-
-        var token = AccessTokenFactory.sampleAccessToken(student);
-        httpHeaders.setBearerAuth(token);
-        HttpEntity<?> request = new HttpEntity<>(resolution, httpHeaders);
-
-        var throwable = catchThrowable(() -> restTemplate.exchange(url, HttpMethod.POST, request, String.class));
-
-        assertThat(throwable).isNotNull();
-        HttpClientErrorException httpException = (HttpClientErrorException) throwable;
-        assertThat(httpException.getStatusCode()).isEqualTo(HttpStatus.CONFLICT);
-    }
-
-    @Test
-    @DisplayName("returns conflict when given an invalid activity id")
-    void createResolutionEndpoint_givenInvalidActivityId_returns409Conflict() {
+    @DisplayName("returns conflict when given a activity id that is not from course")
+    void createResolutionEndpoint_givenActivityNotFromCourse_returns409Conflict() {
         var courseB = CourseFactory.sampleCourseBWithProfessor(professor);
         courseRepository.save(courseB);
 
