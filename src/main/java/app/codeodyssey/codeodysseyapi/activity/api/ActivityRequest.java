@@ -8,8 +8,8 @@ import java.time.Instant;
 
 public record ActivityRequest(@NotBlank String title,
                               @NotBlank String description,
-                              @NotNull @Future Instant startDate,
-                              @NotNull @Future Instant endDate,
+                              @NotNull Instant startDate,
+                              @NotNull Instant endDate,
                               @NotBlank String initialFile,
                               @NotBlank String solutionFile,
                               @NotBlank String testFile,

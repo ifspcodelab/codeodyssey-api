@@ -31,7 +31,7 @@ public class CreateActivityService {
         Course course = this.courseRepository.findById(courseId)
                 .orElseThrow(() -> new ResourceNotFoundException(courseId, Resource.COURSE));
 
-        if (request.startDate().isBefore(Instant.now())) {
+        if (request.startDate().isBefore(Instant.now().minusSeconds(86400))) {
             throw new ViolationException(
                     Resource.ACTIVITY,
                     ViolationType.ACTIVITY_START_DATE_BEFORE_TODAY,
