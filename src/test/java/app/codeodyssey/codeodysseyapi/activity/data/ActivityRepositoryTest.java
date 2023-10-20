@@ -30,8 +30,8 @@ public class ActivityRepositoryTest {
     @Autowired
     private UserRepository userRepository;
 
-    @BeforeEach
-    void beforeEach() {
+    @AfterEach
+    void afterEach() {
         activityRepository.deleteAll();
         courseRepository.deleteAll();
         userRepository.deleteAll();

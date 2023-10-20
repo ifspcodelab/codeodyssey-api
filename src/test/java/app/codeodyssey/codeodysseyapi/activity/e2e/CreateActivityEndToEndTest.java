@@ -29,8 +29,8 @@ import static org.assertj.core.api.Assertions.assertThat;
 import static org.junit.jupiter.api.Assertions.assertDoesNotThrow;
 
 @SpringBootTest(webEnvironment = SpringBootTest.WebEnvironment.RANDOM_PORT)
-@DisplayName("Create Activity End to End tests")
 @Testcontainers
+@DisplayName("Create Activity End to End tests")
 @ContextConfiguration(initializers = {DatabaseContainerInitializer.class})
 @AutoConfigureTestDatabase(replace = AutoConfigureTestDatabase.Replace.NONE)
 public class CreateActivityEndToEndTest {
