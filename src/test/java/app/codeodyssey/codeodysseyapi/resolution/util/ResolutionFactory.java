@@ -10,24 +10,10 @@ public final class ResolutionFactory {
         return new Resolution(
                 ActivityFactory.createValidActivity(),
                 UserFactory.createValidUser(),
-                "ResolutionFile");
+                "DQpwdWJsaWMgY2xhc3MgVmVpY3VsbyB7DQoJcHJpdmF0ZSBmbG9hdCBUb3RhbENvbWJ1c3RpdmVsOw0KCQ0KCXB1YmxpYyBWZWljdWxvKCkge30NCn0NCg==");
     }
 
     public static Resolution createValidResolutionWithActivity(Activity activity) {
-        var resolution = createValidResolution();
-        resolution.setActivity(activity);
-
-        return resolution;
-    }
-
-    public static Resolution createValidResolutionB() {
-        return new Resolution(
-                ActivityFactory.createValidActivity(),
-                UserFactory.createValidUser(),
-                "ResolutionFile2");
-    }
-
-    public static Resolution createValidResolutionBWithActivity(Activity activity) {
         var resolution = createValidResolution();
         resolution.setActivity(activity);
 

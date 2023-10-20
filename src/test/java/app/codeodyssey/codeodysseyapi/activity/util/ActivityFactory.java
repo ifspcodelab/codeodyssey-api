@@ -14,10 +14,10 @@ public final class ActivityFactory {
                 CourseFactory.createValidCourse(),
                 Instant.now(),
                 Instant.now().plusSeconds(86400),
-                "ActivityInitialFile",
-                "ActivitySolutionFile",
-                "ActivityTestFile",
-                "ActivityExtensionFile" );
+                "DQpwdWJsaWMgY2xhc3MgVmVpY3VsbyB7DQoJcHJpdmF0ZSBmbG9hdCBUb3RhbENvbWJ1c3RpdmVsOw0KCQ0KCXB1YmxpYyBWZWljdWxvKCkge30NCn0NCg==",
+                "DQpwdWJsaWMgY2xhc3MgVmVpY3VsbyB7DQoJcHJpdmF0ZSBmbG9hdCBUb3RhbENvbWJ1c3RpdmVsOw0KCQ0KCXB1YmxpYyBWZWljdWxvKCkge30NCn0NCg==",
+                "DQpwdWJsaWMgY2xhc3MgVmVpY3VsbyB7DQoJcHJpdmF0ZSBmbG9hdCBUb3RhbENvbWJ1c3RpdmVsOw0KCQ0KCXB1YmxpYyBWZWljdWxvKCkge30NCn0NCg==",
+                "JAVA" );
     }
 
     public static Activity createValidActivityWithCourse(Course course) {
@@ -34,10 +34,10 @@ public final class ActivityFactory {
                 CourseFactory.createValidCourse(),
                 Instant.now(),
                 Instant.now().plusSeconds(86400),
-                "ActivityInitialFile2",
-                "ActivitySolutionFile2",
-                "ActivityTestFile2",
-                "ActivityExtensionFile2" );
+                "DQpwdWJsaWMgY2xhc3MgVmVpY3VsbyB7DQoJcHJpdmF0ZSBmbG9hdCBUb3RhbENvbWJ1c3RpdmVsOw0KCQ0KCXB1YmxpYyBWZWljdWxvKCkge30NCn0NCg==",
+                "DQpwdWJsaWMgY2xhc3MgVmVpY3VsbyB7DQoJcHJpdmF0ZSBmbG9hdCBUb3RhbENvbWJ1c3RpdmVsOw0KCQ0KCXB1YmxpYyBWZWljdWxvKCkge30NCn0NCg==",
+                "DQpwdWJsaWMgY2xhc3MgVmVpY3VsbyB7DQoJcHJpdmF0ZSBmbG9hdCBUb3RhbENvbWJ1c3RpdmVsOw0KCQ0KCXB1YmxpYyBWZWljdWxvKCkge30NCn0NCg==",
+                "JAVA" );
     }
 
     public static Activity createValidActivityBWithCourse(Course course) {
