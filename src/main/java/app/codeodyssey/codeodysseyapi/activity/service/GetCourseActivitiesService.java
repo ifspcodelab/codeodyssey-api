@@ -43,10 +43,10 @@ public class GetCourseActivitiesService {
                 if (e.getInvitation().getCourse().getId().equals(course.getId())) {
                     return this.activityMapper.to(course.getActivities());
                 }
+            }
 
-                if (course.getProfessor().getId().equals(user.getId())) {
-                    return this.activityMapper.to(course.getActivities());
-                }
+            if (course.getProfessor().getId().equals(user.getId())) {
+                return this.activityMapper.to(course.getActivities());
             }
 
             throw new ForbiddenAccessException(user.getId());
