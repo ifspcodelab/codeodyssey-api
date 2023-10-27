@@ -35,4 +35,6 @@ public interface CourseRepository extends JpaRepository<Course, UUID> {
             AND course.slug = :courseSlug
     """)
     Course findByProfessorIdAndCourseSlug(UUID professorId, String courseSlug);
+
+    boolean existsByProfessorIdAndId(UUID professor, UUID courseId);
 }
