@@ -12,7 +12,8 @@ public enum Resource {
     ACCESS_TOKEN("AccessToken"),
     INVITATION("Invitation"),
     ENROLLMENT("Enrollment"),
-    ACTIVITY("Activity");
+    ACTIVITY("Activity"),
+    RESOLUTION("Resolution");
 
     private final String name;
 }

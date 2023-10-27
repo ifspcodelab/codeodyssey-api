@@ -11,6 +11,8 @@ import app.codeodyssey.codeodysseyapi.user.util.UserFactory;
 import java.time.LocalDate;
 import java.util.Comparator;
 import java.util.List;
+import java.util.UUID;
+
 import org.junit.jupiter.api.Assertions;
 import org.junit.jupiter.api.DisplayName;
 import org.junit.jupiter.api.Test;
@@ -516,6 +518,32 @@ public class CourseRepositoryTest {
         testEntityManager.flush();
         boolean exists = courseRepository.existsBySlugAndProfessor(
                 "non-existing-slug", new User("UserName", "non-existing-email", "Password"));
+        Assertions.assertFalse(exists);
+    }
+
+    @Test
+    @DisplayName("returns true when given a existing professor id and course id")
+    void existsByProfessorIdAndId_givenExistingProfessorIdAndCourseId_returnTrue() {
+        var user = UserFactory.createValidProfessor();
+        var course = CourseFactory.createValidCourseWithProfessor(user);
+
+        testEntityManager.persist(user);
+        testEntityManager.persist(course);
+        testEntityManager.flush();
+        boolean exists = courseRepository.existsByProfessorIdAndId(user.getId(), course.getId());
+        Assertions.assertTrue(exists);
+    }
+
+    @Test
+    @DisplayName("returns false when given a non existing professor id and course id")
+    void existsByProfessorIdAndId_givenExistingProfessorIdAndCourseId_returnFalse() {
+        var user = UserFactory.createValidProfessor();
+        var course = CourseFactory.createValidCourseWithProfessor(user);
+
+        testEntityManager.persist(user);
+        testEntityManager.persist(course);
+        testEntityManager.flush();
+        boolean exists = courseRepository.existsByProfessorIdAndId(UUID.randomUUID(), UUID.randomUUID());
         Assertions.assertFalse(exists);
     }
 

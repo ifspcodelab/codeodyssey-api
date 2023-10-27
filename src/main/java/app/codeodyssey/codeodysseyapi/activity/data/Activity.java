@@ -2,7 +2,7 @@ package app.codeodyssey.codeodysseyapi.activity.data;
 
 import app.codeodyssey.codeodysseyapi.course.data.Course;
 import jakarta.persistence.*;
-import lombok.Data;
+import lombok.*;
 
 import java.time.Instant;
 import java.util.UUID;
@@ -10,6 +10,9 @@ import java.util.UUID;
 @Entity
 @Table(name = "activities")
 @Data
+@AllArgsConstructor
+@Getter
+@Setter
 public class Activity {
 
     @Id
@@ -53,5 +56,19 @@ public class Activity {
         this.extension = extension;
         this.course = course;
 
+    }
+
+    public Activity(String title, String description, Course course, Instant startDate, Instant endDate,
+                    String initialFile, String solutionFile, String testFile, String extension) {
+        this.id = UUID.randomUUID();
+        this.title = title;
+        this.description = description;
+        this.course = course;
+        this.startDate = startDate;
+        this.endDate = endDate;
+        this.initialFile = initialFile;
+        this.solutionFile = solutionFile;
+        this.testFile = testFile;
+        this.extension = extension;
     }
 }
