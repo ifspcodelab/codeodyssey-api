@@ -30,18 +30,26 @@ import static org.junit.jupiter.api.Assertions.assertTrue;
 @ContextConfiguration(initializers = {DatabaseContainerInitializer.class})
 @Testcontainers
 public class ActivityRepositoryTest {
+
+    @Autowired
+    private ActivityRepository activityRepository;
+
     @Autowired
     private UserRepository userRepository;
 
     @Autowired
     private CourseRepository courseRepository;
 
-    @Autowired
-    private ActivityRepository activityRepository;
-
     User professor;
     Course course;
     Activity activity;
+
+    @AfterEach
+    void afterEach() {
+        activityRepository.deleteAll();
+        courseRepository.deleteAll();
+        userRepository.deleteAll();
+    }
 
     @BeforeEach
     void beforeEach() {
@@ -62,6 +70,25 @@ public class ActivityRepositoryTest {
     }
 
     @Test
+    @DisplayName("persists an activity when successful")
+    void persistsActivity_whenSuccessful() {
+
+        var course = CourseFactory.sampleCourse();
+        var professor = course.getProfessor();
+        var activity = ActivityFactory.sampleActivity(course);
+
+        var expectedProfessor = this.userRepository.save(professor);
+        var expectedCourse = this.courseRepository.save(course);
+        var expectedActivity = this.activityRepository.save(activity);
+
+        assertThat(expectedProfessor).isNotNull();
+        assertThat(expectedCourse).isNotNull();
+        assertThat(expectedActivity).isNotNull();
+
+        assertThat(expectedActivity.getCourse().getId()).isEqualTo(expectedCourse.getId());
+
+    }
+
     @DisplayName("returns true when given an course id and activity id")
     void existsByCourseIdAndId_givenCourseIdAndActivityId_returnsTrue() {
         boolean exists = activityRepository.existsByCourseIdAndId(course.getId(), activity.getId());

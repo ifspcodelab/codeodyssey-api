@@ -2,16 +2,14 @@ package app.codeodyssey.codeodysseyapi.enrollment.data;
 
 import app.codeodyssey.codeodysseyapi.invitation.data.Invitation;
 import app.codeodyssey.codeodysseyapi.user.data.User;
-import jakarta.persistence.Entity;
-import jakarta.persistence.Id;
-import jakarta.persistence.ManyToOne;
-import jakarta.persistence.Table;
-import java.time.Instant;
-import java.util.UUID;
+import jakarta.persistence.*;
 import lombok.AllArgsConstructor;
 import lombok.Getter;
 import lombok.NoArgsConstructor;
 import lombok.Setter;
+
+import java.time.Instant;
+import java.util.UUID;
 
 @Entity
 @Table(name = "enrollments")
@@ -23,10 +21,10 @@ public class Enrollment {
     @Id
     private UUID id;
 
-    @ManyToOne
+    @ManyToOne(fetch = FetchType.EAGER)
     private Invitation invitation;
 
-    @ManyToOne
+    @ManyToOne(fetch = FetchType.EAGER)
     private User student;
 
     private Instant createdAt;

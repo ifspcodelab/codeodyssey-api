@@ -1,17 +1,15 @@
 package app.codeodyssey.codeodysseyapi.invitation.data;
 
 import app.codeodyssey.codeodysseyapi.course.data.Course;
-import jakarta.persistence.Entity;
-import jakarta.persistence.Id;
-import jakarta.persistence.ManyToOne;
-import jakarta.persistence.Table;
-import java.time.Instant;
-import java.time.LocalDate;
-import java.util.UUID;
+import jakarta.persistence.*;
 import lombok.AllArgsConstructor;
 import lombok.Getter;
 import lombok.NoArgsConstructor;
 import lombok.Setter;
+
+import java.time.Instant;
+import java.time.LocalDate;
+import java.util.UUID;
 
 @Entity
 @Table(name = "invitations")
@@ -27,7 +25,7 @@ public class Invitation {
 
     private LocalDate expirationDate;
 
-    @ManyToOne
+    @ManyToOne(fetch = FetchType.EAGER)
     private Course course;
 
     private Instant createdAt;

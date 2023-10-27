@@ -7,6 +7,23 @@ import app.codeodyssey.codeodysseyapi.course.util.CourseFactory;
 import java.time.Instant;
 
 public final class ActivityFactory {
+
+    private ActivityFactory() {}
+
+    public static Activity sampleActivity(Course course) {
+        return new Activity(
+                "title",
+                "description",
+                Instant.now(),
+                Instant.now().plusSeconds(600),
+                "test",
+                "test",
+                "test",
+                ".java",
+                course
+        );
+    }
+
     public static Activity createValidActivity() {
         return new Activity(
                 "ActivityTitle",
