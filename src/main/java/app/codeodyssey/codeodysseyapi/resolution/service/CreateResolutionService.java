@@ -23,6 +23,7 @@ public class CreateResolutionService {
     private final EnrollmentRepository enrollmentRepository;
     private final ActivityRepository activityRepository;
     private final ResolutionRepository resolutionRepository;
+    private final RabbitMqPublisher rabbitMqPublisher;
 
     public ResolutionResponse execute(UUID courseId, UUID activityId, CreateResolutionCommand command, String userEmail) {
         Optional<User> user = userRepository.findByEmail(userEmail);
@@ -59,6 +60,8 @@ public class CreateResolutionService {
         }
 
         resolutionRepository.save(resolution);
+
+        rabbitMqPublisher.sendMessage(resolution.getId().toString());
 
         return resolutionMapper.to(resolution);
     }
