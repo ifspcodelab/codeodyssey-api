@@ -23,6 +23,11 @@ spring:
                         enabled: true
     jpa:
         open-in-view: false
+    rabbitmq:
+        host: ${RABBITMQ_HOST:localhost}
+        port: ${RABBITMQ_PORT:5672}
+        username: ${RABBITMQ_USERNAME:guest}
+        password: ${RABBITMQ_PASSWORD:guest}
 application:
     jwt:
         issuer: code-odyssey
@@ -38,3 +43,16 @@ time:
 scheduler:
     registration:
         interval: ${SCHEDULER_REGISTRATION_INTERVAL:60000}
+rabbitmq:
+    producer:
+        queue:
+            name: execution_queue
+        exchange:
+            name: api_exchange
+        routing-key: ${API_EXCHANGE_KEY:my_first_key}
+    consumer:
+        queue:
+            name: result_queue
+        exchange:
+            name: executor_exchange
+        routing-key: ${EXECUTOR_EXCHANGE_KEY:my_second_key}
