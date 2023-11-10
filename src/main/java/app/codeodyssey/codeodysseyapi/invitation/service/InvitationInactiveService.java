@@ -13,11 +13,11 @@ import java.util.List;
 @Service
 @AllArgsConstructor
 @Log4j2
-public class InvitationCleanupService {
+public class InvitationInactiveService {
     private final InvitationRepository invitationRepository;
 
     @Scheduled(fixedRateString = "${scheduler.invitation.interval}")
-    public void cleanupInvitation (){
+    public void inactiveInvitation (){
         List<Invitation> invitationWhereCourseEnded = invitationRepository.findAllByCourseEndDate(LocalDate.now());
 
         for (Invitation invitation : invitationWhereCourseEnded){

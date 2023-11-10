@@ -25,5 +25,5 @@ public interface InvitationRepository extends JpaRepository<Invitation, UUID> {
             JOIN invitation.course course
             WHERE course.endDate <= :endDate
     """)
-    List<Invitation> findByCourseEndDate(LocalDate endDate);
+    List<Invitation> findAllByCourseEndDate(LocalDate endDate);
 }
