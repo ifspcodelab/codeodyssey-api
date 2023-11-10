@@ -18,6 +18,9 @@ import org.springframework.boot.test.context.SpringBootTest;
 import org.springframework.test.context.ContextConfiguration;
 import org.testcontainers.junit.jupiter.Testcontainers;
 
+import java.time.LocalDate;
+import java.util.List;
+
 import static org.assertj.core.api.Assertions.assertThat;
 
 @SpringBootTest
@@ -55,8 +58,8 @@ public class InvitationRepositoryTest {
     }
 
     @Test
-    @DisplayName("returns an empty list when the course doesn't have any invitations")
-    void findAllByCourseId_givenCourseWithNoInvitations_returnNull() {
+    @DisplayName("returns null when the course doesn't have any invitations")
+    void findByCourseId_givenCourseWithNoInvitations_returnNull() {
         Invitation invitation = invitationRepository.findByCourseId(course.getId());
 
         assertThat(invitation).isNull();
@@ -64,7 +67,7 @@ public class InvitationRepositoryTest {
 
     @Test
     @DisplayName("returns an invitation when the course has one invitation")
-    void findAllByCourseId_givenCourseWithOneInvitation_returnInvitation() {
+    void findByCourseId_givenCourseWithOneInvitation_returnInvitation() {
         var invitation = InvitationFactory.sampleInvitationWithCourse(course);
         invitationRepository.save(invitation);
 
@@ -76,7 +79,7 @@ public class InvitationRepositoryTest {
 
     @Test
     @DisplayName("returns the last invitation created when the course has many invitations")
-    void findAllByCourseId_givenCourseWithManyInvitations_returnList() {
+    void findByCourseId_givenCourseWithManyInvitations_returnInvitation() {
         var invitationA = InvitationFactory.sampleInvitationWithCourse(course);
         invitationRepository.save(invitationA);
 
@@ -86,5 +89,45 @@ public class InvitationRepositoryTest {
         Invitation invitationRepositoryByCourseId = invitationRepository.findByCourseId(course.getId());
         assertThat(invitationRepositoryByCourseId).isNotNull();
         assertThat(invitationRepositoryByCourseId.getId()).isEqualTo(invitationB.getId());
+    }
+
+    @Test
+    @DisplayName("returns an empty list when the course doesn't have any invitations from a course that ended")
+    void findAllByCourseEndDate_givenCourseWithNoInvitations_returnEmpty() {
+        List<Invitation> invitation = invitationRepository.findAllByCourseEndDate(LocalDate.now());
+
+        assertThat(invitation).isEmpty();
+    }
+
+    @Test
+    @DisplayName("returns a list when an ended course has one invitation")
+    void findAllByCourseEndDate_givenCourseWithOneInvitation_returnList() {
+        var invitation = InvitationFactory.sampleInvitationWithCourse(course);
+        invitationRepository.save(invitation);
+
+        course.setEndDate(LocalDate.now().minusDays(1));
+        courseRepository.save(course);
+
+        List<Invitation> invitationRepositoryByCourseEndDate = invitationRepository.findAllByCourseEndDate(LocalDate.now());
+
+        assertThat(invitationRepositoryByCourseEndDate).isNotEmpty();
+        assertThat(invitationRepositoryByCourseEndDate).hasSize(1);
+    }
+
+    @Test
+    @DisplayName("returns a list when an ended course has many invitations")
+    void findAllByCourseEndDate_givenCourseWithManyInvitations_returnList() {
+        var invitationA = InvitationFactory.sampleInvitationWithCourse(course);
+        invitationRepository.save(invitationA);
+
+        var invitationB = InvitationFactory.sampleInvitationWithCourse(course);
+        invitationRepository.save(invitationB);
+
+        course.setEndDate(LocalDate.now().minusDays(1));
+        courseRepository.save(course);
+
+        List<Invitation> invitationRepositoryByCourseEndDate = invitationRepository.findAllByCourseEndDate(LocalDate.now());
+        assertThat(invitationRepositoryByCourseEndDate).isNotEmpty();
+        assertThat(invitationRepositoryByCourseEndDate).hasSize(2);
     }
 }

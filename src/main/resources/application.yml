@@ -38,3 +38,5 @@ time:
 scheduler:
     registration:
         interval: ${SCHEDULER_REGISTRATION_INTERVAL:60000}
+    invitation:
+        interval: ${SCHEDULER_INVITATION_INTERVAL:60000}

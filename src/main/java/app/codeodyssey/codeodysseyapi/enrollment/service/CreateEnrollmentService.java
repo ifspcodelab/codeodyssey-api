@@ -12,11 +12,13 @@ import java.time.LocalDate;
 import java.util.Optional;
 import java.util.UUID;
 import lombok.AllArgsConstructor;
+import lombok.extern.log4j.Log4j2;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 
 @Service
 @AllArgsConstructor
+@Log4j2
 public class CreateEnrollmentService {
     private final UserRepository userRepository;
     private final InvitationRepository invitationRepository;
@@ -53,6 +55,11 @@ public class CreateEnrollmentService {
                     invitation.getId(), invitation.getCourse().getId());
         }
 
+        if (!invitation.isActive()) {
+            throw new InvitationLinkExpiredException(
+                    invitation.getId(), invitation.getCourse().getId());
+        }
+
         if (exists) {
             throw new StudentAlreadyEnrolledException(
                     student.getId(), invitation.getCourse().getId());
@@ -60,6 +67,8 @@ public class CreateEnrollmentService {
 
         Enrollment enrollment = new Enrollment(invitation, student);
         enrollmentRepository.save(enrollment);
+
+        log.info("Invitation accepted by student with id " + student.getId() + " from course with id " + invitation.getCourse().getId());
 
         return enrollmentMapper.to(enrollment);
     }
