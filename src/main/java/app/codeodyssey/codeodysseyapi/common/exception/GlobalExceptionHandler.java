@@ -255,4 +255,20 @@ public class GlobalExceptionHandler {
         log.warn(detail);
         return new ResponseEntity<>(problem, status);
     }
+
+    @ExceptionHandler(UserNotAssociatedException.class)
+    public ResponseEntity<ProblemDetail> userNotEnrolled(UserNotAssociatedException ex) {
+        HttpStatus status = HttpStatus.CONFLICT;
+        UUID userId = ex.getUserId();
+        UUID courseId = ex.getCourseId();
+        String title = "User not associated";
+        String detail = "User with id=%s is not associated with course id=%s.".formatted(userId, courseId);
+
+        ProblemDetail problem = ProblemDetail.forStatus(status);
+        problem.setTitle(title);
+        problem.setDetail(detail);
+
+        log.warn(detail);
+        return new ResponseEntity<>(problem, status);
+    }
 }
