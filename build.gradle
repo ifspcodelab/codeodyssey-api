@@ -64,7 +64,8 @@ dependencies {
 	testImplementation 'org.junit.platform:junit-platform-runner:1.8.0'
 	implementation 'org.springframework.boot:spring-boot-starter-amqp'
 	testImplementation 'org.springframework.amqp:spring-rabbit-test'
-	}
+	implementation 'com.fasterxml.jackson.core:jackson-core:2.15.3'
+}
 
 tasks.named('test') {
 	useJUnitPlatform()
