@@ -145,4 +145,26 @@ public class CreateEnrollmentServiceTest {
         assertThat(invitationLinkExpiredException.getInvitationId()).isEqualTo(invitation.getId());
         assertThat(invitationLinkExpiredException.getCourseId()).isEqualTo(course.getId());
     }
+
+    @Test
+    @DisplayName("createEnrollmentService given an inactive invitation link returns InvitationLinkExpired exception")
+    void createEnrollmentService_givenInvitationLinkInactive_returnsInvitationLinkExpired() {
+        var student = UserFactory.sampleUserStudent();
+        var course = CourseFactory.sampleCourse();
+        var professor = course.getProfessor();
+        var invitation = InvitationFactory.sampleInvitation(LocalDate.now(), course);
+        invitation.setActive(false);
+        userRepository.saveAll(List.of(student, professor));
+        courseRepository.save(course);
+        invitationRepository.save(invitation);
+
+        var exception = (RuntimeException)
+                catchThrowable(() -> createEnrollmentService.execute(invitation.getId(), student.getEmail()));
+
+        assertThat(exception).isNotNull();
+        assertThat(exception).isInstanceOf(InvitationLinkExpiredException.class);
+        InvitationLinkExpiredException invitationLinkExpiredException = (InvitationLinkExpiredException) exception;
+        assertThat(invitationLinkExpiredException.getInvitationId()).isEqualTo(invitation.getId());
+        assertThat(invitationLinkExpiredException.getCourseId()).isEqualTo(course.getId());
+    }
 }

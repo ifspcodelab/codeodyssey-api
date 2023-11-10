@@ -18,7 +18,7 @@ public class InvitationCleanupService {
 
     @Scheduled(fixedRateString = "${scheduler.invitation.interval}")
     public void cleanupInvitation (){
-        List<Invitation> invitationWhereCourseEnded = invitationRepository.findByCourseEndDate(LocalDate.now());
+        List<Invitation> invitationWhereCourseEnded = invitationRepository.findAllByCourseEndDate(LocalDate.now());
 
         for (Invitation invitation : invitationWhereCourseEnded){
             if(invitation.isActive()){

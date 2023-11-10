@@ -55,6 +55,11 @@ public class CreateEnrollmentService {
                     invitation.getId(), invitation.getCourse().getId());
         }
 
+        if (!invitation.isActive()) {
+            throw new InvitationLinkExpiredException(
+                    invitation.getId(), invitation.getCourse().getId());
+        }
+
         if (exists) {
             throw new StudentAlreadyEnrolledException(
                     student.getId(), invitation.getCourse().getId());
