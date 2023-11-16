@@ -11,4 +11,5 @@ public record ResolutionResponse (
         ActivityResponse activity,
         UserResponse student,
         Instant submitDate,
-        String resolutionFile){}
+        String resolutionFile,
+        ResolutionResponse resolutionResponse){}

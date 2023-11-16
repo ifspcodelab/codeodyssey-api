@@ -17,7 +17,8 @@ public enum ViolationType {
     ACTIVITY_END_DATE_BEFORE_START_DATE("End date is earlier than its start date"),
     RESOLUTION_SUBMIT_DATE_BEFORE_ACTIVITY_STAR_DATE("Submit date is earlier than its activity start date"),
     RESOLUTION_SUBMIT_DATE_AFTER_ACTIVITY_END_DATE("Submit date later than its activity end date"),
-    ACTIVITY_IS_NOT_FROM_COURSE("Activity is not from that course");
+    ACTIVITY_IS_NOT_FROM_COURSE("Activity is not from that course"),
+    STUDENT_HAS_RESOLUTION_WITH_WAITING_STATUS_IN_ACTIVITY("Student can't create a resolution in the activity if the previously resolution is waiting for results");
 
     private final String name;
 }

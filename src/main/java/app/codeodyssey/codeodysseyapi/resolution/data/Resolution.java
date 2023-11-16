@@ -2,10 +2,7 @@ package app.codeodyssey.codeodysseyapi.resolution.data;
 
 import app.codeodyssey.codeodysseyapi.activity.data.Activity;
 import app.codeodyssey.codeodysseyapi.user.data.User;
-import jakarta.persistence.Entity;
-import jakarta.persistence.Id;
-import jakarta.persistence.ManyToOne;
-import jakarta.persistence.Table;
+import jakarta.persistence.*;
 import lombok.AllArgsConstructor;
 import lombok.Getter;
 import lombok.NoArgsConstructor;
@@ -34,11 +31,15 @@ public class Resolution {
 
     private String resolutionFile;
 
+    @Enumerated(EnumType.STRING)
+    private ResolutionStatus status;
+
     public Resolution(Activity activity, User student, String resolutionFile) {
         this.id = UUID.randomUUID();
         this.activity = activity;
         this.student = student;
         this.submitDate = Instant.now();
         this.resolutionFile = resolutionFile;
+        this.status = ResolutionStatus.WAITING_FOR_RESULTS;
     }
 }
