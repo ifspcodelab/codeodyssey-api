@@ -10,13 +10,16 @@ import java.util.UUID;
 
 @Repository
 public interface ResolutionRepository extends JpaRepository<Resolution, UUID> {
-//    @Query(
-//            """
-//            SELECT resolution
-//            FROM Resolution resolution
-//            WHERE resolution.student.id = :studentId
-//            AND resolution.activity = :activityId
-//            AND resolution.status = :resolutionStatus
-//    """)
     List<Resolution> findAllByStudentIdAndActivityIdAndStatus(UUID studentId, UUID activityId, ResolutionStatus resolutionStatus);
+
+    @Query(
+            """
+            SELECT resolution
+            FROM Resolution resolution
+            JOIN resolution.activity activity
+            WHERE resolution.student.id = :studentId
+            AND activity.course.id = :courseId
+            AND resolution.activity.id = :activityId
+    """)
+    List<Resolution> findAllByStudentIdAndCourseIdAndActivityId(UUID studentId, UUID courseId, UUID activityId);
 }
