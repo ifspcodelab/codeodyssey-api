@@ -19,20 +19,11 @@ public interface ResolutionRepository extends JpaRepository<Resolution, UUID> {
             WHERE resolution.student.id = :studentId
             AND activity.course.id = :courseId
             AND resolution.activity.id = :activityId
+            ORDER BY resolution.submitDate DESC
     """)
-    List<Resolution> findAllByStudentIdAndCourseIdAndActivityId(UUID studentId, UUID courseId, UUID activityId);
+    List<Resolution> findAllByStudentIdAndCourseIdAndActivityIdOrderBySubmitDate(UUID studentId, UUID courseId, UUID activityId);
 
     boolean existsByActivityIdAndId(UUID activity, UUID resolutionId);
-
-    @Query(
-            """
-            SELECT resolution
-            FROM Resolution resolution
-            JOIN resolution.activity activity
-            WHERE resolution.student.id = :studentId
-            AND resolution.activity.id = :activityId
-    """)
-    Resolution findByStudentIdAndActivityId(UUID studentId, UUID activityId);
 
     boolean existsByStudentIdAndId(UUID studentId, UUID activityId);
 }

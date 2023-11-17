@@ -39,7 +39,7 @@ public class GetResolutionsService {
             throw new ViolationException(Resource.ACTIVITY, ViolationType.ACTIVITY_IS_NOT_FROM_COURSE, activityId.toString());
         }
 
-        List<Resolution> resolutions = resolutionRepository.findAllByStudentIdAndCourseIdAndActivityId(user.get().getId(), courseId, activityId);
+        List<Resolution> resolutions = resolutionRepository.findAllByStudentIdAndCourseIdAndActivityIdOrderBySubmitDate(user.get().getId(), courseId, activityId);
 
         return resolutionMapper.to(resolutions);
     }
