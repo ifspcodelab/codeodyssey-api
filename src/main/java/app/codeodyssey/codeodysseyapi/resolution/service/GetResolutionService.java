@@ -38,7 +38,7 @@ public class GetResolutionService {
             throw new ViolationException(Resource.ACTIVITY, ViolationType.ACTIVITY_IS_NOT_FROM_COURSE, activityId.toString());
         }
 
-        if (resolutionRepository.existsByActivityIdAndId(activityId, resolutionId)) {
+        if (!resolutionRepository.existsByActivityIdAndId(activityId, resolutionId)) {
             throw new ViolationException(Resource.RESOLUTION, ViolationType.RESOLUTION_IS_NOT_FROM_ACTIVITY, resolutionId.toString());
         }
 
