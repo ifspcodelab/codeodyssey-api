@@ -1,6 +1,5 @@
 package app.codeodyssey.codeodysseyapi.resolution.data;
 
-import app.codeodyssey.codeodysseyapi.activity.data.Activity;
 import org.springframework.data.jpa.repository.JpaRepository;
 import org.springframework.data.jpa.repository.Query;
 import org.springframework.stereotype.Repository;
@@ -22,4 +21,18 @@ public interface ResolutionRepository extends JpaRepository<Resolution, UUID> {
             AND resolution.activity.id = :activityId
     """)
     List<Resolution> findAllByStudentIdAndCourseIdAndActivityId(UUID studentId, UUID courseId, UUID activityId);
+
+    boolean existsByActivityIdAndId(UUID activity, UUID resolutionId);
+
+    @Query(
+            """
+            SELECT resolution
+            FROM Resolution resolution
+            JOIN resolution.activity activity
+            WHERE resolution.student.id = :studentId
+            AND resolution.activity.id = :activityId
+    """)
+    Resolution findByStudentIdAndActivityId(UUID studentId, UUID activityId);
+
+    boolean existsByStudentIdAndId(UUID studentId, UUID activityId);
 }

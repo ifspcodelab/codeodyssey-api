@@ -11,20 +11,19 @@ import app.codeodyssey.codeodysseyapi.user.data.UserRepository;
 import lombok.AllArgsConstructor;
 import org.springframework.stereotype.Service;
 
-import java.util.List;
 import java.util.Optional;
 import java.util.UUID;
 
 @Service
 @AllArgsConstructor
-public class GetResolutionsService {
+public class GetResolutionService {
     private final ResolutionRepository resolutionRepository;
     private final UserRepository userRepository;
     private final EnrollmentRepository enrollmentRepository;
     private final ActivityRepository activityRepository;
     private final ResolutionMapper resolutionMapper;
 
-    public List<ResolutionResponse> execute(UUID courseId, UUID activityId, String userEmail) {
+    public ResolutionResponse execute(UUID courseId, UUID activityId, UUID resolutionId, String userEmail) {
         Optional<User> user = userRepository.findByEmail(userEmail);
 
         if (user.isEmpty()) {
@@ -39,8 +38,17 @@ public class GetResolutionsService {
             throw new ViolationException(Resource.ACTIVITY, ViolationType.ACTIVITY_IS_NOT_FROM_COURSE, activityId.toString());
         }
 
-        List<Resolution> resolutions = resolutionRepository.findAllByStudentIdAndCourseIdAndActivityId(user.get().getId(), courseId, activityId);
+        if (resolutionRepository.existsByActivityIdAndId(activityId, resolutionId)) {
+            throw new ViolationException(Resource.RESOLUTION, ViolationType.RESOLUTION_IS_NOT_FROM_ACTIVITY, resolutionId.toString());
+        }
 
-        return resolutionMapper.to(resolutions);
+        if (!resolutionRepository.existsByStudentIdAndId(user.get().getId(), resolutionId)) {
+            throw new ViolationException(Resource.RESOLUTION, ViolationType.USER_DID_NOT_CREATE_RESOLUTION, resolutionId.toString());
+        }
+
+        Resolution resolution = resolutionRepository.findById(resolutionId)
+                .orElseThrow(() -> new ResourceNotFoundException(resolutionId, Resource.RESOLUTION));
+
+        return resolutionMapper.to(resolution);
     }
 }
