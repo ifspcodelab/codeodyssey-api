@@ -1,5 +1,6 @@
 package app.codeodyssey.codeodysseyapi.result.data;
 
+import com.fasterxml.jackson.annotation.JsonIgnore;
 import com.fasterxml.jackson.databind.JsonNode;
 import jakarta.persistence.*;
 import lombok.AllArgsConstructor;
@@ -18,6 +19,7 @@ public class TestCase {
     @Id
     private UUID id;
 
+    @JsonIgnore
     @ManyToOne(fetch = FetchType.EAGER)
     private Result result;
 

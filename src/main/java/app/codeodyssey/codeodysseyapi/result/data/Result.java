@@ -29,7 +29,7 @@ public class Result {
     @ManyToOne(fetch = FetchType.EAGER)
     private Activity activity;
 
-    @OneToMany(mappedBy = "result")
+    @OneToMany(mappedBy = "result", fetch = FetchType.EAGER)
     private List<TestCase> testCases;
 
     public Result() {
