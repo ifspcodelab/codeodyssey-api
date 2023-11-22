@@ -7,6 +7,7 @@ import lombok.Getter;
 import lombok.Setter;
 
 import java.util.List;
+import java.util.Optional;
 import java.util.UUID;
 
 @Entity
@@ -33,5 +34,13 @@ public class Result {
 
     public Result() {
         this.id = UUID.randomUUID();
+    }
+
+    public Result(UUID id, String name, Double time, String error, Activity activity) {
+        this.id = id;
+        this.name = name;
+        this.time = time;
+        this.error = error;
+        this.activity = activity;
     }
 }
