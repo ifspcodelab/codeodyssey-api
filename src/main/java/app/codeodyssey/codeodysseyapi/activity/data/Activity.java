@@ -33,9 +33,6 @@ public class Activity {
     @ManyToOne(fetch = FetchType.EAGER)
     private Course course;
 
-    @OneToMany(mappedBy = "activity", fetch = FetchType.EAGER)
-    private List<Result> results;
-
     public Activity() {
         this.id = UUID.randomUUID();
     }

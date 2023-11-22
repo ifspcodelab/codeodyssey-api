@@ -1,9 +1,9 @@
 package app.codeodyssey.codeodysseyapi.result.service;
 
-import app.codeodyssey.codeodysseyapi.activity.data.Activity;
-import app.codeodyssey.codeodysseyapi.activity.data.ActivityRepository;
 import app.codeodyssey.codeodysseyapi.common.exception.Resource;
 import app.codeodyssey.codeodysseyapi.common.exception.ResourceNotFoundException;
+import app.codeodyssey.codeodysseyapi.resolution.data.Resolution;
+import app.codeodyssey.codeodysseyapi.resolution.data.ResolutionRepository;
 import app.codeodyssey.codeodysseyapi.result.data.Result;
 import app.codeodyssey.codeodysseyapi.result.data.ResultRepository;
 import app.codeodyssey.codeodysseyapi.result.data.TestCase;
@@ -35,7 +35,7 @@ public class RabbitMqConsumer {
 
     private final ResultRepository resultRepository;
     private final TestCaseRepository testCaseRepository;
-    private final ActivityRepository activityRepository;
+    private final ResolutionRepository resolutionRepository;
 
     @RabbitListener(queues = {RESULT_QUEUE})
     public void consumer(String message, @Headers Map<String, Object> headers) {
@@ -56,12 +56,12 @@ public class RabbitMqConsumer {
                 String resultId = jsonNodeMessage.get("id").asText();
                 String resultName = jsonNodeMessage.get("name").asText();
                 String resultTime = jsonNodeMessage.get("time").asText();
-                String activityId = jsonNodeMessage.get("activityId").asText();
+                String resolutionId = jsonNodeMessage.get("resolutionId").asText();
                 String resultError = jsonNodeMessage.get("error").asText();
 
-                Activity activity = activityRepository.findById(UUID.fromString(activityId))
+                Resolution resolution = resolutionRepository.findById(UUID.fromString(resolutionId))
                         .orElseThrow(
-                                () -> new ResourceNotFoundException(UUID.fromString(activityId), Resource.ACTIVITY)
+                                () -> new ResourceNotFoundException(UUID.fromString(resolutionId), Resource.RESOLUTION)
                         );
 
                 Result result = new Result(
@@ -69,7 +69,7 @@ public class RabbitMqConsumer {
                         resultName,
                         Double.valueOf(resultTime),
                         resultError,
-                        activity
+                        resolution
                 );
 
                 resultRepository.save(result);

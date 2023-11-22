@@ -11,22 +11,22 @@ import org.springframework.web.bind.annotation.PathVariable;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RestController;
 
-import java.util.List;
 import java.util.UUID;
 
 @RestController
 @RequestMapping("/api/v1/activities")
 @RequiredArgsConstructor
-public class GetActivityResults {
+public class GetActivityResultsEndpoint {
 
     private final GetActivityResultsService getActivityResultsService;
 
-    @GetMapping("/{activityId}/results")
-    public ResponseEntity<List<ResultResponse>> getAll(@PathVariable UUID activityId,
-                                                       Authentication auth) {
+    @GetMapping("/{activityId}/resolutions/{resolutionId}/results")
+    public ResponseEntity<ResultResponse> get(@PathVariable UUID activityId,
+                                              @PathVariable UUID resolutionId,
+                                              Authentication auth) {
         UserDetails principal = (UserDetails) auth.getPrincipal();
         return new ResponseEntity<>(
-                getActivityResultsService.execute(activityId, principal.getUsername()), HttpStatus.OK
+                getActivityResultsService.execute(activityId, resolutionId, principal.getUsername()), HttpStatus.OK
         );
     }
 }

@@ -1,6 +1,7 @@
 package app.codeodyssey.codeodysseyapi.result.data;
 
 import app.codeodyssey.codeodysseyapi.activity.data.Activity;
+import app.codeodyssey.codeodysseyapi.resolution.data.Resolution;
 import jakarta.persistence.*;
 import lombok.AllArgsConstructor;
 import lombok.Getter;
@@ -26,8 +27,8 @@ public class Result {
 
     private String error;
 
-    @ManyToOne(fetch = FetchType.EAGER)
-    private Activity activity;
+    @OneToOne
+    private Resolution resolution;
 
     @OneToMany(mappedBy = "result", fetch = FetchType.EAGER)
     private List<TestCase> testCases;
@@ -36,11 +37,11 @@ public class Result {
         this.id = UUID.randomUUID();
     }
 
-    public Result(UUID id, String name, Double time, String error, Activity activity) {
+    public Result(UUID id, String name, Double time, String error, Resolution resolution) {
         this.id = id;
         this.name = name;
         this.time = time;
         this.error = error;
-        this.activity = activity;
+        this.resolution = resolution;
     }
 }

@@ -13,7 +13,8 @@ public enum Resource {
     INVITATION("Invitation"),
     ENROLLMENT("Enrollment"),
     ACTIVITY("Activity"),
-    RESOLUTION("Resolution");
+    RESOLUTION("Resolution"),
+    RESULT("Result");
 
     private final String name;
 }

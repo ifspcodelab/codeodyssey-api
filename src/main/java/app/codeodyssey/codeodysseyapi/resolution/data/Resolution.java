@@ -1,11 +1,9 @@
 package app.codeodyssey.codeodysseyapi.resolution.data;
 
 import app.codeodyssey.codeodysseyapi.activity.data.Activity;
+import app.codeodyssey.codeodysseyapi.result.data.Result;
 import app.codeodyssey.codeodysseyapi.user.data.User;
-import jakarta.persistence.Entity;
-import jakarta.persistence.Id;
-import jakarta.persistence.ManyToOne;
-import jakarta.persistence.Table;
+import jakarta.persistence.*;
 import lombok.AllArgsConstructor;
 import lombok.Getter;
 import lombok.NoArgsConstructor;
