@@ -19,6 +19,7 @@ import app.codeodyssey.codeodysseyapi.invitation.data.InvitationRepository;
 import app.codeodyssey.codeodysseyapi.invitation.util.InvitationFactory;
 import app.codeodyssey.codeodysseyapi.resolution.api.ResolutionResponse;
 import app.codeodyssey.codeodysseyapi.resolution.data.ResolutionRepository;
+import app.codeodyssey.codeodysseyapi.resolution.util.ResolutionFactory;
 import app.codeodyssey.codeodysseyapi.user.data.User;
 import app.codeodyssey.codeodysseyapi.user.data.UserRepository;
 import app.codeodyssey.codeodysseyapi.user.util.UserFactory;
@@ -165,5 +166,15 @@ public class CreateResolutionServiceTest {
 
         assertThatExceptionOfType(ViolationException.class)
                 .isThrownBy(() -> createResolutionService.execute(course.getId(), activityB.getId(), resolutionCommand, student.getEmail()));
+    }
+
+    @Test
+    @DisplayName("returns conflict when the student has a resolution with waiting status")
+    void execute_givenResolutionWithWaitingStatus_return409Conflict() {
+        var resolution = ResolutionFactory.createValidResolutionWithActivityAndStudent(activity, student);
+        resolutionRepository.save(resolution);
+
+        assertThatExceptionOfType(ViolationException.class)
+                .isThrownBy(() -> createResolutionService.execute(course.getId(), activity.getId(), resolutionCommand, student.getEmail()));
     }
 }
