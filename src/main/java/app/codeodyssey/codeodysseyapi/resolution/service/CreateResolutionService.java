@@ -60,8 +60,7 @@ public class CreateResolutionService {
                     resolution.getSubmitDate().toString());
         }
 
-        List<Resolution> resolutions = resolutionRepository.findAllByStudentIdAndActivityIdAndStatus(user.get().getId(), activityId, ResolutionStatus.WAITING_FOR_RESULTS);
-        if (!resolutions.isEmpty()){
+        if (resolutionRepository.existsByStudentIdAndActivityIdAndStatus(user.get().getId(), activityId, ResolutionStatus.WAITING_FOR_RESULTS)){
             throw new ViolationException(
                     Resource.RESOLUTION,
                     ViolationType.STUDENT_HAS_RESOLUTION_WITH_WAITING_STATUS_IN_ACTIVITY,

@@ -9,7 +9,7 @@ import java.util.UUID;
 
 @Repository
 public interface ResolutionRepository extends JpaRepository<Resolution, UUID> {
-    List<Resolution> findAllByStudentIdAndActivityIdAndStatus(UUID studentId, UUID activityId, ResolutionStatus resolutionStatus);
+    boolean existsByStudentIdAndActivityIdAndStatus(UUID studentId, UUID activityId, ResolutionStatus resolutionStatus);
 
     @Query(
             """
