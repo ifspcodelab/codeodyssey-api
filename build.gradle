@@ -61,13 +61,11 @@ dependencies {
 	testImplementation 'org.junit.jupiter:junit-jupiter-migrationsupport:5.8.0'
 	testImplementation 'org.junit.platform:junit-platform-launcher:1.8.0'
 	testImplementation 'org.junit.vintage:junit-vintage-engine:5.8.0'
-	testImplementation 'org.junit.jupiter:junit-jupiter-params:5.8.0'
-	testImplementation 'org.junit.jupiter:junit-jupiter-engine:5.8.0'
-	testImplementation 'org.junit.jupiter:junit-jupiter-api:5.8.0'
-	testImplementation 'org.junit.jupiter:junit-jupiter-params:5.8.0'
 	testImplementation 'org.junit.platform:junit-platform-runner:1.8.0'
-	testImplementation 'org.junit.jupiter:junit-jupiter-engine:5.8.0'
-	}
+	implementation 'org.springframework.boot:spring-boot-starter-amqp'
+	testImplementation 'org.springframework.amqp:spring-rabbit-test'
+	implementation 'com.fasterxml.jackson.core:jackson-core:2.15.3'
+}
 
 tasks.named('test') {
 	useJUnitPlatform()

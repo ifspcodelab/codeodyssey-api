@@ -1,10 +1,12 @@
 package app.codeodyssey.codeodysseyapi.activity.data;
 
 import app.codeodyssey.codeodysseyapi.course.data.Course;
+import app.codeodyssey.codeodysseyapi.result.data.Result;
 import jakarta.persistence.*;
 import lombok.*;
 
 import java.time.Instant;
+import java.util.List;
 import java.util.UUID;
 
 @Entity
