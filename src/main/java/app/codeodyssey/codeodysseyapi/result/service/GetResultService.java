@@ -23,7 +23,7 @@ import java.util.UUID;
 
 @Service
 @RequiredArgsConstructor
-public class GetActivityResultsService {
+public class GetResultService {
 
     private final ResultRepository resultRepository;
     private final ResultMapper resultMapper;
