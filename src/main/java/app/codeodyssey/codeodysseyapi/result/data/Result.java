@@ -1,6 +1,5 @@
 package app.codeodyssey.codeodysseyapi.result.data;
 
-import app.codeodyssey.codeodysseyapi.activity.data.Activity;
 import app.codeodyssey.codeodysseyapi.resolution.data.Resolution;
 import jakarta.persistence.*;
 import lombok.AllArgsConstructor;
@@ -8,7 +7,6 @@ import lombok.Getter;
 import lombok.Setter;
 
 import java.util.List;
-import java.util.Optional;
 import java.util.UUID;
 
 @Entity
