@@ -5,39 +5,68 @@ import org.springframework.beans.factory.annotation.Value;
 import org.springframework.context.annotation.Bean;
 import org.springframework.context.annotation.Configuration;
 
+import java.util.HashMap;
+import java.util.Map;
+
 @Configuration
 public class RabbitMqConfig {
-    @Value("${rabbitmq.producer.queue.name}")
-    private String producerQueue;
-    @Value("${rabbitmq.consumer.queue.name}")
-    private String consumerQueue;
-    @Value("${rabbitmq.producer.exchange.name}")
-    private String producerExchange;
-    @Value("${rabbitmq.consumer.exchange.name}")
-    private String consumerExchange;
+    private static final String PRODUCER_QUEUE = "execution_queue";
+    private static final String CONSUMER_QUEUE = "result_queue";
+    private static final String PRODUCER_EXCHANGE = "api_exchange";
+    private static final String CONSUMER_EXCHANGE = "executor_exchange";
     @Value("${rabbitmq.producer.routing-key}")
     private String producerRoutingKey;
     @Value("${rabbitmq.consumer.routing-key}")
     private String consumerRoutingKey;
+    @Value("${rabbitmq.ttl}")
+    private String queueTtl;
 
     @Bean
     public Queue producerQueue() {
-        return new Queue(producerQueue);
+        Map<String, Object> args = new HashMap<>();
+        args.put("x-message-ttl", Integer.valueOf(queueTtl));
+        args.put("x-dead-letter-exchange", "execution_dlx");
+        args.put("x-dead-letter-routing-key", "execution_dlq_key");
+        return new Queue(PRODUCER_QUEUE, true, false, false, args);
     }
 
     @Bean
     public Queue consumerQueue() {
-        return new Queue(consumerQueue);
+        Map<String, Object> args = new HashMap<>();
+        args.put("x-message-ttl", Integer.valueOf(queueTtl));
+        args.put("x-dead-letter-exchange", "result_dlx");
+        args.put("x-dead-letter-routing-key", "result_dlq_key");
+        return new Queue(CONSUMER_QUEUE, true, false, false, args);
+    }
+
+    @Bean
+    public Queue producerDLQ() {
+        return new Queue("execution_dlq");
+    }
+
+    @Bean
+    public Queue consumerDLQ() {
+        return new Queue("result_dlq");
     }
 
     @Bean
     public DirectExchange producerExchange() {
-        return new DirectExchange(producerExchange, false, false, null);
+        return new DirectExchange(PRODUCER_EXCHANGE, false, false, null);
     }
 
     @Bean
     public DirectExchange consumerExchange() {
-        return new DirectExchange(consumerExchange, false, false, null);
+        return new DirectExchange(CONSUMER_EXCHANGE, false, false, null);
+    }
+
+    @Bean
+    public DirectExchange producerDLX() {
+        return new DirectExchange("execution_dlx", false, false, null);
+    }
+
+    @Bean
+    public DirectExchange consumerDLX() {
+        return new DirectExchange("result_dlx", false, false, null);
     }
 
     @Bean
@@ -52,5 +81,19 @@ public class RabbitMqConfig {
         return BindingBuilder.bind(consumerQueue())
                 .to(consumerExchange())
                 .with(consumerRoutingKey);
+    }
+
+    @Bean
+    public Binding producerBidingDLQ() {
+        return BindingBuilder.bind(producerDLQ())
+                .to(producerDLX())
+                .with("execution_dlq_key");
+    }
+
+    @Bean
+    public Binding consumerBidingDLQ() {
+        return BindingBuilder.bind(consumerDLQ())
+                .to(consumerDLX())
+                .with("result_dlq_key");
     }
 }
