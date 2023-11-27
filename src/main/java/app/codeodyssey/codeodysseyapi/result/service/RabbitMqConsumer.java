@@ -29,7 +29,6 @@ import java.util.UUID;
 public class RabbitMqConsumer {
     private static final Logger LOGGER = LoggerFactory.getLogger(RabbitMqConsumer.class);
     private final RabbitTemplate rabbitTemplate;
-    private static final String X_RETRY_HEADER = "x-dlq-retry";
     private static final String DLX = "result_dlx";
     private static final String RESULT_QUEUE = "result_queue";
 
@@ -38,61 +37,57 @@ public class RabbitMqConsumer {
     private final ResolutionRepository resolutionRepository;
 
     @RabbitListener(queues = {RESULT_QUEUE})
-    public void consumer(String message, @Headers Map<String, Object> headers) {
-        Integer retryHeader = (Integer) headers.get(X_RETRY_HEADER);
-
-        if (retryHeader == null) {
-            retryHeader = 0;
-        }
+    public void consumer(String message) {
         ObjectMapper objectMapper = new ObjectMapper();
 
         try {
-            if (retryHeader < 3) {
-                Map<String, Object> updatedHeaders = new HashMap<>(headers);
-                int tryCount = retryHeader + 1;
-                updatedHeaders.put(X_RETRY_HEADER, tryCount);
+            if (message != null) {
+                JsonNode jsonNode = objectMapper.readTree(message);
+                String resolutionTestResult = jsonNode.get("result").asText();
+                JsonNode jsonNodeMessage = objectMapper.readTree(resolutionTestResult);
 
-                JsonNode jsonNodeMessage = objectMapper.readTree(message);
-                String resultId = jsonNodeMessage.get("id").asText();
-                String resultName = jsonNodeMessage.get("name").asText();
-                String resultTime = jsonNodeMessage.get("time").asText();
-                String resolutionId = jsonNodeMessage.get("resolutionId").asText();
-                String resultError = jsonNodeMessage.get("error").asText();
+                if (jsonNodeMessage.get("id") != null) {
+                    String resultId = jsonNodeMessage.get("id").asText();
+                    String resultName = jsonNodeMessage.get("name").asText();
+                    String resultTime = jsonNodeMessage.get("time").asText();
+                    String resolutionId = jsonNodeMessage.get("resolution_id").asText();
+                    String resultError = jsonNodeMessage.get("error").asText();
 
-                Resolution resolution = resolutionRepository.findById(UUID.fromString(resolutionId))
-                        .orElseThrow(
-                                () -> new ResourceNotFoundException(UUID.fromString(resolutionId), Resource.RESOLUTION)
-                        );
+                    Resolution resolution = resolutionRepository.findById(UUID.fromString(resolutionId))
+                            .orElseThrow(
+                                    () -> new ResourceNotFoundException(UUID.fromString(resolutionId), Resource.RESOLUTION)
+                            );
 
-                Result result = new Result(
-                        UUID.fromString(resultId),
-                        resultName,
-                        Double.valueOf(resultTime),
-                        resultError,
-                        resolution
-                );
+                    Result result = new Result(
+                            UUID.fromString(resultId),
+                            resultName,
+                            Double.valueOf(resultTime),
+                            resultError,
+                            resolution
+                    );
 
-                resultRepository.save(result);
+                    resultRepository.save(result);
 
-                JsonNode testCases = jsonNodeMessage.get("testCases");
-                if (testCases.isArray()) {
-                    for (JsonNode j : testCases) {
+                    JsonNode testCases = jsonNodeMessage.get("testCases");
+                    if (testCases != null && testCases.isArray()) {
+                        for (JsonNode j : testCases) {
 
-                        TestCase testCase = new TestCase(
-                                UUID.fromString(j.get("id").asText()),
-                                j.get("testName").asText(),
-                                j.get("success").asBoolean(),
-                                j.get("info").asText(),
-                                Double.valueOf(j.get("time").asText()),
-                                result
-                        );
+                            TestCase testCase = new TestCase(
+                                    UUID.fromString(j.get("id").asText()),
+                                    j.get("testName").asText(),
+                                    j.get("success").asBoolean(),
+                                    j.get("info").asText(),
+                                    Double.valueOf(j.get("time").asText()),
+                                    result
+                            );
 
-                        testCaseRepository.save(testCase);
+                            testCaseRepository.save(testCase);
 
+                        }
                     }
+                } else {
+                    rabbitTemplate.convertAndSend(DLX, "result_dlq_key", message);
                 }
-
-
             } else {
                 rabbitTemplate.convertAndSend(DLX, "result_dlq_key", message);
             }
