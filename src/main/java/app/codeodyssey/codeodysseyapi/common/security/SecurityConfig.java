@@ -37,7 +37,8 @@ public class SecurityConfig {
         "/api/v1/invitations/*",
         "/api/v1/courses/*/activities",
         "/api/v1/courses/*/activities/*",
-        "/api/v1/courses/*/activities/*/resolutions"
+        "/api/v1/courses/*/activities/*/resolutions",
+        "/api/v1/courses/*/activities/*/resolutions/*"
     };
 
     @Bean
