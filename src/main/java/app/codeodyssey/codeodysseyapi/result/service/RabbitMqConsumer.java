@@ -4,6 +4,7 @@ import app.codeodyssey.codeodysseyapi.common.exception.Resource;
 import app.codeodyssey.codeodysseyapi.common.exception.ResourceNotFoundException;
 import app.codeodyssey.codeodysseyapi.resolution.data.Resolution;
 import app.codeodyssey.codeodysseyapi.resolution.data.ResolutionRepository;
+import app.codeodyssey.codeodysseyapi.resolution.data.ResolutionStatus;
 import app.codeodyssey.codeodysseyapi.result.data.Result;
 import app.codeodyssey.codeodysseyapi.result.data.ResultRepository;
 import app.codeodyssey.codeodysseyapi.result.data.TestCase;
@@ -12,6 +13,7 @@ import com.fasterxml.jackson.core.JsonProcessingException;
 import com.fasterxml.jackson.databind.JsonNode;
 import com.fasterxml.jackson.databind.ObjectMapper;
 import lombok.RequiredArgsConstructor;
+import lombok.extern.slf4j.Slf4j;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.amqp.AmqpException;
@@ -23,6 +25,7 @@ import java.util.UUID;
 
 @Service
 @RequiredArgsConstructor
+@Slf4j
 public class RabbitMqConsumer {
     private static final Logger LOGGER = LoggerFactory.getLogger(RabbitMqConsumer.class);
     private final RabbitTemplate rabbitTemplate;
@@ -40,20 +43,27 @@ public class RabbitMqConsumer {
         try {
             if (message != null) {
                 JsonNode jsonNode = objectMapper.readTree(message);
-                String resolutionTestResult = jsonNode.get("result").asText();
-                JsonNode jsonNodeMessage = objectMapper.readTree(resolutionTestResult);
+                JsonNode resolutionTestResult = jsonNode.get("result");
 
-                if (jsonNodeMessage.get("id") != null) {
-                    String resultId = jsonNodeMessage.get("id").asText();
-                    String resultName = jsonNodeMessage.get("name").asText();
-                    String resultTime = jsonNodeMessage.get("time").asText();
-                    String resolutionId = jsonNodeMessage.get("resolution_id").asText();
-                    String resultError = jsonNodeMessage.get("error").asText();
+                if (resolutionTestResult.get("id") != null) {
+                    String resultId = resolutionTestResult.get("id").asText();
+                    String resultName = resolutionTestResult.get("name").asText();
+                    String resultTime = resolutionTestResult.get("time").asText();
+                    String resolutionId = resolutionTestResult.get("resolution_id").asText();
+                    String resultError = resolutionTestResult.get("error").asText();
 
                     Resolution resolution = resolutionRepository.findById(UUID.fromString(resolutionId))
                             .orElseThrow(
                                     () -> new ResourceNotFoundException(UUID.fromString(resolutionId), Resource.RESOLUTION)
                             );
+
+                    if (resolutionTestResult.get("error").asText().equals("null")) {
+                        resolution.setStatus(ResolutionStatus.EXECUTED_SUCCESS);
+                    } else {
+                        resolution.setStatus(ResolutionStatus.EXECUTED_ERROR);
+                    }
+
+                    resolutionRepository.save(resolution);
 
                     Result result = new Result(
                             UUID.fromString(resultId),
@@ -65,7 +75,7 @@ public class RabbitMqConsumer {
 
                     resultRepository.save(result);
 
-                    JsonNode testCases = jsonNodeMessage.get("testcases");
+                    JsonNode testCases = resolutionTestResult.get("testcases");
                     if (testCases != null && testCases.isArray()) {
                         for (JsonNode j : testCases) {
 
