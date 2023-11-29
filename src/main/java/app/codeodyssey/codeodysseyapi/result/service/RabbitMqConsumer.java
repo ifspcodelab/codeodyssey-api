@@ -14,8 +14,6 @@ import com.fasterxml.jackson.databind.JsonNode;
 import com.fasterxml.jackson.databind.ObjectMapper;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
-import org.slf4j.Logger;
-import org.slf4j.LoggerFactory;
 import org.springframework.amqp.AmqpException;
 import org.springframework.amqp.rabbit.annotation.RabbitListener;
 import org.springframework.amqp.rabbit.core.RabbitTemplate;
@@ -27,7 +25,6 @@ import java.util.UUID;
 @RequiredArgsConstructor
 @Slf4j
 public class RabbitMqConsumer {
-    private static final Logger LOGGER = LoggerFactory.getLogger(RabbitMqConsumer.class);
     private final RabbitTemplate rabbitTemplate;
     private static final String DLX = "result_dlx";
     private static final String RESULT_QUEUE = "result_queue";
@@ -92,15 +89,18 @@ public class RabbitMqConsumer {
 
                         }
                     }
+                    log.info("Message received: {}", message));
                 } else {
+                    log.warn("Message {} sent to dead letter queue", message);
                     rabbitTemplate.convertAndSend(DLX, "result_dlq_key", message);
                 }
             } else {
+                log.warn(" Null message sent to dead letter queue");
                 rabbitTemplate.convertAndSend(DLX, "result_dlq_key", message);
             }
         } catch (JsonProcessingException | AmqpException ex) {
+            log.error("Error when trying to process message from result queue", ex);
             ex.printStackTrace();
         }
-        LOGGER.info(String.format("Received message -> %s", message));
     }
 }
