@@ -89,7 +89,7 @@ public class RabbitMqConsumer {
 
                         }
                     }
-                    log.info("Message received: {}", message));
+                    log.info("Message received: {}", message);
                 } else {
                     log.warn("Message {} sent to dead letter queue", message);
                     rabbitTemplate.convertAndSend(DLX, "result_dlq_key", message);
