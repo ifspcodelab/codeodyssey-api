@@ -17,11 +17,8 @@ import org.slf4j.LoggerFactory;
 import org.springframework.amqp.AmqpException;
 import org.springframework.amqp.rabbit.annotation.RabbitListener;
 import org.springframework.amqp.rabbit.core.RabbitTemplate;
-import org.springframework.messaging.handler.annotation.Headers;
 import org.springframework.stereotype.Service;
 
-import java.util.HashMap;
-import java.util.Map;
 import java.util.UUID;
 
 @Service
@@ -68,13 +65,13 @@ public class RabbitMqConsumer {
 
                     resultRepository.save(result);
 
-                    JsonNode testCases = jsonNodeMessage.get("testCases");
+                    JsonNode testCases = jsonNodeMessage.get("testcases");
                     if (testCases != null && testCases.isArray()) {
                         for (JsonNode j : testCases) {
 
                             TestCase testCase = new TestCase(
                                     UUID.fromString(j.get("id").asText()),
-                                    j.get("testName").asText(),
+                                    j.get("test_name").asText(),
                                     j.get("success").asBoolean(),
                                     j.get("info").asText(),
                                     Double.valueOf(j.get("time").asText()),
