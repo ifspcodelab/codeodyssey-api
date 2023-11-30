@@ -7,11 +7,13 @@ import app.codeodyssey.codeodysseyapi.enrollment.data.EnrollmentRepository;
 import app.codeodyssey.codeodysseyapi.resolution.api.ResolutionResponse;
 import app.codeodyssey.codeodysseyapi.resolution.data.Resolution;
 import app.codeodyssey.codeodysseyapi.resolution.data.ResolutionRepository;
+import app.codeodyssey.codeodysseyapi.resolution.data.ResolutionStatus;
 import app.codeodyssey.codeodysseyapi.user.data.User;
 import app.codeodyssey.codeodysseyapi.user.data.UserRepository;
 import lombok.AllArgsConstructor;
 import org.springframework.stereotype.Service;
 
+import java.util.List;
 import java.util.Optional;
 import java.util.UUID;
 
@@ -57,6 +59,14 @@ public class CreateResolutionService {
                     Resource.RESOLUTION,
                     ViolationType.RESOLUTION_SUBMIT_DATE_AFTER_ACTIVITY_END_DATE,
                     resolution.getSubmitDate().toString());
+        }
+
+        if (resolutionRepository.existsByStudentIdAndActivityIdAndStatus(user.get().getId(), activityId, ResolutionStatus.WAITING_FOR_RESULTS)){
+            throw new ViolationException(
+                    Resource.RESOLUTION,
+                    ViolationType.STUDENT_HAS_RESOLUTION_WITH_WAITING_STATUS_IN_ACTIVITY,
+                    resolution.getStatus().toString()
+            );
         }
 
         resolutionRepository.save(resolution);

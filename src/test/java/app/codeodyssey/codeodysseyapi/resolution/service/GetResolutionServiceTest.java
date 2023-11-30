@@ -5,7 +5,6 @@ import app.codeodyssey.codeodysseyapi.activity.data.Activity;
 import app.codeodyssey.codeodysseyapi.activity.data.ActivityRepository;
 import app.codeodyssey.codeodysseyapi.activity.util.ActivityFactory;
 import app.codeodyssey.codeodysseyapi.common.exception.EmailNotFoundException;
-import app.codeodyssey.codeodysseyapi.common.exception.ResourceNotFoundException;
 import app.codeodyssey.codeodysseyapi.common.exception.UserNotAssociatedException;
 import app.codeodyssey.codeodysseyapi.common.exception.ViolationException;
 import app.codeodyssey.codeodysseyapi.course.data.Course;
@@ -18,6 +17,7 @@ import app.codeodyssey.codeodysseyapi.invitation.data.Invitation;
 import app.codeodyssey.codeodysseyapi.invitation.data.InvitationRepository;
 import app.codeodyssey.codeodysseyapi.invitation.util.InvitationFactory;
 import app.codeodyssey.codeodysseyapi.resolution.api.ResolutionResponse;
+import app.codeodyssey.codeodysseyapi.resolution.data.Resolution;
 import app.codeodyssey.codeodysseyapi.resolution.data.ResolutionRepository;
 import app.codeodyssey.codeodysseyapi.resolution.util.ResolutionFactory;
 import app.codeodyssey.codeodysseyapi.user.data.User;
@@ -32,20 +32,17 @@ import org.springframework.boot.test.autoconfigure.jdbc.AutoConfigureTestDatabas
 import org.springframework.boot.test.context.SpringBootTest;
 import org.springframework.test.context.ContextConfiguration;
 
-import java.time.Instant;
-import java.util.UUID;
-
 import static org.assertj.core.api.Assertions.assertThat;
 import static org.assertj.core.api.Assertions.assertThatExceptionOfType;
 import static org.junit.jupiter.api.Assertions.assertDoesNotThrow;
 
 @SpringBootTest
-@DisplayName("Tests for Create Resolution Service")
+@DisplayName("Tests for Get Resolution Service")
 @AutoConfigureTestDatabase(replace = AutoConfigureTestDatabase.Replace.NONE)
 @ContextConfiguration(initializers = {DatabaseContainerInitializer.class})
-public class CreateResolutionServiceTest {
+public class GetResolutionServiceTest {
     @Autowired
-    private CreateResolutionService createResolutionService;
+    private GetResolutionService getResolutionService;
 
     @Autowired
     private UserRepository userRepository;
@@ -70,7 +67,7 @@ public class CreateResolutionServiceTest {
     Invitation invitation;
     Enrollment enrollment;
     Activity activity;
-    CreateResolutionCommand resolutionCommand;
+    Resolution resolution;
 
     @BeforeEach
     void beforeEach() {
@@ -80,7 +77,7 @@ public class CreateResolutionServiceTest {
         invitation = InvitationFactory.sampleInvitationWithCourse(course);
         enrollment = EnrollmentFactory.sampleEnrollment(invitation, student);
         activity = ActivityFactory.createValidActivityWithCourse(course);
-        resolutionCommand = new CreateResolutionCommand("ResolutionFile");
+        resolution = ResolutionFactory.createValidResolutionWithActivityAndStudent(activity, student);
 
         userRepository.save(student);
         userRepository.save(professor);
@@ -88,6 +85,7 @@ public class CreateResolutionServiceTest {
         invitationRepository.save(invitation);
         enrollmentRepository.save(enrollment);
         activityRepository.save(activity);
+        resolutionRepository.save(resolution);
     }
 
     @AfterEach
@@ -101,80 +99,67 @@ public class CreateResolutionServiceTest {
     }
 
     @Test
-    @DisplayName("returns ResolutionResponse when given when given a valid course id, activity id and resolution command; student has to be enrolled")
-    void execute_givenValidCourseIdAndActivityIdAndResolutionCommandWithStudentLoggedIn_returnResolutionResponse() {
-        var resolution = assertDoesNotThrow(() -> createResolutionService.execute(course.getId(), activity.getId(), resolutionCommand, student.getEmail()));
+    @DisplayName("returns ResolutionResponse when given when given a valid course id, activity id and resolution id; student has to be enrolled")
+    void execute_givenValidCourseIdAndActivityIdAndResolutionIdWithStudentLoggedIn_returnResolutionResponse() {
+        var resolutionResponse = assertDoesNotThrow(() -> getResolutionService.execute(course.getId(), activity.getId(), resolution.getId(), student.getEmail()));
 
-        assertThat(resolution).isNotNull();
-        assertThat(resolution).isInstanceOf(ResolutionResponse.class);
+        assertThat(resolutionResponse).isNotNull();
+        assertThat(resolutionResponse).isInstanceOf(ResolutionResponse.class);
     }
 
     @Test
     @DisplayName("returns not found when given an invalid user email")
     void execute_givenInvalidUserEmail_return404NotFound() {
         assertThatExceptionOfType(EmailNotFoundException.class)
-                .isThrownBy(() -> createResolutionService.execute(course.getId(), activity.getId(), resolutionCommand, "Email"));
+                .isThrownBy(() -> getResolutionService.execute(course.getId(), activity.getId(), resolution.getId(), "Email"));
     }
 
     @Test
-    @DisplayName("returns not found when given an invalid activity id")
-    void execute_givenInvalidActivityId_return404NotFound() {
-        assertThatExceptionOfType(ResourceNotFoundException.class)
-                .isThrownBy(() -> createResolutionService.execute(course.getId(), UUID.randomUUID(), resolutionCommand, student.getEmail()));
-    }
-
-    @Test
-    @DisplayName("returns conflict when given a activity id that is not from course")
-    void execute_givenActivityNotFromCourse_return409Conflict() {
-        var courseB = CourseFactory.sampleCourseBWithProfessor(professor);
-        courseRepository.save(courseB);
-
-        var activityB = ActivityFactory.createValidActivityBWithCourse(courseB);
-        activityRepository.save(activityB);
-
-        assertThatExceptionOfType(ViolationException.class)
-                .isThrownBy(() -> createResolutionService.execute(course.getId(), activityB.getId(), resolutionCommand, student.getEmail()));
-    }
-
-    @Test
-    @DisplayName("returns conflict when given an student that is not enrolled in the course")
-    void execute_givenStudentNotEnrolled_return409Conflict() {
-        var studentB = UserFactory.sampleUserStudentB();
+    @DisplayName("returns conflict when given an user that is not from the course")
+    void execute_givenUserNotFromCourse_return409Conflict() {
+        User studentB = UserFactory.sampleUserStudentB();
         userRepository.save(studentB);
 
         assertThatExceptionOfType(UserNotAssociatedException.class)
-                .isThrownBy(() -> createResolutionService.execute(course.getId(), activity.getId(), resolutionCommand, studentB.getEmail()));
+                .isThrownBy(() -> getResolutionService.execute(course.getId(), activity.getId(), resolution.getId(), studentB.getEmail()));
     }
 
     @Test
-    @DisplayName("returns conflict when the resolution submit date is before the activity start date")
-    void execute_givenSubmitDateBeforeActivityStartDate_return409Conflict() {
-        var activityB = ActivityFactory.createValidActivityBWithCourse(course);
-        activityB.setStartDate(Instant.now().plusSeconds(3000));
+    @DisplayName("returns conflict when given an activity that is not from the course")
+    void execute_givenActivityNotFromCourse_return409Conflict() {
+        Course courseB = CourseFactory.createValidCourseWithProfessor(professor);
+        courseRepository.save(courseB);
+
+        Activity activityB = ActivityFactory.createValidActivityBWithCourse(courseB);
         activityRepository.save(activityB);
 
         assertThatExceptionOfType(ViolationException.class)
-                .isThrownBy(() -> createResolutionService.execute(course.getId(), activityB.getId(), resolutionCommand, student.getEmail()));
+                .isThrownBy(() -> getResolutionService.execute(course.getId(), activityB.getId(), resolution.getId(), student.getEmail()));
     }
 
     @Test
-    @DisplayName("returns conflict when the resolution submit date is after the activity end date")
-    void execute_givenSubmitDateAfterActivityEndDate_return409Conflict() {
-        var activityB = ActivityFactory.createValidActivityBWithCourse(course);
-        activityB.setEndDate(Instant.now().minusSeconds(3000));
+    @DisplayName("returns conflict when given an resolution that is not from the activity")
+    void execute_givenResolutionNotFromActivity_return409Conflict() {
+        Activity activityB = ActivityFactory.createValidActivityBWithCourse(course);
         activityRepository.save(activityB);
 
+        Resolution resolutionB = ResolutionFactory.createValidResolutionWithActivityAndStudent(activityB, student);
+        resolutionRepository.save(resolutionB);
+
         assertThatExceptionOfType(ViolationException.class)
-                .isThrownBy(() -> createResolutionService.execute(course.getId(), activityB.getId(), resolutionCommand, student.getEmail()));
+                .isThrownBy(() -> getResolutionService.execute(course.getId(), activity.getId(), resolutionB.getId(), student.getEmail()));
     }
 
     @Test
-    @DisplayName("returns conflict when the student has a resolution with waiting status")
-    void execute_givenResolutionWithWaitingStatus_return409Conflict() {
-        var resolution = ResolutionFactory.createValidResolutionWithActivityAndStudent(activity, student);
-        resolutionRepository.save(resolution);
+    @DisplayName("returns conflict when given an user that did not create the resolution")
+    void execute_givenResolutionNotFromStudent_return409Conflict() {
+        User studentB = UserFactory.sampleUserStudentB();
+        userRepository.save(studentB);
+
+        Enrollment enrollmentB = EnrollmentFactory.sampleEnrollment(invitation, studentB);
+        enrollmentRepository.save(enrollmentB);
 
         assertThatExceptionOfType(ViolationException.class)
-                .isThrownBy(() -> createResolutionService.execute(course.getId(), activity.getId(), resolutionCommand, student.getEmail()));
+                .isThrownBy(() -> getResolutionService.execute(course.getId(), activity.getId(), resolution.getId(), studentB.getEmail()));
     }
 }

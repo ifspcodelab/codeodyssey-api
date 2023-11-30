@@ -32,11 +32,15 @@ public class Resolution {
 
     private String resolutionFile;
 
+    @Enumerated(EnumType.STRING)
+    private ResolutionStatus status;
+
     public Resolution(Activity activity, User student, String resolutionFile) {
         this.id = UUID.randomUUID();
         this.activity = activity;
         this.student = student;
         this.submitDate = Instant.now();
         this.resolutionFile = resolutionFile;
+        this.status = ResolutionStatus.WAITING_FOR_RESULTS;
     }
 }
