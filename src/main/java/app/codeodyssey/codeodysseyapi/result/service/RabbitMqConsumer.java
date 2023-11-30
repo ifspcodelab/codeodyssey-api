@@ -4,6 +4,7 @@ import app.codeodyssey.codeodysseyapi.common.exception.Resource;
 import app.codeodyssey.codeodysseyapi.common.exception.ResourceNotFoundException;
 import app.codeodyssey.codeodysseyapi.resolution.data.Resolution;
 import app.codeodyssey.codeodysseyapi.resolution.data.ResolutionRepository;
+import app.codeodyssey.codeodysseyapi.resolution.data.ResolutionStatus;
 import app.codeodyssey.codeodysseyapi.result.data.Result;
 import app.codeodyssey.codeodysseyapi.result.data.ResultRepository;
 import app.codeodyssey.codeodysseyapi.result.data.TestCase;
@@ -12,24 +13,19 @@ import com.fasterxml.jackson.core.JsonProcessingException;
 import com.fasterxml.jackson.databind.JsonNode;
 import com.fasterxml.jackson.databind.ObjectMapper;
 import lombok.RequiredArgsConstructor;
-import org.slf4j.Logger;
-import org.slf4j.LoggerFactory;
+import lombok.extern.slf4j.Slf4j;
 import org.springframework.amqp.AmqpException;
 import org.springframework.amqp.rabbit.annotation.RabbitListener;
 import org.springframework.amqp.rabbit.core.RabbitTemplate;
-import org.springframework.messaging.handler.annotation.Headers;
 import org.springframework.stereotype.Service;
 
-import java.util.HashMap;
-import java.util.Map;
 import java.util.UUID;
 
 @Service
 @RequiredArgsConstructor
+@Slf4j
 public class RabbitMqConsumer {
-    private static final Logger LOGGER = LoggerFactory.getLogger(RabbitMqConsumer.class);
     private final RabbitTemplate rabbitTemplate;
-    private static final String X_RETRY_HEADER = "x-dlq-retry";
     private static final String DLX = "result_dlx";
     private static final String RESULT_QUEUE = "result_queue";
 
@@ -38,67 +34,73 @@ public class RabbitMqConsumer {
     private final ResolutionRepository resolutionRepository;
 
     @RabbitListener(queues = {RESULT_QUEUE})
-    public void consumer(String message, @Headers Map<String, Object> headers) {
-        Integer retryHeader = (Integer) headers.get(X_RETRY_HEADER);
-
-        if (retryHeader == null) {
-            retryHeader = 0;
-        }
+    public void consumer(String message) {
         ObjectMapper objectMapper = new ObjectMapper();
 
         try {
-            if (retryHeader < 3) {
-                Map<String, Object> updatedHeaders = new HashMap<>(headers);
-                int tryCount = retryHeader + 1;
-                updatedHeaders.put(X_RETRY_HEADER, tryCount);
+            if (message != null) {
+                JsonNode jsonNode = objectMapper.readTree(message);
+                JsonNode resolutionTestResult = jsonNode.get("result");
 
-                JsonNode jsonNodeMessage = objectMapper.readTree(message);
-                String resultId = jsonNodeMessage.get("id").asText();
-                String resultName = jsonNodeMessage.get("name").asText();
-                String resultTime = jsonNodeMessage.get("time").asText();
-                String resolutionId = jsonNodeMessage.get("resolutionId").asText();
-                String resultError = jsonNodeMessage.get("error").asText();
+                if (resolutionTestResult.get("id") != null) {
+                    String resultId = resolutionTestResult.get("id").asText();
+                    String resultName = resolutionTestResult.get("name").asText();
+                    String resultTime = resolutionTestResult.get("time").asText();
+                    String resolutionId = resolutionTestResult.get("resolution_id").asText();
+                    String resultError = resolutionTestResult.get("error").asText();
 
-                Resolution resolution = resolutionRepository.findById(UUID.fromString(resolutionId))
-                        .orElseThrow(
-                                () -> new ResourceNotFoundException(UUID.fromString(resolutionId), Resource.RESOLUTION)
-                        );
+                    Resolution resolution = resolutionRepository.findById(UUID.fromString(resolutionId))
+                            .orElseThrow(
+                                    () -> new ResourceNotFoundException(UUID.fromString(resolutionId), Resource.RESOLUTION)
+                            );
 
-                Result result = new Result(
-                        UUID.fromString(resultId),
-                        resultName,
-                        Double.valueOf(resultTime),
-                        resultError,
-                        resolution
-                );
-
-                resultRepository.save(result);
-
-                JsonNode testCases = jsonNodeMessage.get("testCases");
-                if (testCases.isArray()) {
-                    for (JsonNode j : testCases) {
-
-                        TestCase testCase = new TestCase(
-                                UUID.fromString(j.get("id").asText()),
-                                j.get("testName").asText(),
-                                j.get("success").asBoolean(),
-                                j.get("info").asText(),
-                                Double.valueOf(j.get("time").asText()),
-                                result
-                        );
-
-                        testCaseRepository.save(testCase);
-
+                    if (resolutionTestResult.get("error").asText().equals("null")) {
+                        resolution.setStatus(ResolutionStatus.EXECUTED_SUCCESS);
+                    } else {
+                        resolution.setStatus(ResolutionStatus.EXECUTED_ERROR);
                     }
+
+                    resolutionRepository.save(resolution);
+
+                    Result result = new Result(
+                            UUID.fromString(resultId),
+                            resultName,
+                            Double.valueOf(resultTime),
+                            resultError,
+                            resolution
+                    );
+
+                    resultRepository.save(result);
+
+                    JsonNode testCases = resolutionTestResult.get("testcases");
+                    if (testCases != null && testCases.isArray()) {
+                        for (JsonNode j : testCases) {
+
+                            TestCase testCase = new TestCase(
+                                    UUID.fromString(j.get("id").asText()),
+                                    j.get("test_name").asText(),
+                                    j.get("success").asBoolean(),
+                                    j.get("info").asText(),
+                                    Double.valueOf(j.get("time").asText()),
+                                    result
+                            );
+
+                            testCaseRepository.save(testCase);
+
+                        }
+                    }
+                    log.info("Message received: {}", message);
+                } else {
+                    log.warn("Message {} sent to dead letter queue", message);
+                    rabbitTemplate.convertAndSend(DLX, "result_dlq_key", message);
                 }
-
-
             } else {
+                log.warn(" Null message sent to dead letter queue");
                 rabbitTemplate.convertAndSend(DLX, "result_dlq_key", message);
             }
         } catch (JsonProcessingException | AmqpException ex) {
+            log.error("Error when trying to process message from result queue", ex);
             ex.printStackTrace();
         }
-        LOGGER.info(String.format("Received message -> %s", message));
     }
 }
